@@ -140,17 +140,17 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
               <div className="px-4 py-1 ">
                 <div className="w-full bg-gray-200 p-1 rounded-lg">
                   <div className="flex items-center justify-between">
-                    <button className="px-8 py-1 rounded-l" onClick={() => handleDecrement(bag.code)}>-</button>
+                    <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(bag.code)}>-</button>
                     <input
                       type="number"
-                      className="w-16 text-center bg-gray-200 no-arrows"
+                      className="w-16 text-center bg-gray-200 no-arrows text-black"
                       value={quantities[bag.code]}
                       onChange={(e) => handleQuantityChange(bag.code, e.target.value)}
                     />
-                    <button className="px-8 py-1 rounded-r" onClick={() => handleIncrement(bag.code)}>+</button>
+                    <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.code)}>+</button>
                   </div>
                 </div>
-                <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center"> {/* Cambiado mt-1 a mt-4 */}
+                <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black"> {/* Cambiado mt-1 a mt-4 */}
                   <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
                   <span className="px-2 py-1">Agregar al carrito</span>
                 </div>

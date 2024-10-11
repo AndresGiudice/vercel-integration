@@ -12,7 +12,7 @@ export default function Home() {
     <div>
       <NavBar />
       <main className={`main ${inter.className}`}>
-      <h1 className="text-center text-4xl font-bold ">
+      <h1 className="text-center text-4xl font-bold text-black">
         Bienvenidos a nuestro <br /> Comercio Electrónico
       </h1>
 
