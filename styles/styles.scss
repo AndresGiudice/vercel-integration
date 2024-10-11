@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap');
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+}
+
+body{
+    font-family: 'Kumbh Sans', sans-serif;
+    background-color: #efefef; // Añadir esta línea
+}
+
+h6{
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+table{
+    font-size: 1rem;
+}
+
+/*  ------------------ NAV ----------------------------*/
+
+nav{
+    height: 15vh;
+    background-color: #A6CE39;
+}
+
+//--------------------MAIN-----------------------------
+
+main{
+    min-height: 85vh;
+    background-color: #efefef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-arrows::-webkit-outer-spin-button,
+.no-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-arrows {
+  -moz-appearance: textfield;
+}

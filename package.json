@@ -6,10 +6,18 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@headlessui/react": "^2.1.9",
+    "@heroicons/react": "^2.1.5",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
     "mongodb": "^6.5.0",
     "next": "latest",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sass": "^1.79.4",
+    "vercel": "^37.4.2"
   },
   "devDependencies": {
     "@types/node": "^20",
