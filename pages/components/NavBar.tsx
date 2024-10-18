@@ -45,13 +45,19 @@ export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const { cart } = useCart();
+  const [showCartDetails, setShowCartDetails] = useState(false);
+  const { cart, clearCart } = useCart();
 
   const handleSubmenuClick = (name: string) => {
     setOpenSubmenu(openSubmenu === name ? null : name);
   };
 
   const totalItems = Object.values(cart).reduce((acc, quantity) => acc + quantity, 0);
+
+  const placeOrder = () => {
+    alert('Pedido realizado con éxito!');
+    clearCart();
+  };
 
   return (
     <header className="bg-[#A6CE39]">
@@ -63,7 +69,11 @@ export default function Example() {
           </Link>
         </div>
         <div className="flex items-center justify-center flex-1 lg:hidden">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900 mx-4">
+          <a
+            href="#"
+            className="text-sm font-semibold leading-6 text-gray-900 mx-4"
+            onClick={() => setShowCartDetails(!showCartDetails)}
+          >
             <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
             {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
           </a>
@@ -144,7 +154,11 @@ export default function Example() {
           </div>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <a
+            href="#"
+            className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={() => setShowCartDetails(!showCartDetails)}
+          >
             <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
             {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
           </a>
@@ -158,7 +172,11 @@ export default function Example() {
               <span className="sr-only">Your Company</span>
               <img alt="" src="evacor-logo.png" className="h-8 w-auto" />
             </Link>
-            <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+            <a
+              href="#"
+              className="text-sm font-semibold leading-6 text-gray-900"
+              onClick={() => setShowCartDetails(!showCartDetails)}
+            >
               <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
               {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
             </a>
@@ -239,13 +257,40 @@ export default function Example() {
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-             
+                  {/* ... */}
                 </a>
               </div>
             </div>
           </div>
         </DialogPanel>
       </Dialog>
+      {showCartDetails && totalItems > 0 && (
+        <div className="p-4 bg-white shadow-lg rounded-lg mt-4">
+          <h2 className="text-lg font-semibold">Carrito de Compras</h2>
+          <ul>
+            {Object.entries(cart).map(([product, quantity]) => (
+              <li key={product} className="flex justify-between py-2">
+                <span>{product}</span>
+                <span>{quantity}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={clearCart}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+            >
+              Vaciar Carrito
+            </button>
+            <button
+              onClick={placeOrder}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg"
+            >
+              Realizar Pedido
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

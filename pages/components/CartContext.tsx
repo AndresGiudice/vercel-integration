@@ -1,25 +1,37 @@
 // components/CartContext.tsx
-import { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-type CartContextType = {
+// Define the type for your props
+interface CartProviderProps {
+  children: ReactNode;
+}
+
+interface CartContextType {
   cart: { [key: string]: number };
-  addToCart: (code: string, quantity: number) => void;
-};
+  addToCart: (product: string, quantity: number) => void;
+  clearCart: () => void;
+}
 
+// Create the context
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+// Create the provider component
+const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<{ [key: string]: number }>({});
 
-  const addToCart = (code: string, quantity: number) => {
+  const addToCart = (product: string, quantity: number) => {
     setCart((prevCart) => ({
       ...prevCart,
-      [code]: (prevCart[code] || 0) + quantity,
+      [product]: (prevCart[product] || 0) + quantity,
     }));
   };
 
+  const clearCart = () => {
+    setCart({});
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider value={{ cart, addToCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );
@@ -32,3 +44,5 @@ export const useCart = () => {
   }
   return context;
 };
+
+export { CartProvider, CartContext };
