@@ -164,6 +164,35 @@ export default function Example() {
           </a>
         </div>
       </nav>
+      {showCartDetails && totalItems > 0 && (
+        <div className="p-4 bg-white shadow-lg mt-4 w-full">
+          <div className="max-w-md mx-auto ">
+            <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
+            <ul className="mt-4">
+              {Object.entries(cart).map(([product, quantity]) => (
+                <li key={product} className="flex justify-between py-2 px-4 border-b">
+                  <span>{product}</span>
+                  <span>{quantity}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-between mt-4 px-4">
+              <button
+                onClick={clearCart}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              >
+                Vaciar Carrito
+              </button>
+              <button
+                onClick={placeOrder}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg"
+              >
+                Realizar Pedido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Dialog open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} className="lg:hidden">
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
@@ -264,33 +293,6 @@ export default function Example() {
           </div>
         </DialogPanel>
       </Dialog>
-      {showCartDetails && totalItems > 0 && (
-        <div className="p-4 bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="text-lg font-semibold">Carrito de Compras</h2>
-          <ul>
-            {Object.entries(cart).map(([product, quantity]) => (
-              <li key={product} className="flex justify-between py-2">
-                <span>{product}</span>
-                <span>{quantity}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex justify-between mt-4">
-            <button
-              onClick={clearCart}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg"
-            >
-              Vaciar Carrito
-            </button>
-            <button
-              onClick={placeOrder}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg"
-            >
-              Realizar Pedido
-            </button>
-          </div>
-        </div>
-      )}
     </header>
   );
 }
