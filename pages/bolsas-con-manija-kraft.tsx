@@ -5,7 +5,7 @@ import clientPromise from "@/lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import NavBar from './components/NavBar';
-import { useCart } from './components/CartContext';
+import { useCart } from '../context/CartContext';
 import '../styles/styles.css';
 
 type ConnectionStatus = {
