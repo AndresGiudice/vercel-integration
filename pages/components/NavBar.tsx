@@ -166,7 +166,7 @@ export default function Example() {
       </nav>
       {showCartDetails && totalItems > 0 && (
         <div className="p-4 bg-white shadow-lg mt-4 w-full">
-          <div className="max-w-md mx-auto ">
+          <div className="max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
             <ul className="mt-4">
               {Object.entries(cart).map(([product, quantity]) => (
@@ -176,16 +176,16 @@ export default function Example() {
                 </li>
               ))}
             </ul>
-            <div className="flex justify-between mt-4 px-4">
+            <div className="flex flex-col sm:flex-row justify-between mt-4 px-4 space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto md:w-auto">
               <button
                 onClick={clearCart}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                className="bg-red-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto "
               >
                 Vaciar Carrito
               </button>
               <button
                 onClick={placeOrder}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                className="bg-green-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
               >
                 Realizar Pedido
               </button>
