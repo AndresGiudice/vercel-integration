@@ -1,7 +1,9 @@
-import { useState } from 'react'
-import Link from 'next/link'
-import { Dialog, DialogPanel } from '@headlessui/react'
-import { Bars3Icon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
+// components/NavBar.tsx
+import { useState } from 'react';
+import Link from 'next/link';
+import { Dialog, DialogPanel } from '@headlessui/react';
+import { Bars3Icon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useCart } from './CartContext';
 
 const bolsasDePapel = [
   {
@@ -31,22 +33,25 @@ const bolsasDePapel = [
       { name: 'Bolsas de Fondo Americano Sulfito', href: '#' },
     ],
   },
-]
+];
 
 const bobinas = [
   { name: 'Bobinas de Papel Obra', href: '#' },
   { name: 'Bobinas de Papel Sulfito', href: '#' },
   { name: 'Bobinas de Papel Kraft', href: '#' },
-]
+];
 
 export default function Example() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [openMenu, setOpenMenu] = useState<string | null>(null)
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const { cart } = useCart();
 
   const handleSubmenuClick = (name: string) => {
-    setOpenSubmenu(openSubmenu === name ? null : name)
-  }
+    setOpenSubmenu(openSubmenu === name ? null : name);
+  };
+
+  const totalItems = Object.values(cart).reduce((acc, quantity) => acc + quantity, 0);
 
   return (
     <header className="bg-[#A6CE39]">
@@ -54,16 +59,13 @@ export default function Example() {
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img
-              alt=""
-              src="evacor-logo.png"
-              className="h-16 w-auto"
-            />
+            <img alt="" src="evacor-logo.png" className="h-16 w-auto" />
           </Link>
         </div>
         <div className="flex items-center justify-center flex-1 lg:hidden">
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900 mx-4">
             <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
+            {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -144,6 +146,7 @@ export default function Example() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
+            {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
           </a>
         </div>
       </nav>
@@ -153,14 +156,11 @@ export default function Example() {
           <div className="flex items-center justify-between">
             <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img
-                alt=""
-                src="evacor-logo.png"
-                className="h-8 w-auto"
-              />
+              <img alt="" src="evacor-logo.png" className="h-8 w-auto" />
             </Link>
             <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
               <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
+              {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
             </a>
             <button
               type="button"
@@ -247,5 +247,5 @@ export default function Example() {
         </DialogPanel>
       </Dialog>
     </header>
-  )
+  );
 }

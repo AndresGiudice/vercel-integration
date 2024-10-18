@@ -4,7 +4,8 @@ import { Inter } from "next/font/google";
 import clientPromise from "@/lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
-import NavBar from './components/NavBar'; // Importar NavBar
+import NavBar from './components/NavBar';
+import { useCart } from './components/CartContext';
 import '../styles/styles.css';
 
 type ConnectionStatus = {
@@ -41,6 +42,7 @@ type Bag = {
 export default function BolsasConManijaKraft({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [KPBagHandles, setKPBagHandles] = useState<Bag[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const { addToCart } = useCart();
 
   useEffect(() => {
     (async () => {
@@ -77,6 +79,10 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
         [code]: numberValue,
       }));
     }
+  };
+
+  const handleAddToCart = (code: string) => {
+    addToCart(code, quantities[code]);
   };
 
   return (
@@ -161,7 +167,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                     <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.code)}>+</button>
                   </div>
                 </div>
-                <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black">
+                <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.code)}>
                   <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
                   <span className="px-2 py-1">Agregar al carrito</span>
                 </div>
