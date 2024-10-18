@@ -145,12 +145,23 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                       type="number"
                       className="w-16 text-center bg-gray-200 no-arrows text-black"
                       value={quantities[bag.code]}
-                      onChange={(e) => handleQuantityChange(bag.code, e.target.value)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === '') {
+                          setQuantities((prevQuantities) => ({
+                            ...prevQuantities,
+                            [bag.code]: 0,
+                          }));
+                        } else {
+                          handleQuantityChange(bag.code, value);
+                        }
+                      }}
+                      onFocus={(e) => e.target.select()}
                     />
                     <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.code)}>+</button>
                   </div>
                 </div>
-                <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black"> {/* Cambiado mt-1 a mt-4 */}
+                <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black">
                   <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
                   <span className="px-2 py-1">Agregar al carrito</span>
                 </div>

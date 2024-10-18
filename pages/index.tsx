@@ -13,7 +13,7 @@ export default function Home() {
       <NavBar />
       <main className={`main ${inter.className}`}>
       <h1 className="text-center text-4xl font-bold text-black">
-        Bienvenidos a nuestro <br /> Comercio Electrónico
+        Bienvenidos a nuestro <br /> Ecommerce
       </h1>
 
        
