@@ -96,6 +96,9 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   return (
     <div>
       <NavBar />
+      <div className="text-center my-4">
+        <h2 className="text-2xl font-bold mt-10">Bolsas con Manija Kraft</h2>
+      </div>
       <main className={`main ${inter.className}`}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
@@ -160,13 +163,13 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                                   <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                                     {bag.code}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-2 py-2 whitespace-nowrap text-center">
+                                  <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                                     {bag.width}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-2 py-2 whitespace-nowrap text-center">
+                                  <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                                     {bag.height}
                                   </td>
-                                  <td className="text-sm text-gray-900 font-light px-2 py-2 whitespace-nowrap text-center">
+                                  <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                                     {bag.depth}
                                   </td>
                                 </tr>
@@ -178,7 +181,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${bag.price.toFixed(2)}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(bag.price)}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
