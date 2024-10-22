@@ -13,6 +13,7 @@ interface CartItem {
 interface CartContextType {
   cart: { [key: string]: CartItem };
   addToCart: (product: string, quantity: number, description: string) => void;
+  removeItem: (product: string) => void; // Add this line
   clearCart: () => void;
 }
 
@@ -31,12 +32,20 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }));
   };
 
+  const removeItem = (product: string) => {
+    setCart((prevCart) => {
+      const newCart = { ...prevCart };
+      delete newCart[product];
+      return newCart;
+    });
+  };
+
   const clearCart = () => {
     setCart({});
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeItem, clearCart }}>
       {children}
     </CartContext.Provider>
   );

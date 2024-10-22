@@ -46,7 +46,7 @@ export default function Example() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [showCartDetails, setShowCartDetails] = useState(false);
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, removeItem } = useCart();
 
   const handleSubmenuClick = (name: string) => {
     setOpenSubmenu(openSubmenu === name ? null : name);
@@ -172,10 +172,17 @@ export default function Example() {
               {Object.entries(cart).map(([product, { quantity, description }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
                   <div>
-                    <span>{product}</span>
-                    <p className="text-sm text-gray-500">{description}</p>
+                    <span className="text-sm">Código {product}</span>
+                    <p className="text-sm text-gray-500">{description}  {quantity}x</p>
                   </div>
-                  <span>{quantity}</span>
+                    <div className="flex items-center">
+                    <button
+                      onClick={() => removeItem(product)}
+                      className="ml-2 text-red-500 hover:text-red-700 text-2xl"
+                    >
+                      &times;
+                    </button>
+                    </div>
                 </li>
               ))}
             </ul>
