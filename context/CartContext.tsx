@@ -1,28 +1,33 @@
 // components/CartContext.tsx
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-// Define the type for your props
 interface CartProviderProps {
   children: ReactNode;
 }
 
+interface CartItem {
+  quantity: number;
+  description: string;
+}
+
 interface CartContextType {
-  cart: { [key: string]: number };
-  addToCart: (product: string, quantity: number) => void;
+  cart: { [key: string]: CartItem };
+  addToCart: (product: string, quantity: number, description: string) => void;
   clearCart: () => void;
 }
 
-// Create the context
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// Create the provider component
 const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-  const [cart, setCart] = useState<{ [key: string]: number }>({});
+  const [cart, setCart] = useState<{ [key: string]: CartItem }>({});
 
-  const addToCart = (product: string, quantity: number) => {
+  const addToCart = (product: string, quantity: number, description: string) => {
     setCart((prevCart) => ({
       ...prevCart,
-      [product]: (prevCart[product] || 0) + quantity,
+      [product]: {
+        quantity: (prevCart[product]?.quantity || 0) + quantity,
+        description,
+      },
     }));
   };
 

@@ -27,7 +27,8 @@ export default async function handler(request, response) {
           price: 1,
           width: 1,
           height: 1,
-          depth: 1
+          depth: 1,
+          description: 1,
         }
       }
     ]).toArray();

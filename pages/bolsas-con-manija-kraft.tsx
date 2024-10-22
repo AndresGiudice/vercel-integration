@@ -32,6 +32,7 @@ try {
 };
 
 type Bag = {
+  description: string;
   code: string;
   price: number;
   width: number;
@@ -82,11 +83,11 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
     }
   };
 
-  const handleAddToCart = (code: string) => {
-    addToCart(code, quantities[code]);
+  const handleAddToCart = (code: string, description: string) => {
+    addToCart(code, quantities[code], description);
   };
 
-  const totalItems = Object.values(cart).reduce((acc, quantity) => acc + quantity, 0);
+  const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
 
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
@@ -108,7 +109,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                 {Object.entries(cart).map(([product, quantity]) => (
                   <li key={product} className="flex justify-between py-2">
                     <span>{product}</span>
-                    <span>{quantity}</span>
+                    <span>{quantity.quantity}</span>
                   </li>
                 ))}
               </ul>
@@ -207,7 +208,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                         <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.code)}>+</button>
                       </div>
                     </div>
-                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.code)}>
+                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.code, bag.description)}>
                       <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
                       <span className="px-2 py-1">Agregar al carrito</span>
                     </div>

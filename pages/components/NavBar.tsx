@@ -52,7 +52,7 @@ export default function Example() {
     setOpenSubmenu(openSubmenu === name ? null : name);
   };
 
-  const totalItems = Object.values(cart).reduce((acc, quantity) => acc + quantity, 0);
+  const totalItems = Object.values(cart).reduce((acc, { quantity }) => acc + quantity, 0);
 
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
@@ -169,9 +169,12 @@ export default function Example() {
           <div className="max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
             <ul className="mt-4">
-              {Object.entries(cart).map(([product, quantity]) => (
+              {Object.entries(cart).map(([product, { quantity, description }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
-                  <span>{product}</span>
+                  <div>
+                    <span>{product}</span>
+                    <p className="text-sm text-gray-500">{description}</p>
+                  </div>
                   <span>{quantity}</span>
                 </li>
               ))}
