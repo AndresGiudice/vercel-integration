@@ -169,20 +169,20 @@ export default function Example() {
           <div className="max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
             <ul className="mt-4">
-              {Object.entries(cart).map(([product, { quantity, description }]) => (
+              {Object.entries(cart).map(([product, { quantity, description, price }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
                   <div>
                     <span className="text-sm">Código {product}</span>
-                    <p className="text-sm text-gray-500">{description}  {quantity}x</p>
+                    <p className="text-sm text-gray-500">{description}  - ${price.toFixed(0)} x{quantity} = ${Number(price * quantity).toFixed(0)}</p>
                   </div>
-                    <div className="flex items-center">
+                  <div className="flex items-center">
                     <button
                       onClick={() => removeItem(product)}
                       className="ml-2 text-red-500 hover:text-red-700 text-2xl"
                     >
                       &times;
                     </button>
-                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
