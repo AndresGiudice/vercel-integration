@@ -46,7 +46,7 @@ export default function Example() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [showCartDetails, setShowCartDetails] = useState(false);
-  const { cart, clearCart, removeItem } = useCart();
+  const { cart, clearCart, removeItem, totalAmount } = useCart(); // Added totalAmount
 
   const handleSubmenuClick = (name: string) => {
     setOpenSubmenu(openSubmenu === name ? null : name);
@@ -172,8 +172,10 @@ export default function Example() {
               {Object.entries(cart).map(([product, { quantity, description, price }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
                   <div>
-                    <span className="text-sm">Código {product}</span>
-                    <p className="text-sm text-gray-500">{description}  - ${price.toFixed(0)} x{quantity} = ${Number(price * quantity).toFixed(0)}</p>
+                    <span className="text-sm">{description} - {product}</span>
+                    <p className="text-sm text-gray-500">
+                        ${price.toFixed(0)} x{quantity} = ${Number(price * quantity).toFixed(0)}
+                    </p>
                   </div>
                   <div className="flex items-center">
                     <button
@@ -186,6 +188,10 @@ export default function Example() {
                 </li>
               ))}
             </ul>
+              
+            <div className="mt-4 text-right">
+              <span className="text-lg font-semibold">Total: ${totalAmount.toFixed(0)}</span>
+            </div>
             <div className="flex flex-col sm:flex-row justify-between mt-4 px-4 space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto md:w-auto">
               <button
                 onClick={clearCart}

@@ -1,5 +1,5 @@
 // components/CartContext.tsx
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useState, useMemo } from 'react';
 
 interface CartProviderProps {
   children: ReactNode;
@@ -8,7 +8,7 @@ interface CartProviderProps {
 interface CartItem {
   quantity: number;
   description: string;
-  price: number; // Add this line
+  price: number;
 }
 
 interface CartContextType {
@@ -16,6 +16,7 @@ interface CartContextType {
   addToCart: (product: string, quantity: number, description: string, price: number) => void;
   removeItem: (product: string) => void;
   clearCart: () => void;
+  totalAmount: number; // Add this line
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,7 +30,7 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       [product]: {
         quantity: (prevCart[product]?.quantity || 0) + quantity,
         description,
-        price, // Añadir esta línea
+        price,
       },
     }));
   };
@@ -46,8 +47,12 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setCart({});
   };
 
+  const totalAmount = useMemo(() => {
+    return Object.values(cart).reduce((acc, item) => acc + item.price * item.quantity, 0);
+  }, [cart]);
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeItem, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeItem, clearCart, totalAmount }}>
       {children}
     </CartContext.Provider>
   );
