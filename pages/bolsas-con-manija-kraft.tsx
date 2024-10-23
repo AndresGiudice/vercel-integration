@@ -97,9 +97,9 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   return (
     <div>
       <NavBar />
-      <div className="text-center my-4">
+      {/* <div className="text-center my-4">
         <h2 className="text-2xl font-bold mt-10">Bolsas con Manija Kraft</h2>
-      </div>
+      </div> */}
       <main className={`main ${inter.className}`}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (

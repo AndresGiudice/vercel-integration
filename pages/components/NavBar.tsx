@@ -62,10 +62,10 @@ export default function Example() {
   return (
     <header className="bg-[#A6CE39]">
       <nav aria-label="Global" className="mx-auto flex items-center justify-between p-6 lg:px-8">
-        <div className="flex lg:flex-1">
+        <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img alt="" src="evacor-logo.png" className="h-16 w-auto" />
+            <img alt="" src="evacor-logo.png" className="h-8 w-auto lg:h-16" />
           </Link>
         </div>
         <div className="flex items-center justify-center flex-1 lg:hidden">
