@@ -12,7 +12,7 @@ const bolsasDePapel = [
     href: '#',
     submenu: [
       { name: 'Bolsas con Manija Kraft', href: '/bolsas-con-manija-kraft' },
-      { name: 'Bolsas con Manija Blancas', href: '#' },
+      { name: 'Bolsas con Manija Blancas', href: '/bolsas-con-manija-blancas' },
       { name: 'Bolsas con Manija Color', href: '#' },
       { name: 'Bolsas con Manija Fantasía', href: '#' },
     ],

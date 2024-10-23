@@ -1,16 +1,23 @@
 import clientPromise from "../../lib/mongodb";
 
 export default async function handler(request, response) {
+  const { collection } = request.query;
+  const validCollections = ['KPBagHandles', 'WPBagHandles'];
+
+  if (!validCollections.includes(collection)) {
+    return response.status(400).json({ error: 'Invalid collection name' });
+  }
+
   try {
     const client = await clientPromise;
     const db = client.db('list4');
-    const collection = db.collection('KPBagHandles');
+    const dbCollection = db.collection(collection);
 
     const order = [
       "00", "0", "1A", "G1", "G1L", "G2", "G3", "G4", "G5", "G7", "B", "BC", "DB", "8A", "8", "9", "10", "11"
     ];
 
-    const results = await collection.aggregate([
+    const results = await dbCollection.aggregate([
       {
         $addFields: {
           orderIndex: {

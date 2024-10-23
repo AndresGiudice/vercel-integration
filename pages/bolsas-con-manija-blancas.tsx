@@ -40,17 +40,17 @@ type Bag = {
   depth: number;
 };
 
-export default function BolsasConManijaKraft({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [KPBagHandles, setKPBagHandles] = useState<Bag[]>([]);
+export default function BolsasConManijaBlancas({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [WPBagHandles, setWPBagHandles] = useState<Bag[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const results = await fetch("/api/list?collection=KPBagHandles");
+      const results = await fetch("/api/list?collection=WPBagHandles");
       const resultsJson = await results.json();
-      setKPBagHandles(resultsJson);
+      setWPBagHandles(resultsJson);
       const initialQuantities = resultsJson.reduce((acc: any, bag: Bag) => {
         acc[bag.code] = 0;
         return acc;
@@ -97,9 +97,6 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   return (
     <div>
       <NavBar />
-      {/* <div className="text-center my-4">
-        <h2 className="text-2xl font-bold mt-10">Bolsas con Manija Kraft</h2>
-      </div> */}
       <main className={`main ${inter.className}`}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
@@ -131,12 +128,12 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
             <div className="flex flex-wrap justify-evenly">
-              {KPBagHandles.map((bag, index) => (
+              {WPBagHandles.map((bag, index) => (
                 <div
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
                 >
-                  <img className="w-72 h-36 object-contain" src="/bolsas-kraft.jpg" alt="Bag Image" />
+                  <img className="w-72 h-36 object-contain" src="/bolsas-blancas.jpg" alt="Bag Image" />
                   <div className="container mx-auto p-2">
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
