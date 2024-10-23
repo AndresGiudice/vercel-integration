@@ -1,3 +1,4 @@
+
 // components/NavBar.tsx
 import { useState } from 'react';
 import Link from 'next/link';
@@ -61,20 +62,20 @@ export default function Example() {
 
   return (
     <header className="bg-[#A6CE39]">
-      <nav aria-label="Global" className="mx-auto flex items-center justify-between p-6 lg:px-8">
+      <nav aria-label="Global" className="mx-auto flex items-center justify-between p-2 lg:px-8">
         <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img alt="" src="evacor-logo.png" className="h-8 w-auto lg:h-16" />
+            <img alt="" src="evacor-logo.png" className="h-6 w-auto lg:h-16" />
           </Link>
         </div>
-        <div className="flex items-center justify-center flex-1 lg:hidden">
+        <div className="flex  items-center justify-center flex-1 lg:hidden">
           <a
             href="#"
-            className="text-sm font-semibold leading-6 text-gray-900 mx-4"
+            className="text-sm font-semibold leading-6 text-gray-900 mr-10 "
             onClick={() => setShowCartDetails(!showCartDetails)}
           >
-            <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
+            <i className="fas fa-shopping-cart cart-icon text-xl"></i>
             {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
           </a>
         </div>
