@@ -214,16 +214,16 @@ export default function Example() {
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <Link href="/" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.0">
               <span className="sr-only">Your Company</span>
-              <img alt="" src="evacor-logo.png" className="h-8 w-auto" />
+              <img alt="" src="evacor-logo.png" className="h-6 w-auto" />
             </Link>
             <a
               href="#"
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-gray-900 mr-6"
               onClick={() => setShowCartDetails(!showCartDetails)}
             >
-              <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
+              <i className="fas fa-shopping-cart cart-icon text-xl"></i>
               {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
             </a>
             <button
