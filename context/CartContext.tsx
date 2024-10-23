@@ -1,5 +1,5 @@
 // components/CartContext.tsx
-import React, { createContext, ReactNode, useContext, useState, useMemo } from 'react';
+import React, { createContext, ReactNode, useContext, useState, useEffect } from 'react';
 
 interface CartProviderProps {
   children: ReactNode;
@@ -16,13 +16,24 @@ interface CartContextType {
   addToCart: (product: string, quantity: number, description: string, price: number) => void;
   removeItem: (product: string) => void;
   clearCart: () => void;
-  totalAmount: number; // Add this line
+  totalAmount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<{ [key: string]: CartItem }>({});
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (product: string, quantity: number, description: string, price: number) => {
     setCart((prevCart) => ({
@@ -47,9 +58,7 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setCart({});
   };
 
-  const totalAmount = useMemo(() => {
-    return Object.values(cart).reduce((acc, item) => acc + item.price * item.quantity, 0);
-  }, [cart]);
+  const totalAmount = Object.values(cart).reduce((acc, { quantity, price }) => acc + quantity * price, 0);
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeItem, clearCart, totalAmount }}>

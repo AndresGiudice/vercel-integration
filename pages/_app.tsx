@@ -1,12 +1,15 @@
 // pages/_app.tsx
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { CartProvider } from "../context/CartContext";
+import { CartProvider } from '../context/CartContext';
+import '../styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
+import { AppProps } from 'next/app';
+
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <CartProvider>
       <Component {...pageProps} />
     </CartProvider>
   );
 }
+
+export default MyApp;

@@ -136,7 +136,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
                 >
-                  <img className="w-72 h-36 object-contain" src="/bolsas-kraft.jpg" alt="Bag Image" />
+                  <img className="w-72 h-36 object-contain" src="/bolsas-kraft.jpg" alt="Bolsa con Manija Kraft" />
                   <div className="container mx-auto p-2">
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
