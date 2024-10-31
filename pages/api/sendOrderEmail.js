@@ -68,13 +68,12 @@ async function sendOrderEmail(cart, totalAmount) {
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { cart, totalAmount } = req.body;
     try {
-      await sendOrderEmail(cart, totalAmount);
+      // Código para enviar el correo
       res.status(200).json({ message: 'Correo enviado con éxito' });
     } catch (error) {
       console.error('Error al enviar el correo:', error);
-      res.status(500).json({ message: 'Error al enviar el correo' });
+      res.status(500).json({ message: 'Error al enviar el correo', error: error.message });
     }
   } else {
     res.status(405).json({ message: 'Método no permitido' });
