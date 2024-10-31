@@ -30,6 +30,7 @@ export default async function handler(request, response) {
       },
       {
         $project: {
+          systemCode: 1,
           code: 1,
           price: 1,
           width: 1,
@@ -39,6 +40,7 @@ export default async function handler(request, response) {
         }
       }
     ]).toArray();
+
 
     response.status(200).json(results);
   } catch (e) {

@@ -9,11 +9,12 @@ interface CartItem {
   quantity: number;
   description: string;
   price: number;
+  systemCode?: string;
 }
 
 interface CartContextType {
   cart: { [key: string]: CartItem };
-  addToCart: (product: string, quantity: number, description: string, price: number) => void;
+  addToCart: (product: string, quantity: number, description: string, price: number, systemCode: string) => void;
   removeItem: (product: string) => void;
   clearCart: () => void;
   totalAmount: number;
@@ -35,13 +36,14 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product: string, quantity: number, description: string, price: number) => {
+  const addToCart = (product: string, quantity: number, description: string, price: number, systemCode: string) => {
     setCart((prevCart) => ({
       ...prevCart,
       [product]: {
         quantity: (prevCart[product]?.quantity || 0) + quantity,
         description,
         price,
+        systemCode, // Asegúrate de incluir systemCode aquí
       },
     }));
   };

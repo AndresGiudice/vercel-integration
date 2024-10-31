@@ -1,10 +1,21 @@
-
 // components/NavBar.tsx
 import { useState } from 'react';
 import Link from 'next/link';
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { Bars3Icon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useCart } from '../../context/CartContext';
+import axios from 'axios';
+
+const placeOrder = async (cart: any, totalAmount: number, clearCart: () => void) => {
+  try {
+    await axios.post('/api/sendOrderEmail', { cart, totalAmount });
+    alert('Pedido realizado con éxito!');
+    clearCart();
+  } catch (error) {
+    console.error('Error al enviar el correo:', error);
+    alert('Hubo un error al realizar el pedido. Por favor, inténtalo de nuevo.');
+  }
+};
 
 const bolsasDePapel = [
   {
@@ -55,9 +66,8 @@ export default function Example() {
 
   const totalItems = Object.values(cart).reduce((acc, { quantity }) => acc + quantity, 0);
 
-  const placeOrder = () => {
-    alert('Pedido realizado con éxito!');
-    clearCart();
+  const handlePlaceOrder = () => {
+    placeOrder(cart, totalAmount, clearCart);
   };
 
   return (
@@ -201,8 +211,9 @@ export default function Example() {
                 Vaciar Carrito
               </button>
               <button
-                onClick={placeOrder}
+                onClick={handlePlaceOrder}
                 className="bg-green-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
+
               >
                 Realizar Pedido
               </button>
