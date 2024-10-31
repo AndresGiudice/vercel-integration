@@ -6,6 +6,7 @@ interface CartProviderProps {
 }
 
 interface CartItem {
+  product: string; // Añadido
   quantity: number;
   description: string;
   price: number;
@@ -39,19 +40,20 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const addToCart = (product: string, quantity: number, description: string, price: number, systemCode: string) => {
     setCart((prevCart) => ({
       ...prevCart,
-      [product]: {
-        quantity: (prevCart[product]?.quantity || 0) + quantity,
+      [systemCode]: {
+        product, // Asegúrate de pasar el producto aquí
+        quantity: (prevCart[systemCode]?.quantity || 0) + quantity,
         description,
         price,
-        systemCode, // Asegúrate de incluir systemCode aquí
+        systemCode,
       },
     }));
   };
 
-  const removeItem = (product: string) => {
+  const removeItem = (systemCode: string) => {
     setCart((prevCart) => {
       const newCart = { ...prevCart };
-      delete newCart[product];
+      delete newCart[systemCode];
       return newCart;
     });
   };
