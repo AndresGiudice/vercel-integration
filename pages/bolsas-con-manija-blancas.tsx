@@ -38,6 +38,7 @@ type Bag = {
   width: number;
   height: number;
   depth: number;
+  systemCode: string; 
 };
 
 export default function BolsasConManijaBlancas({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -83,8 +84,8 @@ export default function BolsasConManijaBlancas({ isConnected }: InferGetServerSi
     }
   };
 
-  const handleAddToCart = (code: string, description: string, price: number) => {
-    addToCart(code, quantities[code], description, price);
+  const handleAddToCart = (code: string, description: string, price: number, systemCode: string) => {
+    addToCart(code, quantities[code], description, price, systemCode);
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
@@ -205,7 +206,7 @@ export default function BolsasConManijaBlancas({ isConnected }: InferGetServerSi
                         <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.code)}>+</button>
                       </div>
                     </div>
-                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.code, bag.description, bag.price)}>
+                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.code, bag.description, bag.price, bag.systemCode)}>
                       <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
                       <span className="px-2 py-1">Agregar al carrito</span>
                     </div>

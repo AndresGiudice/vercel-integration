@@ -38,7 +38,7 @@ type Bag = {
   width: number;
   height: number;
   depth: number;
-  systemCode: string;
+  systemCode: string; // Add systemCode here
 };
 
 export default function BolsasConManijaKraft({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -98,9 +98,6 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   return (
     <div>
       <NavBar />
-      {/* <div className="text-center my-4">
-        <h2 className="text-2xl font-bold mt-10">Bolsas con Manija Kraft</h2>
-      </div> */}
       <main className={`main ${inter.className}`}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
@@ -137,7 +134,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
                 >
-                  <img className="w-72 h-36 object-contain" src="/bolsas-kraft.jpg" alt="Bolsa con Manija Kraft" />
+                  <img className="w-72 h-36 object-contain" src="/bolsas-kraft.jpg" alt="Bolsa con Manija kraft" />
                   <div className="container mx-auto p-2">
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
