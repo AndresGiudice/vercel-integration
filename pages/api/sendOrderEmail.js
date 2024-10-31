@@ -80,3 +80,14 @@ export default async function handler(req, res) {
     res.status(405).json({ message: 'Método no permitido' });
   }
 }
+
+const placeOrder = async (cart, totalAmount, clearCart) => {
+  try {
+    await axios.post('/api/sendOrderEmail', { cart, totalAmount });
+    alert('Pedido realizado con éxito!');
+    clearCart();
+  } catch (error) {
+    console.error('Error al enviar el correo:', error);
+    alert(`Hubo un error al realizar el pedido. Por favor, inténtalo de nuevo. Detalles del error: ${error.message}`);
+  }
+};
