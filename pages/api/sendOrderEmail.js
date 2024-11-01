@@ -68,25 +68,15 @@ async function sendOrderEmail(cart, totalAmount) {
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
+    const { cart, totalAmount } = req.body;
     try {
-      // Código para enviar el correo
+      await sendOrderEmail(cart, totalAmount);
       res.status(200).json({ message: 'Correo enviado con éxito' });
     } catch (error) {
       console.error('Error al enviar el correo:', error);
-      res.status(500).json({ message: 'Error al enviar el correo', error: error.message });
+      res.status(500).json({ message: 'Error al enviar el correo' });
     }
   } else {
     res.status(405).json({ message: 'Método no permitido' });
   }
 }
-
-const placeOrder = async (cart, totalAmount, clearCart) => {
-  try {
-    await axios.post('/api/sendOrderEmail', { cart, totalAmount });
-    alert('Pedido realizado con éxito!');
-    clearCart();
-  } catch (error) {
-    console.error('Error al enviar el correo:', error);
-    alert(`Hubo un error al realizar el pedido. Por favor, inténtalo de nuevo. Detalles del error: ${error.message}`);
-  }
-};
