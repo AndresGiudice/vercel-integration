@@ -49,7 +49,7 @@ async function sendOrderEmail(cart, totalAmount) {
 
   // Configurar el correo electrónico
   const mailOptions = {
-    from: 'andres.evaco@gmail.com',
+    from: 'andres.evacor@gmail.com',
     to: 'andresgiudice94@gmail.com',
     subject: 'Detalle del Pedido',
     text: 'Adjunto encontrarás el detalle de tu pedido.',
