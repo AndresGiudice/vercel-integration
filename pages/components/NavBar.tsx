@@ -71,7 +71,7 @@ export default function Example() {
   };
 
   return (
-    <header className="bg-[#A6CE39]">
+    <header className="fixed top-0 left-0 right-0 bg-[#A6CE39] z-50">
       <nav aria-label="Global" className="mx-auto flex items-center justify-between p-2 lg:px-8">
         <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
