@@ -98,7 +98,7 @@ export default function BolsasConManijaBlancas({ isConnected }: InferGetServerSi
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '6rem'}}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '7rem'}}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
