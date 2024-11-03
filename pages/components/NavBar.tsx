@@ -79,7 +79,7 @@ export default function Example() {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-[#A6CE39] z-50">
-      <nav aria-label="Global" className="mx-auto flex items-center justify-between p-2 lg:px-8">
+      <nav aria-label="Global" className="mx-auto flex items-center justify-between h-14 lg:h-16 p-2 lg:px-8">
         <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
@@ -102,7 +102,7 @@ export default function Example() {
             onClick={handleMobileMenuToggle}
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           >
-            <span className="sr-only">Open main menu</span>
+           
             {mobileMenuOpen ? (
               <XMarkIcon aria-hidden="true" className="h-6 w-6" />
             ) : (
@@ -234,9 +234,9 @@ export default function Example() {
       )}
       <Dialog open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} className="lg:hidden">
         <div className="fixed inset-0 z-10" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 mt-16">
+        <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 mt-10">
          
-          <div className="mt-8 flow-root">
+          <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 <div className="-mx-3">

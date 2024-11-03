@@ -101,7 +101,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
       {/* <div className="text-center my-4">
         <h2 className="text-2xl font-bold mt-10">Bolsas con Manija Kraft</h2>
       </div> */}
-      <main className={`main ${inter.className}`} style={{ marginTop: '7rem'}}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
