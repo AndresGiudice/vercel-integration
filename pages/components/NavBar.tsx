@@ -180,10 +180,10 @@ export default function Example() {
           <div className="max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
             <ul className="mt-4">
-              {Object.entries(cart).map(([product, { quantity, description, price }]) => (
+              {Object.entries(cart).map(([product, { quantity, description, price, code }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
                   <div>
-                    <span className="text-sm">{description} - {product}</span>
+                    <span className="text-sm">{description} - {code}</span>
                     <p className="text-sm text-gray-500">
                         ${price.toFixed(0)} x{quantity} = ${Number(price * quantity).toFixed(0)}
                     </p>

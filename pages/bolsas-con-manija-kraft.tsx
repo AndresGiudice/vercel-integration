@@ -85,7 +85,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   };
 
   const handleAddToCart = (code: string, description: string, price: number, systemCode: string) => {
-    addToCart(code, quantities[code], description, price, systemCode);
+    addToCart(code, quantities[code], description, price, systemCode, code);
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
