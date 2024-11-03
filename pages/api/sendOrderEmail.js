@@ -9,7 +9,7 @@ async function sendOrderEmail(cart, totalAmount) {
   // Agregar encabezados
   worksheet.columns = [
     { header: 'Código', key: 'systemCode', width: 10 },
-    { header: 'Producto', key: 'product', width: 30 },
+    { header: 'Producto', key: 'code', width: 30 },
     { header: 'Descripción', key: 'description', width: 30 },
     { header: 'Cantidad', key: 'quantity', width: 10 },
     { header: 'Precio Unitario', key: 'price', width: 15 },
@@ -19,10 +19,11 @@ async function sendOrderEmail(cart, totalAmount) {
   // Agregar filas
   Object.entries(cart).forEach(([product, item]) => {
     console.log(`Item: ${JSON.stringify(item)}`); // Agrega este log para depurar
-    const { systemCode, description, quantity, price } = item;
-    console.log(`systemCode: ${systemCode}, product: ${product}`); // Agrega este log para depurar
+    const { systemCode, code, description, quantity, price } = item;
+    console.log(`systemCode: ${systemCode}, product: ${product}, code: ${code}`); // Agrega este log para depurar
     worksheet.addRow({
       systemCode,
+      code,
       product,
       description,
       quantity,
