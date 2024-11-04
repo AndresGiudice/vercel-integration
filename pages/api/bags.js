@@ -6,12 +6,15 @@ export default async function handler(request, response) {
     const db = mongoClient.db("list4");   
     const kpBagHandlesCollection = db.collection("KPBagHandles");
     const wpBagHandlesCollection = db.collection("WPBagHandles");
+    const cpBagHandlesCollection = db.collection("CPBagHandles");
     const kpBagHandles = await kpBagHandlesCollection.find({}).toArray();
     const wpBagHandles = await wpBagHandlesCollection.find({}).toArray();
+    const cpBagHandles = await cpBagHandlesCollection.find({}).toArray();
 
     response.status(200).json({ 
       kpBagHandles: kpBagHandles, 
-      wpBagHandles: wpBagHandles
+      wpBagHandles: wpBagHandles,
+      cpBagHandles: cpBagHandles,
     });
 
   } catch (e) {

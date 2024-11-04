@@ -24,7 +24,7 @@ const bolsasDePapel = [
     submenu: [
       { name: 'Bolsas con Manija Kraft', href: '/bolsas-con-manija-kraft' },
       { name: 'Bolsas con Manija Blancas', href: '/bolsas-con-manija-blancas' },
-      { name: 'Bolsas con Manija Color', href: '#' },
+      { name: 'Bolsas con Manija Color', href: '/bolsas-con-manija-color' },
       { name: 'Bolsas con Manija Fantasía', href: '#' },
     ],
   },
@@ -83,7 +83,7 @@ export default function Example() {
         <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img alt="" src="evacor-logo.png" className="h-6 w-auto lg:h-16" />
+            <img alt="" src="evacor-logo.png" className="h-6 w-auto lg:h-10" />
           </Link>
         </div>
         <div className="flex  items-center justify-center flex-1 lg:hidden">
@@ -190,13 +190,13 @@ export default function Example() {
         <div className="p-4 bg-white shadow-lg mt-4 w-full">
           <div className="max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
-            <ul className="mt-4">
+            <ul className="mt-4 max-h-60 overflow-y-auto">
               {Object.entries(cart).map(([product, { quantity, description, price, code }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
                   <div>
                     <span className="text-sm">{description} - {code}</span>
                     <p className="text-sm text-gray-500">
-                        ${price.toFixed(0)} x{quantity} = ${Number(price * quantity).toFixed(0)}
+                      ${price.toFixed(0)} x{quantity} = ${Number(price * quantity).toFixed(0)}
                     </p>
                   </div>
                   <div className="flex items-center">
@@ -299,14 +299,7 @@ export default function Example() {
                   )}
                 </div>
               </div>
-              <div className="py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  {/* ... */}
-                </a>
-              </div>
+        
             </div>
           </div>
         </DialogPanel>
