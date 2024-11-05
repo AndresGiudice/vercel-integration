@@ -7,11 +7,12 @@
     list-style: none;
     text-decoration: none;
     color: black;
+   
 }
 
 body{
     font-family: 'Kumbh Sans', sans-serif;
-    background-color: #efefef; // Añadir esta línea
+    background-color: #efefef;
 }
 
 h6{
@@ -34,10 +35,10 @@ nav{
 
 main{
     min-height: 85vh;
-    background-color: #efefef;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #efefef;
 }
 
 .no-arrows::-webkit-outer-spin-button,
@@ -47,5 +48,6 @@ main{
 }
 
 .no-arrows {
+  appearance: none;
   -moz-appearance: textfield;
 }

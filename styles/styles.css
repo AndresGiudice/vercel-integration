@@ -31,10 +31,10 @@ nav {
 
 main {
   min-height: 85vh;
-  background-color: #efefef;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #efefef;
 }
 
 .no-arrows::-webkit-outer-spin-button,
@@ -44,5 +44,7 @@ main {
 }
 
 .no-arrows {
+  -webkit-appearance: none;
+          appearance: none;
   -moz-appearance: textfield;
 }/*# sourceMappingURL=styles.css.map */
