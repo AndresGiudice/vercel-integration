@@ -2,7 +2,7 @@ import clientPromise from "../../lib/mongodb";
 
 export default async function handler(request, response) {
   const { collection } = request.query;
-  const validCollections = ['KPBagHandles', 'WPBagHandles', 'CPBagHandles'];
+  const validCollections = ['KPBagHandles', 'WPBagHandles', 'CPBagHandles', 'PartyBags' ];
 
   if (!validCollections.includes(collection)) {
     return response.status(400).json({ error: 'Invalid collection name' });

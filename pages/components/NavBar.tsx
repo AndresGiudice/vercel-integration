@@ -32,7 +32,7 @@ const bolsasDePapel = [
     name: 'Bolsas de Fondo Cuadrado sin Manija',
     href: '#',
     submenu: [
-      { name: 'Bolsas Fast Food "Cotillón" Estándar', href: '#' },
+      { name: 'Bolsas Fast Food "Cotillón" Estándar', href: 'bolsas-fast-food-color' },
       { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
       { name: 'Bolsas Fast Food Kraft', href: '#' },
     ],

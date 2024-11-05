@@ -7,14 +7,17 @@ export default async function handler(request, response) {
     const kpBagHandlesCollection = db.collection("KPBagHandles");
     const wpBagHandlesCollection = db.collection("WPBagHandles");
     const cpBagHandlesCollection = db.collection("CPBagHandles");
+    const partyBagsCollection = db.collection("PartyBags");
     const kpBagHandles = await kpBagHandlesCollection.find({}).toArray();
     const wpBagHandles = await wpBagHandlesCollection.find({}).toArray();
     const cpBagHandles = await cpBagHandlesCollection.find({}).toArray();
+    const partyBags = await partyBagsCollection.find({}).toArray();
 
     response.status(200).json({ 
       kpBagHandles: kpBagHandles, 
       wpBagHandles: wpBagHandles,
       cpBagHandles: cpBagHandles,
+      partyBags: partyBags
     });
 
   } catch (e) {
