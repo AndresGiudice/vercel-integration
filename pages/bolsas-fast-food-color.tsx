@@ -142,10 +142,10 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
             </div>
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
-            <div className="flex flex-wrap justify-evenly">
-              {PartyBags.map((bag, index, description) => (
+            <div className="flex flex-wrap justify-center items-center">
+              {PartyBags.map((bag, index) => (
                 <div
-                  className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
+                  className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm ml-16"
                   key={index}
                 >
                  <img className="w-72 h-36 object-contain" src={`/${bag.description}.png`} alt={bag.description} />
