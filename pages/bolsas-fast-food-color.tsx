@@ -32,6 +32,7 @@ try {
 };
 
 type Bag = {
+  quantity: any;
   description: string;
   code: string;
   price: number;
@@ -43,7 +44,6 @@ type Bag = {
 
 export default function BolsasFastFoodColor({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [PartyBags, setPartyBags] = useState<Bag[]>([]);
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
 
@@ -52,49 +52,52 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
       const results = await fetch("/api/list?collection=PartyBags");
       const resultsJson = await results.json();
       setPartyBags(resultsJson);
-      const initialQuantities = resultsJson.reduce((acc: any, bag: Bag) => {
-        acc[bag.code] = 0;
-        return acc;
-      }, {});
-      setQuantities(initialQuantities);
     })();
   }, []);
 
-  const handleIncrement = (code: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [code]: parseFloat((prevQuantities[code] + 1).toFixed(2)),
-    }));
+  const handleIncrement = (index: number) => {
+    setPartyBags((prevBags) => {
+      const newBags = [...prevBags];
+      newBags[index].quantity = (newBags[index].quantity || 0) + 1;
+      return newBags;
+    });
   };
 
-  const handleDecrement = (code: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [code]: parseFloat(Math.max(prevQuantities[code] - 1, 0).toFixed(2)),
-    }));
+  const handleDecrement = (index: number) => {
+    setPartyBags((prevBags) => {
+      const newBags = [...prevBags];
+      newBags[index].quantity = Math.max((newBags[index].quantity || 0) - 1, 0);
+      return newBags;
+    });
   };
 
-  const handleQuantityChange = (code: string, value: string) => {
-    const normalizedValue = value.replace(',', '.');
-    const numberValue = parseFloat(normalizedValue);
+  const handleQuantityChange = (index: number, value: string) => {
+    const numberValue = parseInt(value, 10);
     if (!isNaN(numberValue) && numberValue >= 0) {
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [code]: numberValue,
-      }));
+      setPartyBags((prevBags) => {
+        const newBags = [...prevBags];
+        newBags[index].quantity = numberValue;
+        return newBags;
+      });
     }
   };
 
-  const handleAddToCart = (code: string, description: string, price: number, systemCode: string) => {
-    addToCart(code, quantities[code], description, price, systemCode, code);
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [code]: 0,
-    }));
-    // Asegúrate de que showCartDetails no se cambie aquí
+  const handleAddToCart = (index: number) => {
+    const bag = PartyBags[index];
+    let finalPrice = bag.price;
+    if (bag.quantity >= 100) {
+      finalPrice = bag.price * 0.9; // Apply 10% discount
+    }
+    addToCart(bag.code, bag.quantity, bag.description, finalPrice, bag.systemCode, bag.code);
+    setPartyBags((prevBags) => {
+      const newBags = [...prevBags];
+      newBags[index].quantity = 0;
+      return newBags;
+    });
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
+  const totalPrice = Object.values(cart).reduce((acc, item) => acc + item.quantity * item.price, 0);
 
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
@@ -118,10 +121,10 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
               <h2 className="text-lg font-semibold">Carrito de Compras</h2>
               <ul>
-                {Object.entries(cart).map(([product, quantity]) => (
+                {Object.entries(cart).map(([product, item]) => (
                   <li key={product} className="flex justify-between py-2">
                     <span>{product}</span>
-                    <span>{quantity.quantity}</span>
+                    <span>{item.quantity}</span>
                   </li>
                 ))}
               </ul>
@@ -138,6 +141,9 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
                 >
                   Realizar Pedido
                 </button>
+              </div>
+              <div className="mt-4">
+                <p className="text-lg font-semibold">Total: ${totalPrice.toFixed(2)}</p>
               </div>
             </div>
           )}
@@ -199,24 +205,25 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
                       <div className="flex items-center justify-between">
-                        <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(bag.code)}>-</button>
+                        <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(index)}>-</button>
                         <input
                           type="number"
-                          step="0.01"
                           className="w-16 text-center bg-gray-200 no-arrows text-black"
-                          value={quantities[bag.code]}
+                          value={bag.quantity || 0}
                           onChange={(e) => {
                             const value = e.target.value;
-                            if (/^\d*\.?\d*$/.test(value)) {
-                              handleQuantityChange(bag.code, value);
+                            if (value === '') {
+                              handleQuantityChange(index, '0');
+                            } else {
+                              handleQuantityChange(index, value);
                             }
                           }}
                           onFocus={(e) => e.target.select()}
                         />
-                        <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.code)}>+</button>
+                        <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(index)}>+</button>
                       </div>
                     </div>
-                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.code, bag.description, bag.price, bag.systemCode)}>
+                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(index)}>
                       <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
                       <span className="px-2 py-1">Agregar al carrito</span>
                     </div>
