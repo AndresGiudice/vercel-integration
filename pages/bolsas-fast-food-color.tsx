@@ -103,12 +103,10 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
     const totalQuantity = Object.values(newCart).reduce((acc, item) => acc + item.quantity, 0);
   
     // Aplica el descuento si el total de unidades es mayor o igual a 100
-    Object.keys(newCart).forEach((key) => {
-      newCart[key].price = totalQuantity >= 100 ? newCart[key].price * 0.9 : newCart[key].price;
-    });
+    const finalPrice = totalQuantity >= 100 ? bag.price * 0.9 : bag.price;
   
     // Añade el producto al carrito con el precio final calculado
-    addToCart(bag.code, bag.quantity, bag.description, newCart[bag.code].price, bag.systemCode, bag.code);
+    addToCart(bag.code, bag.quantity, bag.description, finalPrice, bag.systemCode, bag.code);
   
     // Actualiza el estado de las bolsas
     setPartyBags((prevBags) => {
