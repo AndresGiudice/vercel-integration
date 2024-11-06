@@ -46,7 +46,6 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
   const [PartyBags, setPartyBags] = useState<Bag[]>([]);
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
-  const [totalQuantity, setTotalQuantity] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -55,11 +54,6 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
       setPartyBags(resultsJson);
     })();
   }, []);
-
-  useEffect(() => {
-    const total = PartyBags.reduce((acc, bag) => acc + bag.quantity, 0);
-    setTotalQuantity(total);
-  }, [PartyBags]);
 
   const handleIncrement = (index: number) => {
     setPartyBags((prevBags) => {
@@ -90,39 +84,13 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
 
   const handleAddToCart = (index: number) => {
     const bag = PartyBags[index];
-    const newCart = { ...cart };
-  
-    // Agrega la cantidad actual del producto al carrito temporalmente para calcular el total
-    newCart[bag.code] = {
-      product: bag.description,
-      ...bag,
-      quantity: (newCart[bag.code]?.quantity || 0) + bag.quantity,
-    };
-  
-    // Calcula el total de unidades en el carrito incluyendo la cantidad actual del producto
-    const totalQuantity = Object.values(newCart).reduce((acc, item) => acc + item.quantity, 0);
-  
-    // Aplica el descuento si el total de unidades es mayor o igual a 100
-    const finalPrice = totalQuantity >= 100 ? bag.price * 0.9 : bag.price;
-  
-    // Añade el producto al carrito con el precio final calculado
+    let finalPrice = bag.price;
     addToCart(bag.code, bag.quantity, bag.description, finalPrice, bag.systemCode, bag.code);
-  
-    // Actualiza el estado de las bolsas
     setPartyBags((prevBags) => {
       const newBags = [...prevBags];
       newBags[index].quantity = 0;
       return newBags;
     });
-  };
-  
-  const calculateTotalQuantity = () => {
-    return Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
-  };
-  
-  const calculateFinalPrice = (price: number) => {
-    const totalQuantity = calculateTotalQuantity();
-    return totalQuantity >= 100 ? price * 0.9 : price;
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
@@ -229,7 +197,8 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                      <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateFinalPrice(bag.price))}</span></p>  </div>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(bag.price)}</span></p>
+                  </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
                       <div className="flex items-center justify-between">

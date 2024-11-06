@@ -53,6 +53,13 @@ const bobinas = [
   { name: 'Bobinas de Papel Kraft', href: '#' },
 ];
 
+const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number) => {
+  if (code === 'Fb3' && totalQuantity >= 100) {
+    return price * 0.9;
+  }
+  return price;
+};
+
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -76,6 +83,16 @@ export default function Example() {
       setShowCartDetails(false);
     }
   };
+
+  const totalQuantityByCode = (code: string) => {
+    return Object.values(cart).reduce((acc, item) => item.code === code ? acc + item.quantity : acc, 0);
+  };
+
+  const totalAmountWithDiscount = Object.entries(cart).reduce((acc, [_, { quantity, description, price, code }]) => {
+    const totalQuantity = totalQuantityByCode(code);
+    const discountedPrice = calculateDiscountedPrice(code, totalQuantity, price);
+    return acc + discountedPrice * quantity;
+  }, 0);
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-[#A6CE39] z-50">
@@ -196,7 +213,7 @@ export default function Example() {
                   <div>
                     <span className="text-sm">{description} - {code}</span>
                     <p className="text-sm text-gray-500">
-                      ${price.toFixed(0)} x{quantity} = ${Number(price * quantity).toFixed(0)}
+                      ${calculateDiscountedPrice(code, totalQuantityByCode(code), price).toFixed(0)} x{quantity} = ${Number(calculateDiscountedPrice(code, totalQuantityByCode(code), price) * quantity).toFixed(0)}
                     </p>
                   </div>
                   <div className="flex items-center">
@@ -212,7 +229,7 @@ export default function Example() {
             </ul>
               
             <div className="mt-4 text-right">
-              <span className="text-lg font-semibold">Total: ${totalAmount.toFixed(0)}</span>
+              <span className="text-lg font-semibold">Total: ${totalAmountWithDiscount.toFixed(0)}</span>
             </div>
             <div className="flex flex-col sm:flex-row justify-between mt-4 px-4 space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto md:w-auto">
               <button
