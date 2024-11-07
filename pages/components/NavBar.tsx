@@ -79,9 +79,6 @@ export default function Example() {
 
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!mobileMenuOpen);
-    if (showCartDetails) {
-      setShowCartDetails(false);
-    }
   };
 
   const totalQuantityByCode = (code: string) => {
@@ -93,6 +90,10 @@ export default function Example() {
     const discountedPrice = calculateDiscountedPrice(code, totalQuantity, price);
     return acc + discountedPrice * quantity;
   }, 0);
+
+  const toggleCartDetails = () => {
+    setShowCartDetails(!showCartDetails);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-[#A6CE39] z-50">
@@ -107,7 +108,7 @@ export default function Example() {
           <a
             href="#"
             className="text-sm font-semibold leading-6 text-gray-900 mr-10 "
-            onClick={() => setShowCartDetails(!showCartDetails)}
+            onClick={toggleCartDetails}
           >
             <i className="fas fa-shopping-cart cart-icon text-xl"></i>
             {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
@@ -119,7 +120,6 @@ export default function Example() {
             onClick={handleMobileMenuToggle}
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           >
-           
             {mobileMenuOpen ? (
               <XMarkIcon aria-hidden="true" className="h-6 w-6" />
             ) : (
@@ -196,7 +196,7 @@ export default function Example() {
           <a
             href="#"
             className="text-sm font-semibold leading-6 text-gray-900"
-            onClick={() => setShowCartDetails(!showCartDetails)}
+            onClick={toggleCartDetails}
           >
             <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
             {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
