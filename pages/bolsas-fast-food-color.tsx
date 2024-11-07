@@ -42,6 +42,13 @@ type Bag = {
   systemCode: string; 
 };
 
+const calculateDiscountedPrice = (bag: Bag, totalQuantity: number) => {
+  if (bag.code === "Fb3" && totalQuantity >= 100) {
+    return Math.round(bag.price * 0.9);
+  }
+  return Math.round(bag.price);
+};
+
 export default function BolsasFastFoodColor({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [PartyBags, setPartyBags] = useState<Bag[]>([]);
   const { addToCart, cart, clearCart } = useCart();
@@ -95,6 +102,13 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = Object.values(cart).reduce((acc, item) => acc + item.quantity * item.price, 0);
+
+  const totalFb3Quantity = Object.values(cart).reduce((acc, item) => {
+    if (item.code === "Fb3") {
+      return acc + item.quantity;
+    }
+    return acc;
+  }, 0);
 
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
@@ -197,7 +211,7 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(bag.price)}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${calculateDiscountedPrice(bag, totalFb3Quantity)}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
