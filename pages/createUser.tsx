@@ -31,6 +31,19 @@ const CreateUser = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    const response = await fetch('/api/forgotPassword', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ adminEmail }),
+    });
+
+    const data = await response.json();
+    setMessage(data.message);
+  };
+
   const handleUserCreation = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -43,7 +56,11 @@ const CreateUser = () => {
     });
 
     const data = await response.json();
-    setMessage(data.message);
+    if (data.success) {
+      setMessage('Usuario creado exitosamente');
+    } else {
+      setMessage('Error al crear el usuario: ' + data.message);
+    }
   };
 
   return (
@@ -90,6 +107,9 @@ const CreateUser = () => {
                 Login
               </button>
             </form>
+            <button onClick={handleForgotPassword} className="w-full text-blue-500 py-2 mt-4 hover:underline">
+              ¿Olvidó su contraseña?
+            </button>
           </>
         ) : (
           <>
