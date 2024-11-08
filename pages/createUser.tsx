@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const CreateUser = () => {
+  const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [userName, setUserName] = useState('');
@@ -18,7 +19,7 @@ const CreateUser = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ adminEmail, adminPassword }),
+      body: JSON.stringify({ adminName, adminEmail, adminPassword }),
     });
 
     const data = await response.json();
@@ -52,6 +53,17 @@ const CreateUser = () => {
           <>
             <h1 className="text-2xl font-bold mb-6">Admin Login</h1>
             <form onSubmit={handleAdminLogin}>
+              <div className="mb-4">
+                <label htmlFor="adminName" className="block text-gray-700 font-bold mb-2">Nombre:</label>
+                <input
+                  type="text"
+                  id="adminName"
+                  value={adminName}
+                  onChange={(e) => setAdminName(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
               <div className="mb-4">
                 <label htmlFor="adminEmail" className="block text-gray-700 font-bold mb-2">Email:</label>
                 <input

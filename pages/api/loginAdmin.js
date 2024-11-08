@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
-    const { adminEmail, adminPassword } = request.body;
+    const { adminName, adminEmail, adminPassword } = request.body;
 
     try {
       const client = await clientPromise;
@@ -11,7 +11,7 @@ export default async function handler(request, response) {
       const collection = db.collection('admin-data');
 
       // Buscar el administrador en la base de datos
-      const admin = await collection.findOne({ email: adminEmail });
+      const admin = await collection.findOne({ email: adminEmail, name: adminName });
 
       if (admin && await bcrypt.compare(adminPassword, admin.password)) {
         response.status(200).json({ success: true, message: 'Login successful' });
