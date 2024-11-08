@@ -14,11 +14,13 @@ export default async function handler(request, response) {
       }
     });
 
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
     const mailOptions = {
       from: 'andres.evacor@gmail.com',
       to: 'andres.evacor@gmail.com',
       subject: 'Aprobación de nuevo administrador',
-      text: `Aprobar nuevo administrador: ${name} (${email}). Haz clic en el siguiente enlace para aprobar: http://localhost:3000/api/approveAdmin?email=${email}&password=${password}`
+      text: `Aprobar nuevo administrador: ${name} (${email}). Haz clic en el siguiente enlace para aprobar: ${baseUrl}/api/approveAdmin?email=${email}&password=${password}`
     };
 
     try {
