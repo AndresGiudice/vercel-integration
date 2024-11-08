@@ -9,6 +9,8 @@ const RegisterAdmin = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    console.log({ email, name, password }); // Agrega este console.log
+
     const response = await fetch('/api/registerAdmin', {
       method: 'POST',
       headers: {
