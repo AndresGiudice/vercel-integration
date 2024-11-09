@@ -49,7 +49,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
       const data = await response.json();
       const processedData = data.map((bag: Bag) => ({
         ...bag,
-      description: bag.description.replace(/^Bolsas\s*/, "").replace(/ x 100 u\.$/, ""),
+        description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
       }));
       setBags(processedData);
       const initialQuantities = processedData.reduce((acc: any, bag: Bag) => {
@@ -147,14 +147,14 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                             <table className="min-w-full table-fixed">
                               <thead className="border-b">
                                 <tr>
-                                  <th scope="col" className="w-1/4 text-sm font-medium text-gray-900 px-2 py-2 text-center">
-                                    Descripción
+                                  <th scope="col" className="w-1/4 text-base font-medium text-gray-900 px-2 py-2 text-center">
+                                    Descripción & Medidas
                                   </th>
                                 </tr>
                               </thead>
                               <tbody>
                                 <tr className="border-b">
-                                  <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
+                                  <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
                                     {bag.description}
                                   </td>
                                 </tr>
