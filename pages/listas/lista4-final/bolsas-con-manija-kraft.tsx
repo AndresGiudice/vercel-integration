@@ -206,6 +206,9 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
           </div>
         </div>
       </main>
+      <footer className="text-center bg-[#efefef] py-4">
+        <p>LISTA 4 FINAL</p>
+      </footer>
     </div>
   );
 }
