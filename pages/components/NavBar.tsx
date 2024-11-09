@@ -101,7 +101,7 @@ export default function Example() {
         <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img alt="" src="evacor-logo.png" className="h-6 w-auto lg:h-10" />
+            <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
           </Link>
         </div>
         <div className="flex  items-center justify-center flex-1 lg:hidden">

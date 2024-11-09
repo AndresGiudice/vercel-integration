@@ -47,8 +47,12 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      setBags(data);
-      const initialQuantities = data.reduce((acc: any, bag: Bag) => {
+      const processedData = data.map((bag: Bag) => ({
+        ...bag,
+      description: bag.description.replace(/^Bolsas\s*/, "").replace(/ x 100 u\.$/, ""),
+      }));
+      setBags(processedData);
+      const initialQuantities = processedData.reduce((acc: any, bag: Bag) => {
         acc[bag.systemCode] = 0;
         return acc;
       }, {});
@@ -144,26 +148,14 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                               <thead className="border-b">
                                 <tr>
                                   <th scope="col" className="w-1/4 text-sm font-medium text-gray-900 px-2 py-2 text-center">
-                                    Código
-                                  </th>
-                                  <th scope="col" className="w-1/4 text-sm font-medium text-gray-900 px-2 py-2 text-center">
                                     Descripción
-                                  </th>
-                                  <th scope="col" className="w-1/4 text-sm font-medium text-gray-900 px-2 py-2 text-center">
-                                    Precio
                                   </th>
                                 </tr>
                               </thead>
                               <tbody>
                                 <tr className="border-b">
                                   <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
-                                    {bag.systemCode}
-                                  </td>
-                                  <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                                     {bag.description}
-                                  </td>
-                                  <td className="px-2 py-2 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
-                                    {bag.list4}
                                   </td>
                                 </tr>
                               </tbody>
