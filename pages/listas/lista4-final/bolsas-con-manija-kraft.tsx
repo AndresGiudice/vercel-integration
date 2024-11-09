@@ -47,10 +47,13 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const processedData = data.map((bag: Bag) => ({
-        ...bag,
-        description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
-      }));
+      const order = ["B00K0", "BG0K0", "B1AK0", "BG1K0", "BG1KG", "BG2K0", "BG3K0", "BG4K0", "BG5K0", "BG7K0", "BBK00", "BBCK0", "BDBK0", "B8AK0", "BG8K0", "BG9K0", "B10K0", "B11K0"];
+      const processedData = data
+        .map((bag: Bag) => ({
+          ...bag,
+          description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
+        }))
+        .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
       setBags(processedData);
       const initialQuantities = processedData.reduce((acc: any, bag: Bag) => {
         acc[bag.systemCode] = 0;
