@@ -133,7 +133,11 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
     return acc;
   }, {});
 
-  const sortedGroupedBags = Object.keys(groupedBags).sort().reduce((acc: { [key: string]: Bag[] }, key: string) => {
+  const sortedGroupedBags = Object.keys(groupedBags).sort((a, b) => {
+    if (a === "Surtido") return 1;
+    if (b === "Surtido") return -1;
+    return a.localeCompare(b);
+  }).reduce((acc: { [key: string]: Bag[] }, key: string) => {
     acc[key] = groupedBags[key];
     return acc;
   }, {});
