@@ -133,6 +133,11 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
     return acc;
   }, {});
 
+  const sortedGroupedBags = Object.keys(groupedBags).sort().reduce((acc: { [key: string]: Bag[] }, key: string) => {
+    acc[key] = groupedBags[key];
+    return acc;
+  }, {});
+
   return (
     <div>
       <NavBar />
@@ -167,7 +172,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
             <div className="flex flex-wrap justify-evenly">
-              {Object.entries(groupedBags).map(([additionalDescription, bags]) => (
+              {Object.entries(sortedGroupedBags).map(([additionalDescription, bags]) => (
                 <div
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={additionalDescription}
