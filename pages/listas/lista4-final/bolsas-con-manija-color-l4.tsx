@@ -38,7 +38,6 @@ type Bag = {
 
 export default function BolsasConManijaColor({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bags, setBags] = useState<Bag[]>([]);
-  const [quantities, setQuantities] = useState<{ [description: string]: { [systemCode: string]: number } }>({});
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
 
@@ -55,68 +54,11 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
           }))
           .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
         setBags(processedData);
-        const initialQuantities = processedData.reduce((acc: any, bag: Bag) => {
-          if (!acc[bag.additionalDescription]) {
-            acc[bag.additionalDescription] = {};
-          }
-          acc[bag.additionalDescription][bag.systemCode] = 0;
-          return acc;
-        }, {});
-        setQuantities(initialQuantities);
       } catch (error) {
         console.error("Error fetching bag handles:", error);
       }
     })();
   }, []);
-
-  const handleIncrement = useCallback((description: string, systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [description]: {
-        ...prevQuantities[description],
-        [systemCode]: (prevQuantities[description][systemCode] || 0) + 1,
-      },
-    }));
-  }, []);
-
-  const handleDecrement = useCallback((description: string, systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [description]: {
-        ...prevQuantities[description],
-        [systemCode]: Math.max((prevQuantities[description][systemCode] || 0) - 1, 0),
-      },
-    }));
-  }, []);
-
-  const handleQuantityChange = useCallback((description: string, systemCode: string, value: string) => {
-    const numberValue = parseInt(value, 10);
-    if (!isNaN(numberValue) && numberValue >= 0) {
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [description]: {
-          ...prevQuantities[description],
-          [systemCode]: numberValue,
-        },
-      }));
-    }
-  }, []);
-
-  const handleAddToCart = useCallback((description: string, bag: Bag) => {
-    const quantity = quantities[description][bag.systemCode];
-    if (quantity > 0) {
-      addToCart(bag.systemCode, quantity, description, bag.list4, bag.systemCode, bag.systemCode);
-    }
-
-    // Reset quantity to zero after adding to cart
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [description]: {
-        ...prevQuantities[description],
-        [bag.systemCode]: 0,
-      },
-    }));
-  }, [addToCart, quantities]);
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
 
@@ -184,41 +126,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
                   <img className="w-72 h-36 object-contain" src={`/Bolsa de Color ${additionalDescription}.jpg`} alt={additionalDescription} />
                   <div className="px-4 py-1 ">
                     {bags.slice(0, 3).map((bag) => (
-                      <div key={bag.systemCode}>
-                        <div className="flex justify-center mb-2">
-                          <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100: <span className="font-bold">${Math.round(bag.list4)}</span></p>
-                        </div>
-                        <div className="w-full bg-gray-200 p-1 rounded-lg">
-                          <div className="flex items-center justify-between">
-                            <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(additionalDescription, bag.systemCode)}>-</button>
-                            <input
-                              type="number"
-                              className="w-16 text-center bg-gray-200 no-arrows text-black"
-                              value={quantities[additionalDescription][bag.systemCode]}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === '') {
-                                  setQuantities((prevQuantities) => ({
-                                    ...prevQuantities,
-                                    [additionalDescription]: {
-                                      ...prevQuantities[additionalDescription],
-                                      [bag.systemCode]: 0,
-                                    },
-                                  }));
-                                } else {
-                                  handleQuantityChange(additionalDescription, bag.systemCode, value);
-                                }
-                              }}
-                              onFocus={(e) => e.target.select()}
-                            />
-                            <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(additionalDescription, bag.systemCode)}>+</button>
-                          </div>
-                        </div>
-                        <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(additionalDescription, bag)}>
-                          <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
-                          <span className="px-2 py-1">Agregar al carrito</span>
-                        </div>
-                      </div>
+                      <BagCard key={bag.systemCode} bag={bag} additionalDescription={additionalDescription} addToCart={addToCart} />
                     ))}
                   </div>
                 </div>
@@ -233,3 +141,67 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
     </div>
   );
 }
+
+type BagCardProps = {
+  bag: Bag;
+  additionalDescription: string;
+  addToCart: (systemCode: string, quantity: number, description: string, list4: number, systemCode1: string, systemCode2: string) => void;
+};
+
+const BagCard: React.FC<BagCardProps> = ({ bag, additionalDescription, addToCart }) => {
+  const [quantity, setQuantity] = useState(0);
+
+  const handleIncrement = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const handleDecrement = () => {
+    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 0));
+  };
+
+  const handleQuantityChange = (value: string) => {
+    const numberValue = parseInt(value, 10);
+    if (!isNaN(numberValue) && numberValue >= 0) {
+      setQuantity(numberValue);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (quantity > 0) {
+      addToCart(bag.systemCode, quantity, additionalDescription, bag.list4, bag.systemCode, bag.systemCode);
+      setQuantity(0);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex justify-center mb-2">
+        <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100: <span className="font-bold">${Math.round(bag.list4)}</span></p>
+      </div>
+      <div className="w-full bg-gray-200 p-1 rounded-lg">
+        <div className="flex items-center justify-between">
+          <button className="px-8 py-1 rounded-l text-black" onClick={handleDecrement}>-</button>
+          <input
+            type="number"
+            className="w-16 text-center bg-gray-200 no-arrows text-black"
+            value={quantity}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === '') {
+                setQuantity(0);
+              } else {
+                handleQuantityChange(value);
+              }
+            }}
+            onFocus={(e) => e.target.select()}
+          />
+          <button className="px-8 py-1 rounded-r text-black" onClick={handleIncrement}>+</button>
+        </div>
+      </div>
+      <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={handleAddToCart}>
+        <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
+        <span className="px-2 py-1">Agregar al carrito</span>
+      </div>
+    </div>
+  );
+};
