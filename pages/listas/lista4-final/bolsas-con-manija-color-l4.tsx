@@ -80,7 +80,10 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
     if (b === "Surtido") return -1;
     return a.localeCompare(b);
   }).reduce((acc: { [key: string]: Bag[] }, key: string) => {
-    acc[key] = groupedBags[key];
+    acc[key] = groupedBags[key].sort((a, b) => {
+      const order = ["G1", "G3", "G5"];
+      return order.indexOf(a.description.slice(0, 2)) - order.indexOf(b.description.slice(0, 2));
+    });
     return acc;
   }, {});
 
