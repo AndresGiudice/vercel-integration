@@ -146,7 +146,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
 type BagCardProps = {
   bags: Bag[];
   additionalDescription: string;
-  addToCart: (systemCode: string, quantity: number, description: string, list4: number, systemCode1: string, systemCode2: string) => void;
+  addToCart: (systemCode: string, quantity: number, description: string, price: number) => void;
 };
 
 const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCart }) => {
@@ -182,7 +182,7 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
   const handleAddToCart = () => {
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        addToCart(bag.systemCode, quantities[index], additionalDescription, bag.list4, bag.systemCode, bag.systemCode);
+        addToCart(bag.systemCode, quantities[index], `${additionalDescription} - ${bag.description}`, bag.list4);
       }
     });
     setQuantities(bags.map(() => 0));

@@ -1,31 +1,29 @@
-
 // components/CartContext.tsx
 import React, { createContext, ReactNode, useContext, useState, useEffect } from 'react';
+
+type CartItem = {
+  product: string;
+  quantity: number;
+  price: number;
+  code: string;
+  description: string; // Added description property
+};
+
+type CartContextType = {
+  cart: { [key: string]: CartItem };
+  addToCart: (systemCode: string, quantity: number, description: string, price: number) => void;
+  removeItem: (product: string) => void;
+  clearCart: () => void;
+  totalAmount: number;
+};
+
+const CartContext = createContext<CartContextType | undefined>(undefined);
 
 interface CartProviderProps {
   children: ReactNode;
 }
 
-interface CartItem {
-  product: string; // Añadido
-  quantity: number;
-  description: string;
-  price: number;
-  code : string;
-  systemCode?: string;
-}
-
-interface CartContextType {
-  cart: { [key: string]: CartItem };
-  addToCart: (product: string, quantity: number, description: string, price: number, systemCode: string, code: string) => void;
-  removeItem: (uniqueKey: string) => void;
-  clearCart: () => void;
-  totalAmount: number;
-}
-
-const CartContext = createContext<CartContextType | undefined>(undefined);
-
-const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<{ [key: string]: CartItem }>({});
 
   useEffect(() => {
@@ -39,25 +37,23 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product: string, quantity: number, description: string, price: number, systemCode: string, code: string) => {
-    const uniqueKey = `${systemCode}-${code}-${new Date().getTime()}`;
-    setCart((prevCart) => ({
-      ...prevCart,
-      [uniqueKey]: {
-        product,
-        quantity: (prevCart[uniqueKey]?.quantity || 0) + quantity,
-        description,
-        price,
-        code,
-        systemCode,
-      },
-    }));
-  };
-
-  const removeItem = (uniqueKey: string) => {
+  const addToCart = (systemCode: string, quantity: number, description: string, price: number) => {
     setCart((prevCart) => {
       const newCart = { ...prevCart };
-      delete newCart[uniqueKey];
+      const key = `${systemCode}-${description}-${price}`;
+      if (newCart[key]) {
+        newCart[key].quantity += quantity;
+      } else {
+        newCart[key] = { product: description, quantity, price, code: systemCode, description }; // Added description property
+      }
+      return newCart;
+    });
+  };
+
+  const removeItem = (product: string) => {
+    setCart((prevCart) => {
+      const newCart = { ...prevCart };
+      delete newCart[product];
       return newCart;
     });
   };
@@ -66,7 +62,7 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setCart({});
   };
 
-  const totalAmount = Object.values(cart).reduce((acc, { quantity, price }) => acc + quantity * price, 0);
+  const totalAmount = Object.values(cart).reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeItem, clearCart, totalAmount }}>
@@ -82,5 +78,3 @@ export const useCart = () => {
   }
   return context;
 };
-
-export { CartProvider, CartContext };
