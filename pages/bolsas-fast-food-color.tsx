@@ -92,7 +92,7 @@ export default function BolsasFastFoodColor({ isConnected }: InferGetServerSideP
   const handleAddToCart = (index: number) => {
     const bag = PartyBags[index];
     let finalPrice = bag.price;
-    addToCart(bag.code, bag.quantity, bag.description, finalPrice, bag.systemCode, bag.code);
+    addToCart(bag.code, bag.quantity, bag.description, finalPrice);
     setPartyBags((prevBags) => {
       const newBags = [...prevBags];
       newBags[index].quantity = 0;

@@ -88,7 +88,7 @@ export default function BolsasConManijaBlancas({ isConnected }: InferGetServerSi
   };
 
   const handleAddToCart = (systemCode: string, description: string, list4: number) => {
-    addToCart(systemCode, quantities[systemCode], description, list4, systemCode, systemCode);
+    addToCart(systemCode, quantities[systemCode], description, list4);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [systemCode]: 0,

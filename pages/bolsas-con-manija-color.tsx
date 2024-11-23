@@ -102,7 +102,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
     bags.forEach((bag) => {
       const quantity = quantities[description][bag.code];
       if (quantity > 0) {
-        addToCart(bag.code, quantity, description, bag.price, bag.systemCode, bag.code);
+        addToCart(bag.code, quantity, description, bag.price);
       }
     });
 
