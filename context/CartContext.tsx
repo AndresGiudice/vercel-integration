@@ -1,3 +1,4 @@
+
 // components/CartContext.tsx
 import React, { createContext, ReactNode, useContext, useState, useEffect } from 'react';
 
@@ -17,7 +18,7 @@ interface CartItem {
 interface CartContextType {
   cart: { [key: string]: CartItem };
   addToCart: (product: string, quantity: number, description: string, price: number, systemCode: string, code: string) => void;
-  removeItem: (product: string) => void;
+  removeItem: (uniqueKey: string) => void;
   clearCart: () => void;
   totalAmount: number;
 }
@@ -39,11 +40,12 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product: string, quantity: number, description: string, price: number, systemCode: string, code: string) => {
+    const uniqueKey = `${systemCode}-${code}-${new Date().getTime()}`;
     setCart((prevCart) => ({
       ...prevCart,
-      [systemCode]: {
-        product, // Asegúrate de pasar el producto aquí
-        quantity: (prevCart[systemCode]?.quantity || 0) + quantity,
+      [uniqueKey]: {
+        product,
+        quantity: (prevCart[uniqueKey]?.quantity || 0) + quantity,
         description,
         price,
         code,
@@ -52,10 +54,10 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }));
   };
 
-  const removeItem = (systemCode: string) => {
+  const removeItem = (uniqueKey: string) => {
     setCart((prevCart) => {
       const newCart = { ...prevCart };
-      delete newCart[systemCode];
+      delete newCart[uniqueKey];
       return newCart;
     });
   };

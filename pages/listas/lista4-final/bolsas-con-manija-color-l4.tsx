@@ -96,10 +96,10 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
               <h2 className="text-lg font-semibold">Carrito de Compras</h2>
               <ul>
-                {Object.entries(cart).map(([product, quantity]) => (
-                  <li key={product} className="flex justify-between py-2">
-                    <span>{product}</span>
-                    <span>{quantity.quantity}</span>
+                {Object.entries(cart).map(([uniqueKey, item]) => (
+                  <li key={uniqueKey} className="flex justify-between py-2">
+                    <span>{item.product}</span>
+                    <span>{item.quantity}</span>
                   </li>
                 ))}
               </ul>
