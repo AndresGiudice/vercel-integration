@@ -182,7 +182,7 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
   const handleAddToCart = () => {
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        addToCart(bag.systemCode, quantities[index], ` ${bag.description} - ${additionalDescription}`, bag.list4);
+        addToCart(bag.systemCode, quantities[index], bag.description, bag.list4);
       }
     });
     setQuantities(bags.map(() => 0));
