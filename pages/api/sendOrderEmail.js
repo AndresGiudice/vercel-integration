@@ -20,8 +20,7 @@ async function sendOrderEmail(cart, totalAmount) {
 
   // Agregar encabezados
   worksheet.columns = [
-    { header: 'Código', key: 'systemCode', width: 10 },
-    { header: 'Producto', key: 'code', width: 30 },
+    { header: 'Código', key: 'code', width: 30 },
     { header: 'Descripción', key: 'description', width: 30 },
     { header: 'Cantidad', key: 'quantity', width: 10 },
     { header: 'Precio Unitario', key: 'price', width: 15 },
@@ -30,12 +29,10 @@ async function sendOrderEmail(cart, totalAmount) {
 
   // Agregar filas
   Object.entries(cart).forEach(([product, item]) => {
-    const { systemCode, code, description, quantity, price } = item;
+    const { code, description, quantity, price } = item;
     const discountedPrice = calculateDiscountedPrice(code, totalQuantityFb3, price);
     worksheet.addRow({
-      systemCode,
       code,
-      product,
       description,
       quantity,
       price: discountedPrice,
@@ -45,7 +42,7 @@ async function sendOrderEmail(cart, totalAmount) {
 
   // Agregar fila de total
   worksheet.addRow({});
-  worksheet.addRow({ product: 'Total', total: totalAmount });
+  worksheet.addRow({ description: 'Total', total: totalAmount });
 
   // Generar el archivo Excel
   const buffer = await workbook.xlsx.writeBuffer();
