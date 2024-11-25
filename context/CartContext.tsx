@@ -5,8 +5,8 @@ type CartItem = {
   product: string;
   quantity: number;
   price: number;
-  code: string;
-  description: string; // Added description property
+  systemCode: string; // Changed from code to systemCode
+  description: string;
 };
 
 type CartContextType = {
@@ -44,7 +44,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       if (newCart[key]) {
         newCart[key].quantity += quantity;
       } else {
-        newCart[key] = { product: description, quantity, price, code: systemCode, description }; // Added description property
+        newCart[key] = { product: description, quantity, price, systemCode, description }; // Changed from code to systemCode
       }
       return newCart;
     });
