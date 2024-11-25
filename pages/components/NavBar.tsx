@@ -211,7 +211,7 @@ export default function Example() {
               {Object.entries(cart).map(([product, { quantity, description, price, code }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
                   <div>
-                    <span className="text-sm">{description} - {code}</span>
+                    <span className="text-sm">{description}</span>
                     <p className="text-sm text-gray-500">
                       ${calculateDiscountedPrice(code, totalQuantityByCode(code), price).toFixed(0)} x{quantity} = ${Number(calculateDiscountedPrice(code, totalQuantityByCode(code), price) * quantity).toFixed(0)}
                     </p>
