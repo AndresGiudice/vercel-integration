@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const ExcelJS = require('exceljs');
 
-function calculateDiscountedPrice(systemCode, totalQuantity, price) {
-  if (systemCode === 'Fb3' && totalQuantity >= 100) {
+function calculateDiscountedPrice(code, totalQuantity, price) {
+  if (code === 'Fb3' && totalQuantity >= 100) {
     return price * 0.9;
   }
   return price;
@@ -11,7 +11,7 @@ function calculateDiscountedPrice(systemCode, totalQuantity, price) {
 async function sendOrderEmail(cart, totalAmount) {
   // Calcular la cantidad total de productos con el código "Fb3"
   const totalQuantityFb3 = Object.values(cart).reduce((acc, item) => {
-    return item.systemCode === 'Fb3' ? acc + item.quantity : acc;
+    return item.code === 'Fb3' ? acc + item.quantity : acc;
   }, 0);
 
   // Crear un libro de Excel
@@ -20,7 +20,7 @@ async function sendOrderEmail(cart, totalAmount) {
 
   // Agregar encabezados
   worksheet.columns = [
-    { header: 'Código', key: 'systemCode', width: 30 },
+    { header: 'Código', key: 'code', width: 30 },
     { header: 'Descripción', key: 'description', width: 30 },
     { header: 'Cantidad', key: 'quantity', width: 10 },
     { header: 'Precio Unitario', key: 'price', width: 15 },
@@ -29,10 +29,10 @@ async function sendOrderEmail(cart, totalAmount) {
 
   // Agregar filas
   Object.entries(cart).forEach(([product, item]) => {
-    const { systemCode, description, quantity, price } = item;
-    const discountedPrice = calculateDiscountedPrice(systemCode, totalQuantityFb3, price);
+    const { code, description, quantity, price } = item;
+    const discountedPrice = calculateDiscountedPrice(code, totalQuantityFb3, price);
     worksheet.addRow({
-      systemCode,
+      code,
       description,
       quantity,
       price: discountedPrice,

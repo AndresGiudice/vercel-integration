@@ -53,8 +53,8 @@ const bobinas = [
   { name: 'Bobinas de Papel Kraft', href: '#' },
 ];
 
-const calculateDiscountedPrice = (codeSystem: string, totalQuantity: number, price: number) => {
-  if (codeSystem === 'Fb3' && totalQuantity >= 100) {
+const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number) => {
+  if (code === 'Fb3' && totalQuantity >= 100) {
     return price * 0.9;
   }
   return price;
@@ -81,13 +81,13 @@ export default function Example() {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  const totalQuantityBysystemCode = (systemCode: string) => {
-    return Object.values(cart).reduce((acc, item) => item.systemCode === systemCode ? acc + item.quantity : acc, 0);
+  const totalQuantityByCode = (code: string) => {
+    return Object.values(cart).reduce((acc, item) => item.code === code ? acc + item.quantity : acc, 0);
   };
 
-  const totalAmountWithDiscount = Object.entries(cart).reduce((acc, [_, { quantity, description, price, systemCode }]) => {
-    const totalQuantity = totalQuantityBysystemCode(systemCode);
-    const discountedPrice = calculateDiscountedPrice(systemCode, totalQuantity, price);
+  const totalAmountWithDiscount = Object.entries(cart).reduce((acc, [_, { quantity, description, price, code }]) => {
+    const totalQuantity = totalQuantityByCode(code);
+    const discountedPrice = calculateDiscountedPrice(code, totalQuantity, price);
     return acc + discountedPrice * quantity;
   }, 0);
 
@@ -208,12 +208,12 @@ export default function Example() {
           <div className="max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
             <ul className="mt-4 max-h-60 overflow-y-auto">
-              {Object.entries(cart).map(([product, { quantity, description, price, systemCode }]) => (
+              {Object.entries(cart).map(([product, { quantity, description, price, code }]) => (
                 <li key={product} className="flex justify-between py-2 px-4 border-b">
                   <div>
                     <span className="text-sm">{description}</span>
                     <p className="text-sm text-gray-500">
-                      ${calculateDiscountedPrice(systemCode, totalQuantityBysystemCode(systemCode), price).toFixed(0)} x{quantity} = ${Number(calculateDiscountedPrice(systemCode, totalQuantityBysystemCode(systemCode), price) * quantity).toFixed(0)}
+                      ${calculateDiscountedPrice(code, totalQuantityByCode(code), price).toFixed(0)} x{quantity} = ${Number(calculateDiscountedPrice(code, totalQuantityByCode(code), price) * quantity).toFixed(0)}
                     </p>
                   </div>
                   <div className="flex items-center">
