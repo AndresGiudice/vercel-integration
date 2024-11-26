@@ -102,6 +102,11 @@ export default async function handler(request, response) {
         }
       },
       {
+        $addFields: {
+          systemCode: "$_id"
+        }
+      },
+      {
         $project: {
           _id: 0,
           systemCode: 1,
@@ -111,6 +116,11 @@ export default async function handler(request, response) {
         }
       }
     ]).toArray();
+
+    // Log systemCode for each result
+    resultsKraft.forEach(item => console.log(item.systemCode));
+    resultsBlancas.forEach(item => console.log(item.systemCode));
+    resultsPA.forEach(item => console.log(item.systemCode));
 
     response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA });
   } catch (e) {
