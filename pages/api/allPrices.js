@@ -117,12 +117,33 @@ export default async function handler(request, response) {
       }
     ]).toArray();
 
+    const resultsFb3x100 = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { description: "Bolsa Fast Food FB3 Pleno x 100 u." },
+            { systemCode: { $in: ["BFM301", "BFB301"] } }
+          ]
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1
+        }
+      }
+    ]).toArray();
+
     // Log systemCode for each result
     resultsKraft.forEach(item => console.log(item.systemCode));
     resultsBlancas.forEach(item => console.log(item.systemCode));
     resultsPA.forEach(item => console.log(item.systemCode));
+    resultsFb3x100.forEach(item => console.log(item.systemCode));
 
-    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA });
+    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100 });
   } catch (e) {
     console.error(e);
     response.status(500).json(e);
