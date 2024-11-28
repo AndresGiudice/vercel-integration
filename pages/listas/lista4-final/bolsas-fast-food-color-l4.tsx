@@ -141,7 +141,14 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
                 >
-                 <img className="w-72 h-36 object-contain" src={`/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription}.png`} alt={bag.description} />
+                  <div>
+                    <img 
+                      className="w-72 h-36 object-contain" 
+                      src={`/Bolsa Fast Food FB3 Pleno ${bag.systemCode}.png`} 
+                      alt={bag.description} 
+                      onError={(e) => { e.currentTarget.src = `/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription}.png`; }}
+                    />
+                  </div>
                  <div className="container mx-auto p-2">
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
@@ -158,7 +165,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                               <tbody>
                                 <tr className="border-b">
                                   <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                    {bag.description} {bag.additionalDescription}
+                                  {bag.description.replace('Fast Food', '')} {bag.additionalDescription}
                                   </td>
                                 </tr>
                               </tbody>

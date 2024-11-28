@@ -123,7 +123,8 @@ export default async function handler(request, response) {
           $or: [
             { description: "Bolsa Fast Food FB3 Pleno x 100 u." },
             { systemCode: { $in: ["BFM301", "BFB301"] } }
-          ]
+          ],
+          additionalDescription: { $nin: ["Lila Pastel", "Amarillo Pastel"] }
         }
       },
       {
