@@ -88,7 +88,8 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   };
 
   const handleAddToCart = (systemCode: string, description: string, list4: number) => {
-    addToCart(systemCode, quantities[systemCode], description, list4);
+    const cleanedDescription = description.replace(/(Kraft).*/, 'Kraft');
+    addToCart(systemCode, quantities[systemCode], cleanedDescription, list4);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [systemCode]: 0,
