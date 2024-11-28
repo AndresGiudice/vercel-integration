@@ -86,9 +86,9 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     }
   };
 
-  const handleAddToCart = (systemCode: string, description: string, list4: number) => {
+  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
     const cleanedDescription = description.replace(/(Kraft).*/, 'Kraft');
-    addToCart(systemCode, quantities[systemCode], cleanedDescription, list4);
+    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${additionalDescription}`, list4);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [systemCode]: 0,
@@ -202,7 +202,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                         <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.systemCode)}>+</button>
                       </div>
                     </div>
-                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.systemCode, bag.description, bag.list4)}>
+                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription )}>
                       <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
                       <span className="px-2 py-1">Agregar al carrito</span>
                     </div>
