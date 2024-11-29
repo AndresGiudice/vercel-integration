@@ -43,6 +43,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
+  const [discountedPrices, setDiscountedPrices] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     (async () => {
@@ -59,41 +60,61 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
         return acc;
       }, {});
       setQuantities(initialQuantities);
+      const initialDiscountedPrices = processedData.reduce((acc: any, bag: Bag) => {
+        acc[bag.systemCode] = bag.list4;
+        return acc;
+      }, {});
+      setDiscountedPrices(initialDiscountedPrices);
     })();
   }, []);
 
+  useEffect(() => {
+    const totalQuantity = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
+    applyDiscount(totalQuantity);
+  }, [cart]);
+
+  const applyDiscount = (totalQuantity: number) => {
+    setDiscountedPrices((prevPrices) => {
+      const newPrices = { ...prevPrices };
+      bags.forEach((bag) => {
+        newPrices[bag.systemCode] = totalQuantity >= 100 ? bag.list4 * 0.9 : bag.list4;
+      });
+      return newPrices;
+    });
+  };
+
+  const updateQuantities = (systemCode: string, newQuantity: number) => {
+    setQuantities((prevQuantities) => {
+      const newQuantities = {
+        ...prevQuantities,
+        [systemCode]: newQuantity,
+      };
+      return newQuantities;
+    });
+    const totalQuantity = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0) + newQuantity;
+    applyDiscount(totalQuantity);
+  };
+
   const handleIncrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: prevQuantities[systemCode] + 1,
-    }));
+    updateQuantities(systemCode, quantities[systemCode] + 1);
   };
 
   const handleDecrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: Math.max(prevQuantities[systemCode] - 1, 0),
-    }));
+    updateQuantities(systemCode, Math.max(quantities[systemCode] - 1, 0));
   };
 
   const handleQuantityChange = (systemCode: string, value: string) => {
     const numberValue = parseInt(value, 10);
     if (!isNaN(numberValue) && numberValue >= 0) {
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [systemCode]: numberValue,
-      }));
+      updateQuantities(systemCode, numberValue);
     }
   };
 
   const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
     const cleanedDescription = description.replace(/Bolsa Fast Food\s*/, '').replace(/(Kraft).*/, 'Kraft');
     const cleanedAdditionalDescription = additionalDescription.replace(/Bolsa Fast Food\s*/, '');
-    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: 0,
-    }));
+    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, discountedPrices[systemCode]);
+    updateQuantities(systemCode, 0);
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
@@ -112,10 +133,11 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
               <h2 className="text-lg font-semibold">Carrito de Compras</h2>
               <ul>
-                {Object.entries(cart).map(([product, quantity]) => (
+                {Object.entries(cart).map(([product, item]) => (
                   <li key={product} className="flex justify-between py-2">
                     <span>{product}</span>
-                    <span>{quantity.quantity}</span>
+                    <span>{item.quantity}</span>
+                    <span>${Math.round(item.price * item.quantity)}</span>
                   </li>
                 ))}
               </ul>
@@ -177,7 +199,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(bag.list4)}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(discountedPrices[bag.systemCode])}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
@@ -190,10 +212,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                           onChange={(e) => {
                             const value = e.target.value;
                             if (value === '') {
-                              setQuantities((prevQuantities) => ({
-                                ...prevQuantities,
-                                [bag.systemCode]: 0,
-                              }));
+                              updateQuantities(bag.systemCode, 0);
                             } else {
                               handleQuantityChange(bag.systemCode, value);
                             }
