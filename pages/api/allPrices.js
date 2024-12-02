@@ -189,6 +189,68 @@ export default async function handler(request, response) {
       }
     ]).toArray();
 
+    const resultsFm = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { systemCode: { $in: ["BFM501", "BFM901", "BFM101"] } }
+          ]
+        }
+      },
+      
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1
+        }
+      }
+    ]).toArray();
+
+    const resultsBaKr = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { systemCode: { $in: ["BAK2", "BAK3", "BAK4", "BAK4A", "BAK5", "BAK6", "BAK6L", "BAK7" ] } }
+
+          ]
+        }
+      },
+      
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1
+        }
+      }
+    ]).toArray();
+
+    const resultsBaSu = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { systemCode: { $in: ["BAS3", "BAS4", "BAS4A", "BAS5", "BAS6", "BAS6L", "BAS7" ] } }
+          ]
+        }
+      },
+      
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1
+        }
+      }
+    ]).toArray();
+
+
 
     // Log systemCode for each result
     resultsKraft.forEach(item => console.log(item.systemCode));
@@ -197,8 +259,11 @@ export default async function handler(request, response) {
     resultsFb3x100.forEach(item => console.log(item.systemCode));
     resultsFantFb3x100.forEach(item => console.log(item.systemCode));
     resultsFb3x10.forEach(item => console.log(item.systemCode));
+    resultsFm.forEach(item => console.log(item.systemCode));
+    resultsBaKr.forEach(item => console.log(item.systemCode));
+    resultsBaSu.forEach(item => console.log(item.systemCode));
 
-    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10 });
+    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu});
   } catch (e) {
     console.error(e);
     response.status(500).json(e);
