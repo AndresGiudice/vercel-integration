@@ -22,9 +22,9 @@ const bolsasDePapel = [
     name: 'Bolsas de Fondo Cuadrado con Manija',
     href: '#',
     submenu: [
-      { name: 'Bolsas con Manija Kraft', href: '/bolsas-con-manija-kraft' },
-      { name: 'Bolsas con Manija Blancas', href: '/bolsas-con-manija-blancas' },
-      { name: 'Bolsas con Manija Color', href: '/bolsas-con-manija-color' },
+      { name: 'Bolsas con Manija Kraft', href: '/listas/lista4-final/bolsas-con-manija-kraft' },
+      { name: 'Bolsas con Manija Blancas', href: '/listas/lista4-final/bolsas-con-manija-blancas' },
+      { name: 'Bolsas con Manija Color', href: '/listas/lista4-final/bolsas-con-manija-color' },
       { name: 'Bolsas con Manija Fantasía', href: '#' },
     ],
   },
@@ -32,23 +32,25 @@ const bolsasDePapel = [
     name: 'Bolsas de Fondo Cuadrado sin Manija',
     href: '#',
     submenu: [
-      { name: 'Bolsas Fast Food "Cotillón" Estándar', href: 'bolsas-fast-food-color' },
+      { name: 'Bolsas Fast Food "Cotillón" Estándar', href: '/listas/lista4-final/bolsas-fast-food-color' },
+      { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: '/listas/lista4-final/bolsas-fast-food-color-x10' },
+      { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: '/listas/lista4-final/bolsas-fast-food-fantasia' },
       { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
-      { name: 'Bolsas Fast Food Kraft', href: '#' },
+      { name: 'Bolsas Fast Food Kraft', href: '/listas/lista4-final/bolsas-fast-food-kraft' },
     ],
   },
   {
     name: 'Bolsas de Fondo Americano',
     href: '#',
     submenu: [
-      { name: 'Bolsas de Fondo Americano Kraft', href: '#' },
-      { name: 'Bolsas de Fondo Americano Sulfito', href: '#' },
+      { name: 'Bolsas de Fondo Americano Kraft', href: '/listas/lista4-final/bolsas-fondo-americano-kraft' },
+      { name: 'Bolsas de Fondo Americano Sulfito', href: '/listas/lista4-final/bolsas-fondo-americano-sulfito' },
     ],
   },
 ];
 
 const bobinas = [
-  { name: 'Bobinas de Papel Obra', href: '#' },
+  { name: 'Bobinas de Papel Obra', href: '/listas/lista4-final/bobinas-obra' },
   { name: 'Bobinas de Papel Sulfito', href: '#' },
   { name: 'Bobinas de Papel Kraft', href: '#' },
 ];
