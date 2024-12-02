@@ -250,6 +250,27 @@ export default async function handler(request, response) {
       }
     ]).toArray();
 
+    const resultsBobinasObra = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { additionalDescription: { $in: ["multicírculos rojo", "multicírculos naranja", "multicírculos verde", "multicírculos negro", "tejido rojo", "tejido naranja", "tejido verde", "tejido negro", "zigzag rojo", "zigzag naranja", "zigzag verde", "zigzag negro", "delivery negro", "delivery gris", "delivery marrón", "Pintita negro", "Pintita Naranja", "Pintita Verde", "Pintita Rojo", "regalos negro", "regalos naranja", "regalos verde", "regalos rojo", "animalitos naranja", "animalitos verde", "animalitos rojo", "Navidad Azul", "Navidad Verde", "Navidad Rojo"] } }
+          ],
+          description: { $nin: ["Bobina KRAFT Fantasía 37 cm x 140 mts", "Bobina Kraft Fantasía 37 cm x 140 mts", "Bobina KRAFT Fantasía 60 cm x 140 mts", "Bobina Kraft Fantasía 60 cm x 140 mts"] }
+        }
+      },
+      
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1
+        }
+      }
+    ]).toArray();
+
 
 
     // Log systemCode for each result
@@ -262,10 +283,15 @@ export default async function handler(request, response) {
     resultsFm.forEach(item => console.log(item.systemCode));
     resultsBaKr.forEach(item => console.log(item.systemCode));
     resultsBaSu.forEach(item => console.log(item.systemCode));
+    resultsBobinasObra.forEach(item => console.log(item.systemCode));
 
-    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu});
+
+    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra});
   } catch (e) {
     console.error(e);
     response.status(500).json(e);
   }
 }
+
+
+
