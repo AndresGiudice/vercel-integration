@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import clientPromise from "@/lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
@@ -40,69 +40,42 @@ type Bag = {
 
 export default function BolsasConManijaKraft({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bags, setBags] = useState<Bag[]>([]);
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const response = await fetch("/api/allPrices");
-      const data = await response.json();
-      const order = ["BFM501", "BFM901", "BFM101"];
-      const processedData = data.boObr
-        .map((bag: Bag) => ({
-          ...bag,
-          description: bag.description.replace(/^Bolsa Fast Food\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
-        }))
-        .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
-      setBags(processedData);
-      const initialQuantities = processedData.reduce((acc: any, bag: Bag) => {
-        acc[bag.systemCode] = 0;
-        return acc;
-      }, {});
-      setQuantities(initialQuantities);
+      try {
+        const response = await fetch("/api/allPrices");
+        const data = await response.json();
+        const order = ["BFM501", "BFM901", "BFM101"];
+        const processedData = data.boObr
+          .map((bag: Bag) => ({
+            ...bag,
+            description: bag.description.replace(/^Bolsa Fast Food\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
+          }))
+          .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
+        setBags(processedData);
+      } catch (error) {
+        console.error("Error fetching bag handles:", error);
+      }
     })();
   }, []);
 
-  const handleIncrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: prevQuantities[systemCode] + 1,
-    }));
-  };
-
-  const handleDecrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: Math.max(prevQuantities[systemCode] - 1, 0),
-    }));
-  };
-
-  const handleQuantityChange = (systemCode: string, value: string) => {
-    const numberValue = parseInt(value, 10);
-    if (!isNaN(numberValue) && numberValue >= 0) {
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [systemCode]: numberValue,
-      }));
-    }
-  };
-
-  const handleAddToCart = (systemCode: string, description: string, list4: number) => {
-    const cleanedDescription = description.replace(/(Kraft).*/, 'Kraft');
-    addToCart(systemCode, quantities[systemCode], cleanedDescription, list4);
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: 0,
-    }));
-  };
-
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
 
-  const placeOrder = () => {
+  const placeOrder = useCallback(() => {
     alert('Pedido realizado con éxito!');
     clearCart();
-  };
+  }, [clearCart]);
+
+  const groupedBags = bags.reduce((acc: { [key: string]: Bag[] }, bag: Bag) => {
+    if (!acc[bag.additionalDescription]) {
+      acc[bag.additionalDescription] = [];
+    }
+    acc[bag.additionalDescription].push(bag);
+    return acc;
+  }, {});
 
   return (
     <div>
@@ -113,10 +86,10 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
               <h2 className="text-lg font-semibold">Carrito de Compras</h2>
               <ul>
-                {Object.entries(cart).map(([product, quantity]) => (
-                  <li key={product} className="flex justify-between py-2">
-                    <span>{product}</span>
-                    <span>{quantity.quantity}</span>
+                {Object.entries(cart).map(([uniqueKey, item]) => (
+                  <li key={uniqueKey} className="flex justify-between py-2">
+                    <span>{item.product}</span>
+                    <span>{item.quantity}</span>
                   </li>
                 ))}
               </ul>
@@ -138,71 +111,14 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
             <div className="flex flex-wrap justify-evenly">
-              {bags.map((bag, index) => (
+              {Object.entries(groupedBags).map(([additionalDescription, bags]) => (
                 <div
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
-                  key={index}
+                  key={additionalDescription}
                 >
-                  <img className="w-72 h-36 object-contain" 
-                       src={`/Bolsa Fast Food ${bag.additionalDescription}.png`}  
-                       alt={bag.additionalDescription} />
-                  <div className="container mx-auto p-2">
-                    <div className="flex flex-col">
-                      <div className="overflow-x-auto">
-                        <div className="py-2 inline-block min-w-full">
-                          <div className="overflow-hidden">
-                            <table className="min-w-full table-fixed">
-                              <thead className="border-b">
-                                <tr>
-                                  <th scope="col" className="w-1/4 text-base font-medium text-gray-900 px-2 py-2 text-center">
-                                    Descripción & Medidas
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr className="border-b">
-                                  <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                    {bag.description} - {bag.additionalDescription}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x und. : <span className="font-bold">${Math.round(bag.list4)}</span></p>
-                  </div>
+                  <img className="w-72 h-36 object-contain" src={`/Bolsa Fast Food ${additionalDescription}.png`} alt={additionalDescription} />
                   <div className="px-4 py-1 ">
-                    <div className="w-full bg-gray-200 p-1 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(bag.systemCode)}>-</button>
-                        <input
-                          type="number"
-                          className="w-16 text-center bg-gray-200 no-arrows text-black"
-                          value={quantities[bag.systemCode]}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (value === '') {
-                              setQuantities((prevQuantities) => ({
-                                ...prevQuantities,
-                                [bag.systemCode]: 0,
-                              }));
-                            } else {
-                              handleQuantityChange(bag.systemCode, value);
-                            }
-                          }}
-                          onFocus={(e) => e.target.select()}
-                        />
-                        <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.systemCode)}>+</button>
-                      </div>
-                    </div>
-                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.systemCode, bag.description, bag.list4)}>
-                      <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
-                      <span className="px-2 py-1">Agregar al carrito</span>
-                    </div>
+                    <BagCard bags={bags} additionalDescription={additionalDescription} addToCart={addToCart} />
                   </div>
                 </div>
               ))}
@@ -216,3 +132,88 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
     </div>
   );
 }
+
+type BagCardProps = {
+  bags: Bag[];
+  additionalDescription: string;
+  addToCart: (systemCode: string, quantity: number, description: string, price: number) => void;
+};
+
+const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCart }) => {
+  const [quantities, setQuantities] = useState<number[]>(bags.map(() => 0));
+
+  const handleIncrement = (index: number) => {
+    setQuantities((prevQuantities) => {
+      const newQuantities = [...prevQuantities];
+      newQuantities[index] += 1;
+      return newQuantities;
+    });
+  };
+
+  const handleDecrement = (index: number) => {
+    setQuantities((prevQuantities) => {
+      const newQuantities = [...prevQuantities];
+      newQuantities[index] = Math.max(newQuantities[index] - 1, 0);
+      return newQuantities;
+    });
+  };
+
+  const handleQuantityChange = (index: number, value: string) => {
+    const numberValue = parseInt(value, 10);
+    if (!isNaN(numberValue) && numberValue >= 0) {
+      setQuantities((prevQuantities) => {
+        const newQuantities = [...prevQuantities];
+        newQuantities[index] = numberValue;
+        return newQuantities;
+      });
+    }
+  };
+
+  const handleAddToCart = () => {
+    bags.forEach((bag, index) => {
+      if (quantities[index] > 0) {
+        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, bag.list4);
+      }
+    });
+    setQuantities(bags.map(() => 0));
+  };
+
+  return (
+    <div>
+      {bags.map((bag, index) => (
+        <div key={bag.systemCode}>
+          <div className="flex justify-center mb-2">
+            <p className="text-gray-700 text-base mt-2">{bag.description} - {bag.additionalDescription}</p>
+          </div>
+          <div className="w-full bg-gray-200 p-1 rounded-lg mb-2">
+            <div className="flex items-center justify-between">
+              <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(index)}>-</button>
+              <input
+                type="number"
+                className="w-16 text-center bg-gray-200 no-arrows text-black"
+                value={quantities[index]}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === '') {
+                    handleQuantityChange(index, '0');
+                  } else {
+                    handleQuantityChange(index, value);
+                  }
+                }}
+                onFocus={(e) => e.target.select()}
+              />
+              <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(index)}>+</button>
+            </div>
+          </div>
+          <div className="flex justify-center mb-2">
+            <p className="text-gray-700 text-lg"> Precio x und. : <span className="font-bold">${Math.round(bag.list4)}</span></p>
+          </div>
+        </div>
+      ))}
+      <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={handleAddToCart}>
+        <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
+        <span className="px-2 py-1">Agregar al carrito</span>
+      </div>
+    </div>
+  );
+};
