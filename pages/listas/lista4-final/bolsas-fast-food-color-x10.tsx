@@ -48,7 +48,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const processedData = data.fb3x100
+      const processedData = data.fb3x10
         .map((bag: Bag) => ({
           ...bag,
           description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
@@ -87,8 +87,8 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
   };
 
   const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
-    const cleanedDescription = description.replace(/Bolsa Fast Food\s*/, '').replace(/(Kraft).*/, 'Kraft');
-    const cleanedAdditionalDescription = additionalDescription.replace(/Bolsa Fast Food\s*/, '');
+    const cleanedDescription = description.replace(/BOLSA FAST FOOD\s*/, '').replace(/(Kraft).*/, 'Kraft');
+    const cleanedAdditionalDescription = additionalDescription.replace(/BOLSA FAST FOOD\s*/, '');
     addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
@@ -149,9 +149,9 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                   <div>
                     <img 
                       className="w-72 h-36 object-contain" 
-                      src={`/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription}.png`} 
+                      src={`/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.additionalDescription}.jpg`} 
                       alt={bag.description} 
-                      onError={(e) => { e.currentTarget.src = `/Bolsa Fast Food FB3 Pleno ${bag.systemCode}.png`; }}
+                      onError={(e) => { e.currentTarget.src = `/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.systemCode}.jpg`; }}
                     />
                   </div>
                  <div className="container mx-auto p-2">
@@ -170,7 +170,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                               <tbody>
                                 <tr className="border-b">
                                   <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description.replace('Fast Food', '')} {bag.additionalDescription}
+                                  {bag.description.replace('BOLSA FAST FOOD', '')} {bag.additionalDescription}
                                   </td>
                                 </tr>
                               </tbody>
