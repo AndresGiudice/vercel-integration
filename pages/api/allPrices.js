@@ -292,6 +292,28 @@ export default async function handler(request, response) {
       }
     ]).toArray();
 
+    const resultsBobinasKraft = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { description: { $in: ["Bobina Kraft Fantasía 37 cm x 140 mts", "Bobina Kraft Fantasía 60 cm x 140 mts", "Bobina KRAFT Fantasía 37 cm x 140 mts" ,"Bobina KRAFT Fantasía 60 cm x 140 mts"] } },
+            { systemCode: { $in: ["BKF370501", "BKF370502", "BKF600501", "BKF600502", "BLD4013N", "BLD4039L", "BLD6017N", "BLD6047L", "BLD4039B", "BLD4039M", "BLD6047B", "BLD6047M" ] } }
+          ],
+          systemCode: { $nin: ["BKF370301", "BKF370302", "BKF600301", "BKF600302"] }
+        }
+        
+      },
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1
+        }
+      }
+    ]).toArray();
+
 
 
     // Log systemCode for each result
@@ -307,7 +329,7 @@ export default async function handler(request, response) {
     // resultsBobinasObra.forEach(item => console.log(item.systemCode));
     resultsBobinasSulfito.forEach(item => console.log(item.systemCode));
 
-    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra, boSu : resultsBobinasSulfito });
+    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra, boSu : resultsBobinasSulfito, boKr : resultsBobinasKraft});
   } catch (e) {
     console.error(e);
     response.status(500).json(e);
