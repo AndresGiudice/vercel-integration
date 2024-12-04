@@ -271,6 +271,27 @@ export default async function handler(request, response) {
       }
     ]).toArray();
 
+    const resultsBobinasSulfito = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { description: { $in: ["Bobina Sulfito Fantasía 37 cm x 140 mts", "Bobina Sulfito Fantasía 60 cm x 140 mts", "Bobina SULFITO Fantasía 37 cm x 140 mts" ,"Bobina SULFITO Fantasía 60 cm x 140 mts"] } }
+          ],
+          systemCode: { $nin: ["BSF600302", "BSF370302", "BSF370301", "BSF600301", "BSF600601", "BSF600602", "BSF600704", "BSF370603", "BSF370702", "BSF370704", "BSF370601", "BSF370602", "BSF370604", "BSF370701", "BSF370703", "BSF600701", "BSF600603",  "BSF600604", "BSF600702", "BSF600703"  ] }
+        }
+        
+      },
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1
+        }
+      }
+    ]).toArray();
+
 
 
     // Log systemCode for each result
@@ -284,9 +305,9 @@ export default async function handler(request, response) {
     // resultsBaKr.forEach(item => console.log(item.systemCode));
     // resultsBaSu.forEach(item => console.log(item.systemCode));
     // resultsBobinasObra.forEach(item => console.log(item.systemCode));
+    resultsBobinasSulfito.forEach(item => console.log(item.systemCode));
 
-
-    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra});
+    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra, boSu : resultsBobinasSulfito });
   } catch (e) {
     console.error(e);
     response.status(500).json(e);

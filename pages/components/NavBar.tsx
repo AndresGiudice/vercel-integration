@@ -51,7 +51,7 @@ const bolsasDePapel = [
 
 const bobinas = [
   { name: 'Bobinas de Papel Obra', href: '/listas/lista4-final/bobinas-obra' },
-  { name: 'Bobinas de Papel Sulfito', href: '#' },
+  { name: 'Bobinas de Papel Sulfito', href: '/listas/lista4-final/bobinas-sulfito' },
   { name: 'Bobinas de Papel Kraft', href: '#' },
 ];
 

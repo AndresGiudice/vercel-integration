@@ -172,7 +172,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(bag.list4)}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x1000: <span className="font-bold">${Math.round(bag.list4)}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
