@@ -86,7 +86,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     }
   };
 
-  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
+  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string = '') => {
     const cleanedDescription = description.replace(/BOLSA FAST FOOD\s*/, '').replace(/(Kraft).*/, 'Kraft');
     const cleanedAdditionalDescription = additionalDescription.replace(/BOLSA FAST FOOD\s*/, '');
     addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);

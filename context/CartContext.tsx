@@ -40,25 +40,25 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, [cart]);
 
   const calculateDiscountedPrice = (code: string, quantity: number, originalPrice: number) => {
-    if (code.includes('FB3') && quantity >= 100) {
+    if ((code.includes('FB3') || code.includes('FM3')) && quantity >= 100) {
       return originalPrice * 0.9;
     }
     return originalPrice;
   };
 
   const recalculateDiscounts = (cart: { [key: string]: CartItem }) => {
-    const totalFB3Quantity = Object.values(cart).reduce((acc, item) => {
-      return item.code.includes('FB3') ? acc + item.quantity : acc;
+    const totalFB3FM3Quantity = Object.values(cart).reduce((acc, item) => {
+      return (item.code.includes('FB3') || item.code.includes('FM3')) ? acc + item.quantity : acc;
     }, 0);
 
     const newCart = { ...cart };
     Object.keys(newCart).forEach(key => {
       const item = newCart[key];
-      if (item.code.includes('FB3')) {
+      if (item.code.includes('FB3') || item.code.includes('FM3')) {
         newCart[key] = {
           ...item,
-          price: calculateDiscountedPrice(item.code, totalFB3Quantity, item.originalPrice),
-          discounted: totalFB3Quantity >= 100
+          price: calculateDiscountedPrice(item.code, totalFB3FM3Quantity, item.originalPrice),
+          discounted: totalFB3FM3Quantity >= 100
         };
       }
     });
