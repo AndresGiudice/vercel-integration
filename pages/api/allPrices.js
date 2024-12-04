@@ -274,16 +274,16 @@ export default async function handler(request, response) {
 
 
     // Log systemCode for each result
-    resultsKraft.forEach(item => console.log(item.systemCode));
-    resultsBlancas.forEach(item => console.log(item.systemCode));
-    resultsPA.forEach(item => console.log(item.systemCode));
-    resultsFb3x100.forEach(item => console.log(item.systemCode));
-    resultsFantFb3x100.forEach(item => console.log(item.systemCode));
-    resultsFb3x10.forEach(item => console.log(item.systemCode));
-    resultsFm.forEach(item => console.log(item.systemCode));
-    resultsBaKr.forEach(item => console.log(item.systemCode));
-    resultsBaSu.forEach(item => console.log(item.systemCode));
-    resultsBobinasObra.forEach(item => console.log(item.systemCode));
+    // resultsKraft.forEach(item => console.log(item.systemCode));
+    // resultsBlancas.forEach(item => console.log(item.systemCode));
+    // resultsPA.forEach(item => console.log(item.systemCode));
+    // resultsFb3x100.forEach(item => console.log(item.systemCode));
+    // resultsFantFb3x100.forEach(item => console.log(item.systemCode));
+    // resultsFb3x10.forEach(item => console.log(item.systemCode));
+    // resultsFm.forEach(item => console.log(item.systemCode));
+    // resultsBaKr.forEach(item => console.log(item.systemCode));
+    // resultsBaSu.forEach(item => console.log(item.systemCode));
+    // resultsBobinasObra.forEach(item => console.log(item.systemCode));
 
 
     response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra});
