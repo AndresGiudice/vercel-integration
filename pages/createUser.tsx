@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 
 const CreateUser = () => {
   const [adminName, setAdminName] = useState('');
@@ -9,22 +8,22 @@ const CreateUser = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [priceList, setPriceList] = useState('');
-  const [folders, setFolders] = useState<string[]>([]);
+  const [priceLists, setPriceLists] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const fetchFolders = async () => {
-      const response = await fetch('/api/createUser');
+    const fetchPriceLists = async () => {
+      const response = await fetch('/api/getPriceLists');
       const data = await response.json();
       if (data.success) {
-        setFolders(data.folders);
+        setPriceLists(data.priceLists);
       } else {
-        setMessage('Error al obtener las carpetas: ' + data.message);
+        setMessage('Error al obtener las listas de precios: ' + data.message);
       }
     };
 
-    fetchFolders();
+    fetchPriceLists();
   }, []);
 
   const handleAdminLogin = async (event: React.FormEvent) => {
@@ -173,9 +172,9 @@ const CreateUser = () => {
                   required
                   className="w-full px-3 py-2 border rounded"
                 >
-                  <option value="">Seleccione una lista</option>
-                  {folders.map((folder) => (
-                    <option key={folder} value={folder}>{folder}</option>
+                  <option value="">Seleccione una lista de precios</option>
+                  {priceLists.map((list, index) => (
+                    <option key={index} value={list}>{list}</option>
                   ))}
                 </select>
               </div>
@@ -183,11 +182,6 @@ const CreateUser = () => {
                 Crear Usuario
               </button>
             </form>
-            <Link href="/listUsers" legacyBehavior>
-              <a className="w-full text-blue-500 py-2 mt-4 hover:underline block text-center">
-                Ver listado de usuarios
-              </a>
-            </Link>
           </>
         )}
         {message && <p className="mt-4 text-green-500">{message}</p>}

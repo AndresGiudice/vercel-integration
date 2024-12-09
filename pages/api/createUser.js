@@ -1,7 +1,5 @@
 import clientPromise from "../../lib/mongodb";
 import bcrypt from 'bcryptjs';
-import fs from 'fs';
-import path from 'path';
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
@@ -37,41 +35,6 @@ export default async function handler(request, response) {
     } catch (error) {
       console.error('Error creating user:', error);
       response.status(500).json({ success: false, message: 'Error al crear el usuario' });
-    }
-  } else if (request.method === 'GET') {
-    try {
-      const directoryPath = path.join(__dirname, '../../pages/listas');
-      console.log(`Checking directory: ${directoryPath}`);
-      console.log('Current working directory:', process.cwd());
-      if (!fs.existsSync(directoryPath)) {
-        throw new Error(`Directory not found: ${directoryPath}`);
-      }
-      const folders = fs.readdirSync(directoryPath).filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
-      console.log(`Folders found: ${folders}`);
-
-      // Log the structure of the directory
-      const files = fs.readdirSync(directoryPath);
-      files.forEach(file => {
-        const filePath = path.join(directoryPath, file);
-        const stats = fs.statSync(filePath);
-        if (stats.isDirectory()) {
-          console.log(`Directory: ${filePath}`);
-        } else {
-          console.log(`File: ${filePath}`);
-        }
-      });
-
-      const requiredFolders = ['lista4', 'lista4-final'];
-      const foundFolders = requiredFolders.filter(folder => folders.includes(folder));
-
-      if (foundFolders.length !== requiredFolders.length) {
-        throw new Error('Required folders not found');
-      }
-
-      response.status(200).json({ success: true, folders: foundFolders });
-    } catch (error) {
-      console.error('Error fetching folders:', error);
-      response.status(500).json({ success: false, message: `Error al obtener las carpetas: ${error.message}` });
     }
   } else {
     response.status(405).json({ success: false, message: 'Method not allowed' });
