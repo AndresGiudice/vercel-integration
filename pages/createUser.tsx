@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 const CreateUser = () => {
   const [adminName, setAdminName] = useState('');
@@ -182,6 +183,11 @@ const CreateUser = () => {
                 Crear Usuario
               </button>
             </form>
+            <Link href="/listUsers" legacyBehavior>
+              <a className="w-full text-blue-500 py-2 mt-4 hover:underline block text-center">
+                Ver listado de usuarios
+              </a>
+            </Link>
           </>
         )}
         {message && <p className="mt-4 text-green-500">{message}</p>}
