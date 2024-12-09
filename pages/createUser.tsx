@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const CreateUser = () => {
   const [adminName, setAdminName] = useState('');
@@ -8,8 +8,23 @@ const CreateUser = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [priceList, setPriceList] = useState('');
+  const [folders, setFolders] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const fetchFolders = async () => {
+      const response = await fetch('/api/createUser');
+      const data = await response.json();
+      if (data.success) {
+        setFolders(data.folders);
+      } else {
+        setMessage('Error al obtener las carpetas: ' + data.message);
+      }
+    };
+
+    fetchFolders();
+  }, []);
 
   const handleAdminLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -150,14 +165,18 @@ const CreateUser = () => {
               </div>
               <div className="mb-4">
                 <label htmlFor="priceList" className="block text-gray-700 font-bold mb-2">Lista de Precios:</label>
-                <input
-                  type="text"
+                <select
                   id="priceList"
                   value={priceList}
                   onChange={(e) => setPriceList(e.target.value)}
                   required
                   className="w-full px-3 py-2 border rounded"
-                />
+                >
+                  <option value="">Seleccione una lista</option>
+                  {folders.map((folder) => (
+                    <option key={folder} value={folder}>{folder}</option>
+                  ))}
+                </select>
               </div>
               <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
                 Crear Usuario

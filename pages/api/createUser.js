@@ -1,5 +1,7 @@
 import clientPromise from "../../lib/mongodb";
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
@@ -35,6 +37,15 @@ export default async function handler(request, response) {
     } catch (error) {
       console.error('Error creating user:', error);
       response.status(500).json({ success: false, message: 'Error al crear el usuario' });
+    }
+  } else if (request.method === 'GET') {
+    try {
+      const directoryPath = path.join(process.cwd(), './pages/listas');
+      const folders = fs.readdirSync(directoryPath).filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
+      response.status(200).json({ success: true, folders });
+    } catch (error) {
+      console.error('Error fetching folders:', error);
+      response.status(500).json({ success: false, message: 'Error al obtener las carpetas' });
     }
   } else {
     response.status(405).json({ success: false, message: 'Method not allowed' });
