@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import clientPromise from "@/lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { useEffect, useState, useCallback } from "react";
-import NavBar from '../../components/NavBar';
+import NavBar from '../../../pages/components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
 
