@@ -2,7 +2,6 @@ import clientPromise from "../../lib/mongodb";
 import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
-import fetch from 'node-fetch';
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
@@ -41,21 +40,26 @@ export default async function handler(request, response) {
     }
   } else if (request.method === 'GET') {
     try {
-      const url = 'https://evacor-ecommerce.vercel.app/listas';
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(`Failed to fetch from ${url}`);
+      const directoryPath = path.join(process.cwd(), './pages/listas');
+      console.log(`Checking directory: ${directoryPath}`);
+      console.log('Current working directory:', process.cwd());
+      if (!fs.existsSync(directoryPath)) {
+        throw new Error(`Directory not found: ${directoryPath}`);
       }
-      const html = await res.text();
-
-      // Parse the HTML to find the folders
-      const folderRegex = /<a href="\/listas\/([^"]+)\/">/g;
-      const folders = [];
-      let match;
-      while ((match = folderRegex.exec(html)) !== null) {
-        folders.push(match[1]);
-      }
+      const folders = fs.readdirSync(directoryPath).filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
       console.log(`Folders found: ${folders}`);
+
+      // Log the structure of the directory
+      const files = fs.readdirSync(directoryPath);
+      files.forEach(file => {
+        const filePath = path.join(directoryPath, file);
+        const stats = fs.statSync(filePath);
+        if (stats.isDirectory()) {
+          console.log(`Directory: ${filePath}`);
+        } else {
+          console.log(`File: ${filePath}`);
+        }
+      });
 
       const requiredFolders = ['lista4', 'lista4-final'];
       const foundFolders = requiredFolders.filter(folder => folders.includes(folder));
