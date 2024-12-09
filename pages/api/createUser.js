@@ -40,7 +40,7 @@ export default async function handler(request, response) {
     }
   } else if (request.method === 'GET') {
     try {
-      const directoryPath = path.join(process.cwd(), './pages/listas');
+      const directoryPath = path.join(__dirname, '../../pages/listas');
       console.log(`Checking directory: ${directoryPath}`);
       console.log('Current working directory:', process.cwd());
       if (!fs.existsSync(directoryPath)) {
