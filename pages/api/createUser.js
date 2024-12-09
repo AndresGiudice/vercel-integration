@@ -47,7 +47,15 @@ export default async function handler(request, response) {
       }
       const folders = fs.readdirSync(directoryPath).filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
       console.log(`Folders found: ${folders}`);
-      response.status(200).json({ success: true, folders });
+
+      const requiredFolders = ['lista4', 'lista4-final'];
+      const foundFolders = requiredFolders.filter(folder => folders.includes(folder));
+
+      if (foundFolders.length !== requiredFolders.length) {
+        throw new Error('Required folders not found');
+      }
+
+      response.status(200).json({ success: true, folders: foundFolders });
     } catch (error) {
       console.error('Error fetching folders:', error);
       response.status(500).json({ success: false, message: `Error al obtener las carpetas: ${error.message}` });
