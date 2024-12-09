@@ -45,7 +45,7 @@ export default async function handler(request, response) {
       response.status(200).json({ success: true, folders });
     } catch (error) {
       console.error('Error fetching folders:', error);
-      response.status(500).json({ success: false, message: 'Error al obtener las carpetas' });
+      response.status(500).json({ success: false, message: `Error al obtener las carpetas: ${error.message}` });
     }
   } else {
     response.status(405).json({ success: false, message: 'Method not allowed' });
