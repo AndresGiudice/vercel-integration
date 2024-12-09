@@ -40,7 +40,7 @@ export default async function handler(request, response) {
     }
   } else if (request.method === 'GET') {
     try {
-      const directoryPath = path.join(process.cwd(), './pages/listas');
+      const directoryPath = path.join(process.cwd(), process.env.LISTAS_DIRECTORY);
       console.log(`Checking directory: ${directoryPath}`);
       if (!fs.existsSync(directoryPath)) {
         throw new Error(`Directory not found: ${directoryPath}`);
