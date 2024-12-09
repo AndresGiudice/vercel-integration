@@ -43,7 +43,8 @@ export default async function handler(request, response) {
       const directoryPath = path.join(process.cwd(), 'pages', 'listas');
       console.log(`Checking directory: ${directoryPath}`);
       if (!fs.existsSync(directoryPath)) {
-        throw new Error(`Directory not found: ${directoryPath}`);
+        console.warn(`Directory not found: ${directoryPath}`);
+        return response.status(200).json({ success: true, folders: [] });
       }
       const folders = fs.readdirSync(directoryPath).filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
       console.log(`Folders found: ${folders}`);
@@ -64,7 +65,7 @@ export default async function handler(request, response) {
       const foundFolders = requiredFolders.filter(folder => folders.includes(folder));
 
       if (foundFolders.length !== requiredFolders.length) {
-        throw new Error('Required folders not found');
+        console.warn('Required folders not found');
       }
 
       response.status(200).json({ success: true, folders: foundFolders });
