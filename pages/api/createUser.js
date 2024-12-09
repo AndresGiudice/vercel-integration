@@ -48,6 +48,18 @@ export default async function handler(request, response) {
       const folders = fs.readdirSync(directoryPath).filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
       console.log(`Folders found: ${folders}`);
 
+      // Log the structure of the directory
+      const files = fs.readdirSync(directoryPath);
+      files.forEach(file => {
+        const filePath = path.join(directoryPath, file);
+        const stats = fs.statSync(filePath);
+        if (stats.isDirectory()) {
+          console.log(`Directory: ${filePath}`);
+        } else {
+          console.log(`File: ${filePath}`);
+        }
+      });
+
       const requiredFolders = ['lista4', 'lista4-final'];
       const foundFolders = requiredFolders.filter(folder => folders.includes(folder));
 
