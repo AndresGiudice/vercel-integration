@@ -41,6 +41,9 @@ export default async function handler(request, response) {
   } else if (request.method === 'GET') {
     try {
       const directoryPath = path.join(process.cwd(), './pages/listas');
+      if (!fs.existsSync(directoryPath)) {
+        throw new Error(`Directory not found: ${directoryPath}`);
+      }
       const folders = fs.readdirSync(directoryPath).filter(file => fs.statSync(path.join(directoryPath, file)).isDirectory());
       response.status(200).json({ success: true, folders });
     } catch (error) {
