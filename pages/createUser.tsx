@@ -27,6 +27,10 @@ const CreateUser = () => {
     fetchFolders();
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('visitedCreateUser', 'true'); // Establecer bandera en localStorage al acceder a la página
+  }, []);
+
   const handleAdminLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -74,6 +78,7 @@ const CreateUser = () => {
     const data = await response.json();
     if (data.success) {
       setMessage('Usuario creado exitosamente');
+      localStorage.setItem('userCreated', 'true'); // Establecer bandera en localStorage
     } else {
       setMessage('Error al crear el usuario: ' + data.message);
     }

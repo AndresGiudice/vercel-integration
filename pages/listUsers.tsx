@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const ListUsers = () => {
   interface User {
@@ -8,8 +9,15 @@ const ListUsers = () => {
   }
 
   const [users, setUsers] = useState<User[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
+    const visitedCreateUser = localStorage.getItem('visitedCreateUser');
+    if (!visitedCreateUser) {
+      router.push('/createUser'); // Redirigir a createUser si no se ha visitado la página
+      return;
+    }
+
     const fetchUsers = async () => {
       const response = await fetch('/api/listUsers');
       const data = await response.json();
@@ -21,7 +29,7 @@ const ListUsers = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
