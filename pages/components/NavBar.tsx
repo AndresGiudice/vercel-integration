@@ -1,5 +1,5 @@
 // components/NavBar.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { Bars3Icon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -17,12 +17,12 @@ const placeOrder = async (cart: any, totalAmount: number, clearCart: () => void)
   }
 };
 
-const bolsasDePapel = [
+const bolsasDePapel = (priceList: string) => [
   {
     name: 'Bolsas de Fondo Cuadrado con Manija',
     href: '#',
     submenu: [
-      { name: 'Bolsas con Manija Kraft', href: '/listas/lista4-final/bolsas-con-manija-kraft' },
+      { name: 'Bolsas con Manija Kraft', href: `/listas/${priceList}/bolsas-con-manija-kraft` },
       { name: 'Bolsas con Manija Blancas', href: '/listas/lista4-final/bolsas-con-manija-blancas' },
       { name: 'Bolsas con Manija Color', href: '/listas/lista4-final/bolsas-con-manija-color' },
       { name: 'Bolsas con Manija Fantasía', href: '#' },
@@ -68,6 +68,21 @@ export default function Example() {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [showCartDetails, setShowCartDetails] = useState(false);
   const { cart, clearCart, removeItem, totalAmount } = useCart(); // Added totalAmount
+  const [priceList, setPriceList] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPriceList = async () => {
+      try {
+        const response = await axios.get('/api/listUsers');
+        const { priceList } = response.data as { priceList: string[] };
+        setPriceList(priceList[0]); // Assuming you want the first priceList
+      } catch (error) {
+        console.error('Error fetching price list:', error);
+      }
+    };
+
+    fetchPriceList();
+  }, []);
 
   const handleSubmenuClick = (name: string) => {
     setOpenSubmenu(openSubmenu === name ? null : name);
@@ -130,45 +145,47 @@ export default function Example() {
           </button>
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
-          <div className="relative">
-            <button
-              className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 bg-[#A6CE39]"
-              onClick={() => setOpenMenu(openMenu === 'bolsas' ? null : 'bolsas')}
-            >
-              Bolsas de Papel
-              <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-black" />
-            </button>
-            {openMenu === 'bolsas' && (
-              <div className="absolute z-10 mt-3 w-screen max-w-sm overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
-                <div className="p-4">
-                  {bolsasDePapel.map((item) => (
-                    <div key={item.name} className="mb-2">
-                      <button
-                        className="flex w-full items-center justify-between rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 bg-gray-200"
-                        onClick={() => handleSubmenuClick(item.name)}
-                      >
-                        {item.name}
-                        <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-black" />
-                      </button>
-                      {openSubmenu === item.name && (
-                        <div className="mt-2 space-y-2 ml-4">
-                          {item.submenu.map((subItem) => (
-                            <a
-                              key={subItem.name}
-                              href={subItem.href}
-                              className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                            >
-                              {subItem.name}
-                            </a>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+          {priceList && (
+            <div className="relative">
+              <button
+                className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 bg-[#A6CE39]"
+                onClick={() => setOpenMenu(openMenu === 'bolsas' ? null : 'bolsas')}
+              >
+                Bolsas de Papel
+                <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-black" />
+              </button>
+              {openMenu === 'bolsas' && (
+                <div className="absolute z-10 mt-3 w-screen max-w-sm overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                  <div className="p-4">
+                    {priceList && bolsasDePapel(priceList).map((item) => (
+                      <div key={item.name} className="mb-2">
+                        <button
+                          className="flex w-full items-center justify-between rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 bg-gray-200"
+                          onClick={() => handleSubmenuClick(item.name)}
+                        >
+                          {item.name}
+                          <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-black" />
+                        </button>
+                        {openSubmenu === item.name && (
+                          <div className="mt-2 space-y-2 ml-4">
+                            {item.submenu.map((subItem) => (
+                              <a
+                                key={subItem.name}
+                                href={subItem.href}
+                                className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                              >
+                                {subItem.name}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
           <div className="relative">
             <button
               className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 bg-[#A6CE39]"
@@ -268,7 +285,7 @@ export default function Example() {
                   </button>
                   {openMenu === 'bolsas' && (
                     <div className="mt-2 space-y-2">
-                      {bolsasDePapel.map((item) => (
+                      {priceList && bolsasDePapel(priceList).map((item) => (
                         <div key={item.name} className="mb-2">
                           <button
                             className="flex w-full items-center justify-between rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 bg-gray-200"

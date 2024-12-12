@@ -8,8 +8,9 @@ export default async function handler(request, response) {
       const collection = db.collection('users-data');
 
       const users = await collection.find({}).toArray();
+      const priceList = users.map(user => user.priceList); // Obtener priceList de los usuarios
 
-      response.status(200).json({ success: true, users });
+      response.status(200).json({ success: true, users, priceList });
     } catch (error) {
       console.error('Error fetching users:', error);
       response.status(500).json({ success: false, message: 'Error al obtener los usuarios' });
