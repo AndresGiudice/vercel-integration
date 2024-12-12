@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
+import nookies from 'nookies';
 
 const ListUsers = () => {
   interface User {
@@ -12,12 +14,6 @@ const ListUsers = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const visitedCreateUser = localStorage.getItem('visitedCreateUser');
-    if (!visitedCreateUser) {
-      router.push('/createUser'); // Redirigir a createUser si no se ha visitado la página
-      return;
-    }
-
     const fetchUsers = async () => {
       const response = await fetch('/api/listUsers');
       const data = await response.json();
@@ -47,6 +43,23 @@ const ListUsers = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { token } = context.query;
+
+  if (!token || token !== 'expected_token_value') {
+    return {
+      redirect: {
+        destination: '/createUser',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 };
 
 export default ListUsers;

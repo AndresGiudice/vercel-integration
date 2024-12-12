@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { setCookie } from 'nookies';
 
 const CreateUser = () => {
   const [adminName, setAdminName] = useState('');
@@ -28,7 +29,7 @@ const CreateUser = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('visitedCreateUser', 'true'); // Establecer bandera en localStorage al acceder a la página
+    setCookie(null, 'visitedCreateUser', 'true', { path: '/' });
   }, []);
 
   const handleAdminLogin = async (event: React.FormEvent) => {
@@ -188,7 +189,7 @@ const CreateUser = () => {
                 Crear Usuario
               </button>
             </form>
-            <Link href="/listUsers" legacyBehavior>
+            <Link href="/listUsers?token=expected_token_value" legacyBehavior>
               <a className="w-full text-blue-500 py-2 mt-4 hover:underline block text-center">
                 Ver listado de usuarios
               </a>
