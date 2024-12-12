@@ -4,7 +4,7 @@ import path from 'path';
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      const directoryPath = path.resolve('./public/price-lists');
+      const directoryPath = path.resolve('./public/listas');
       if (!fs.existsSync(directoryPath)) {
         throw new Error(`Directory not found: ${directoryPath}`);
       }
