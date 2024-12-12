@@ -137,7 +137,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-        <p>LISTA 4 FINAL</p>
+        <p>LISTA 4</p>
       </footer>
     </div>
   );

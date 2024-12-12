@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import nookies from 'nookies';
+import { FaPencilAlt, FaTrash } from 'react-icons/fa'; // Import trash icon
 
 const ListUsers = () => {
   interface User {
@@ -11,6 +12,9 @@ const ListUsers = () => {
   }
 
   const [users, setUsers] = useState<User[]>([]);
+  const [editingUser, setEditingUser] = useState<string | null>(null);
+  const [editedUser, setEditedUser] = useState<User | null>(null);
+  const [priceLists, setPriceLists] = useState<string[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,8 +28,66 @@ const ListUsers = () => {
       }
     };
 
+    const fetchPriceLists = async () => {
+      const response = await fetch('/api/getPriceLists');
+      const data = await response.json();
+      if (data.success) {
+        setPriceLists(data.priceLists);
+      } else {
+        console.error('Error fetching price lists:', data.message);
+      }
+    };
+
     fetchUsers();
+    fetchPriceLists();
   }, [router]);
+
+  const handleEditClick = (user: User) => {
+    setEditingUser(user.email);
+    setEditedUser(user);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (editedUser) {
+      setEditedUser({ ...editedUser, [e.target.name]: e.target.value });
+    }
+  };
+
+  const handleSaveClick = async () => {
+    if (editedUser) {
+      const response = await fetch('/api/updateUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editedUser),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setUsers(users.map(user => user.email === editedUser.email ? editedUser : user));
+        setEditingUser(null);
+        setEditedUser(null);
+      } else {
+        console.error('Error updating user:', data.message);
+      }
+    }
+  };
+
+  const handleDeleteClick = async (email: string) => {
+    const response = await fetch('/api/deleteUser', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setUsers(users.filter(user => user.email !== email));
+    } else {
+      console.error('Error deleting user:', data.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -34,9 +96,49 @@ const ListUsers = () => {
         <ul>
           {users.map((user) => (
             <li key={user.email} className="mb-2">
-              <p><strong>Nombre:</strong> {user.name}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Lista de Precios:</strong> {user.priceList}</p>
+              {editingUser === user.email ? (
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={editedUser?.name || ''}
+                    onChange={handleInputChange}
+                    className="border p-1 mb-1 w-full"
+                  />
+                  <input
+                    type="text"
+                    name="email"
+                    value={editedUser?.email || ''}
+                    onChange={handleInputChange}
+                    className="border p-1 mb-1 w-full"
+                  />
+                  <select
+                    name="priceList"
+                    value={editedUser?.priceList || ''}
+                    onChange={handleInputChange}
+                    className="border p-1 mb-1 w-full"
+                  >
+                    {priceLists.map((priceList) => (
+                      <option key={priceList} value={priceList}>
+                        {priceList}
+                      </option>
+                    ))}
+                  </select>
+                  <button onClick={handleSaveClick} className="bg-green-500 text-white p-1 rounded">Guardar</button>
+                </div>
+              ) : (
+                <div>
+                  <p><strong>Nombre:</strong> {user.name}</p>
+                  <p><strong>Email:</strong> {user.email}</p>
+                  <p><strong>Lista de Precios:</strong> {user.priceList}</p>
+                  <button onClick={() => handleEditClick(user)} className="text-green-500 mr-2">
+                    <FaPencilAlt />
+                  </button>
+                  <button onClick={() => handleDeleteClick(user.email)} className="text-red-500">
+                    <FaTrash />
+                  </button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
