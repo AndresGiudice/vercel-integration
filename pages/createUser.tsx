@@ -66,6 +66,8 @@ const CreateUser = () => {
       setMessage('Usuario creado exitosamente');
       localStorage.setItem('userCreated', 'true'); // Establecer bandera en localStorage
       localStorage.setItem('priceList', priceList); // Guardar Lista de Precios en localStorage
+    } else if (data.message === 'Email already registered') {
+      setMessage('El mail ya está registrado');
     } else {
       setMessage('Error al crear el usuario: ' + data.message);
     }
