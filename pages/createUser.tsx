@@ -10,23 +10,8 @@ const CreateUser = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [priceList, setPriceList] = useState('');
-  const [folders, setFolders] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const fetchFolders = async () => {
-      const response = await fetch('/api/getPriceLists');
-      const data = await response.json();
-      if (data.success) {
-        setFolders(data.priceLists);
-      } else {
-        setMessage('Error al obtener las carpetas: ' + data.message);
-      }
-    };
-
-    fetchFolders();
-  }, []);
 
   useEffect(() => {
     setCookie(null, 'visitedCreateUser', 'true', { path: '/' });
@@ -73,13 +58,14 @@ const CreateUser = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: userName, email: userEmail, password: userPassword, priceList }),
+      body: JSON.stringify({ name: userName, email: userEmail, password: userPassword, priceList }), // Ensure priceList is included
     });
 
     const data = await response.json();
     if (data.success) {
       setMessage('Usuario creado exitosamente');
       localStorage.setItem('userCreated', 'true'); // Establecer bandera en localStorage
+      localStorage.setItem('priceList', priceList); // Guardar Lista de Precios en localStorage
     } else {
       setMessage('Error al crear el usuario: ' + data.message);
     }
@@ -189,10 +175,10 @@ const CreateUser = () => {
                   required
                   className="w-full px-3 py-2 border rounded"
                 >
-                  <option value="">Seleccione una lista</option>
-                  {folders.map((folder) => (
-                    <option key={folder} value={folder}>{folder}</option>
-                  ))}
+                  <option value="">seleccione una lista</option>
+                  <option value="lista4">lista4</option>
+                  <option value="lista4-10">lista4-10</option>
+                  <option value="lista4-final">lista4-final</option>
                 </select>
               </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
