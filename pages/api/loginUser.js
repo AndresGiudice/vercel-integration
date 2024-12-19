@@ -14,7 +14,7 @@ export default async function handler(request, response) {
       const user = await collection.findOne({ email });
 
       if (user && await bcrypt.compare(password, user.password)) {
-        response.status(200).json({ success: true, message: 'Login successful', folder: user.priceList });
+        response.status(200).json({ success: true, message: 'Login successful', priceList: user.priceList });
       } else {
         response.status(401).json({ success: false, message: 'Invalid credentials' });
       }
