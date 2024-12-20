@@ -23,6 +23,8 @@ const LoginUser = () => {
     if (data.success) {
       console.log('Price List:', data.priceList); // Log the priceList to the console
       setMessage('Login successful');
+      localStorage.setItem('authToken', data.token); // Store the auth token
+      localStorage.setItem('user', JSON.stringify(data.user)); // Store the user information
       router.push('/'); // Redirect to index page
     } else {
       setMessage('Login failed: ' + data.message);

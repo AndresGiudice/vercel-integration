@@ -2,8 +2,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Dialog, DialogPanel } from '@headlessui/react';
-import { Bars3Icon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, ChevronDownIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'; // Add UserIcon import
 import { useCart } from '../../context/CartContext';
+import { useUser } from '../../context/UserContext'; // Assuming you have a UserContext
 import axios from 'axios';
 
 const placeOrder = async (cart: any, totalAmount: number, clearCart: () => void) => {
@@ -23,8 +24,8 @@ const bolsasDePapel = (priceList: string) => [
     href: '#',
     submenu: [
       { name: 'Bolsas con Manija Kraft', href: `/listas/${priceList}/bolsas-con-manija-kraft` },
-      { name: 'Bolsas con Manija Blancas', href: '/listas/lista4-final/bolsas-con-manija-blancas' },
-      { name: 'Bolsas con Manija Color', href: '/listas/lista4-final/bolsas-con-manija-color' },
+      { name: 'Bolsas con Manija Blancas', href: `/listas/${priceList}/bolsas-con-manija-blancas` },
+      { name: 'Bolsas con Manija Color', href: `/listas/${priceList}/bolsas-con-manija-color` },
       { name: 'Bolsas con Manija Fantasía', href: '#' },
     ],
   },
@@ -32,27 +33,27 @@ const bolsasDePapel = (priceList: string) => [
     name: 'Bolsas de Fondo Cuadrado sin Manija',
     href: '#',
     submenu: [
-      { name: 'Bolsas Fast Food "Cotillón" Estándar', href: '/listas/lista4-final/bolsas-fast-food-color' },
-      { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: '/listas/lista4-final/bolsas-fast-food-color-x10' },
-      { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: '/listas/lista4-final/bolsas-fast-food-fantasia' },
+      { name: 'Bolsas Fast Food "Cotillón" Estándar', href: `/listas/${priceList}/bolsas-fast-food-color` },
+      { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: `/listas/${priceList}/bolsas-fast-food-color-x10` },
+      { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: `/listas/${priceList}/bolsas-fast-food-fantasia` },
       { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
-      { name: 'Bolsas Fast Food Kraft', href: '/listas/lista4-final/bolsas-fast-food-kraft' },
+      { name: 'Bolsas Fast Food Kraft', href: `/listas/${priceList}/bolsas-fast-food-kraft` },
     ],
   },
   {
     name: 'Bolsas de Fondo Americano',
     href: '#',
     submenu: [
-      { name: 'Bolsas de Fondo Americano Kraft', href: '/listas/lista4-final/bolsas-fondo-americano-kraft' },
-      { name: 'Bolsas de Fondo Americano Sulfito', href: '/listas/lista4-final/bolsas-fondo-americano-sulfito' },
+      { name: 'Bolsas de Fondo Americano Kraft', href: `/listas/${priceList}/bolsas-fondo-americano-kraft` },
+      { name: 'Bolsas de Fondo Americano Sulfito', href: `/listas/${priceList}/bolsas-fondo-americano-sulfito` },
     ],
   },
 ];
 
-const bobinas = [
-  { name: 'Bobinas de Papel Obra', href: '/listas/lista4-final/bobinas-obra' },
-  { name: 'Bobinas de Papel Sulfito', href: '/listas/lista4-final/bobinas-sulfito' },
-  { name: 'Bobinas de Papel Kraft', href: '/listas/lista4-final/bobinas-kraft' },
+const bobinas = (priceList: string) => [
+  { name: 'Bobinas de Papel Obra', href: `/listas/${priceList}/bobinas-obra` },
+  { name: 'Bobinas de Papel Sulfito', href: `/listas/${priceList}/bobinas-sulfito` },
+  { name: 'Bobinas de Papel Kraft', href: `/listas/${priceList}/bobinas-kraft` },
 ];
 
 const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number) => {
@@ -69,6 +70,13 @@ export default function Example() {
   const [showCartDetails, setShowCartDetails] = useState(false);
   const { cart, clearCart, removeItem, totalAmount } = useCart(); // Added totalAmount
   const [priceList, setPriceList] = useState<string | null>(null);
+  const { user, logout, setUser } = useUser(); // Ensure setUser is defined
+  const [showUserDetails, setShowUserDetails] = useState(false); // Add this line
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = '/loginUser'; // Redirect to loginUser.tsx
+  };
 
   useEffect(() => {
     const fetchPriceList = async () => {
@@ -82,6 +90,22 @@ export default function Example() {
     };
 
     fetchPriceList();
+
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (typeof setUser === 'function') {
+          setUser(parsedUser);
+        } else {
+          console.error('setUser is not a function');
+        }
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+      }
+    } else {
+      console.error('No user found in localStorage');
+    }
   }, []);
 
   const handleSubmenuClick = (name: string) => {
@@ -110,6 +134,10 @@ export default function Example() {
 
   const toggleCartDetails = () => {
     setShowCartDetails(!showCartDetails);
+  };
+
+  const toggleUserDetails = () => {
+    setShowUserDetails(!showUserDetails);
   };
 
   return (
@@ -157,7 +185,7 @@ export default function Example() {
               {openMenu === 'bolsas' && (
                 <div className="absolute z-10 mt-3 w-screen max-w-sm overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                   <div className="p-4">
-                    {priceList && bolsasDePapel(priceList).map((item) => (
+                    {priceList && bolsasDePapel(user.priceList).map((item) => (
                       <div key={item.name} className="mb-2">
                         <button
                           className="flex w-full items-center justify-between rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 bg-gray-200"
@@ -197,7 +225,7 @@ export default function Example() {
             {openMenu === 'bobinas' && (
               <div className="absolute z-10 mt-3 w-screen max-w-[15rem] overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
-                  {bobinas.map((item) => (
+                  {bobinas(user.priceList).map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
@@ -220,8 +248,27 @@ export default function Example() {
             <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
             {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
           </a>
+          <button
+            onClick={toggleUserDetails}
+            className="ml-4 p-2 rounded-full text-gray-700 hover:text-gray-900"
+          >
+            <UserIcon className="h-6 w-6" />
+          </button>
         </div>
       </nav>
+      {showUserDetails && user && ( // Check if user exists
+        <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg p-4">
+          <p className="text-sm font-semibold">Usuario: {user.name}</p>
+          <p className="text-sm text-gray-500">Email: {user.email}</p>
+          <p className="text-sm text-gray-500">Price List: {user.priceList}</p> {/* Display priceList */}
+          <button
+            onClick={handleLogout} // Use handleLogout instead of logout
+            className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      )}
       {showCartDetails && totalItems > 0 && (
         <div className="p-4 bg-white shadow-lg mt-4 w-full">
           <div className="max-w-md mx-auto">
@@ -285,7 +332,7 @@ export default function Example() {
                   </button>
                   {openMenu === 'bolsas' && (
                     <div className="mt-2 space-y-2">
-                      {priceList && bolsasDePapel(priceList).map((item) => (
+                      {priceList && bolsasDePapel(user.priceList).map((item) => (
                         <div key={item.name} className="mb-2">
                           <button
                             className="flex w-full items-center justify-between rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 bg-gray-200"
@@ -322,7 +369,7 @@ export default function Example() {
                   </button>
                   {openMenu === 'bobinas' && (
                     <div className="mt-2 space-y-2">
-                      {bobinas.map((item) => (
+                      {bobinas(user.priceList).map((item) => (
                         <a
                           key={item.name}
                           href={item.href}

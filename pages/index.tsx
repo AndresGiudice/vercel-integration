@@ -3,11 +3,11 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import NavBar from "./components/NavBar"; // Importar NavBar
 import '../styles/styles.css';
-
+import withAuth from '../components/withAuth';
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+function HomePage() {
   return (
     <div>
       <NavBar />
@@ -21,3 +21,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default withAuth(HomePage);
