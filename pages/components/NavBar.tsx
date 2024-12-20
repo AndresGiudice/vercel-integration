@@ -6,6 +6,7 @@ import { Bars3Icon, ChevronDownIcon, XMarkIcon, UserIcon } from '@heroicons/reac
 import { useCart } from '../../context/CartContext';
 import { useUser } from '../../context/UserContext'; // Assuming you have a UserContext
 import axios from 'axios';
+import withAuth from '../../components/withAuth';
 
 const placeOrder = async (cart: any, totalAmount: number, clearCart: () => void) => {
   try {
@@ -63,7 +64,7 @@ const calculateDiscountedPrice = (code: string, totalQuantity: number, price: nu
   return price;
 };
 
-export default function Example() {
+function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -390,3 +391,5 @@ export default function Example() {
     </header>
   );
 }
+
+export default withAuth(Example);
