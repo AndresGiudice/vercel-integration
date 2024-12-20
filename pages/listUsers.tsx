@@ -14,7 +14,7 @@ const ListUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editedUser, setEditedUser] = useState<User | null>(null);
-  const [priceLists, setPriceLists] = useState<string[]>([]);
+  const [priceLists, setPriceLists] = useState<string[]>(['lista4', 'lista4-10', 'lista4-final']);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const ListUsers = () => {
       const response = await fetch('/api/getPriceLists');
       const data = await response.json();
       if (data.success) {
-        setPriceLists(data.priceLists);
+        setPriceLists(['lista4', 'lista4-10', 'lista4-final']);
       } else {
         console.error('Error fetching price lists:', data.message);
       }
@@ -92,7 +92,10 @@ const ListUsers = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6">Listado de Usuarios</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Listado de Usuarios</h1>
+          <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
+        </div>
         <ul>
           {users.map((user) => (
             <li key={user.email} className="mb-2">

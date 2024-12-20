@@ -12,6 +12,8 @@ const CreateUser = () => {
   const [priceList, setPriceList] = useState('');
   const [message, setMessage] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const [showUserPassword, setShowUserPassword] = useState(false);
 
   useEffect(() => {
     setCookie(null, 'visitedCreateUser', 'true', { path: '/' });
@@ -105,16 +107,24 @@ const CreateUser = () => {
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-4 relative">
                 <label htmlFor="adminPassword" className="block text-gray-700 font-bold mb-2">Contraseña:</label>
-                <input
-                  type="password"
-                  id="adminPassword"
-                  value={adminPassword}
-                  onChange={(e) => setAdminPassword(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border rounded"
-                />
+                <div className="relative">
+                  <input
+                    type={showAdminPassword ? "text" : "password"}
+                    id="adminPassword"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded pr-10"
+                  />
+                  <span
+                    onClick={() => setShowAdminPassword(!showAdminPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  >
+                    {showAdminPassword ? '🔓' : '🔒'}
+                  </span>
+                </div>
               </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
                 Login
@@ -157,16 +167,24 @@ const CreateUser = () => {
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-4 relative">
                 <label htmlFor="userPassword" className="block text-gray-700 font-bold mb-2">Contraseña:</label>
-                <input
-                  type="password"
-                  id="userPassword"
-                  value={userPassword}
-                  onChange={(e) => setUserPassword(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border rounded"
-                />
+                <div className="relative">
+                  <input
+                    type={showUserPassword ? "text" : "password"}
+                    id="userPassword"
+                    value={userPassword}
+                    onChange={(e) => setUserPassword(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded pr-10"
+                  />
+                  <span
+                    onClick={() => setShowUserPassword(!showUserPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  >
+                    {showUserPassword ? '🔓' : '🔒'}
+                  </span>
+                </div>
               </div>
               <div className="mb-4">
                 <label htmlFor="priceList" className="block text-gray-700 font-bold mb-2">Lista de Precios:</label>

@@ -26,7 +26,10 @@ const RegisterAdmin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6">Registrar Administrador</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Registrar Administrador</h1>
+          <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Nombre:</label>
@@ -61,7 +64,7 @@ const RegisterAdmin = () => {
               className="w-full px-3 py-2 border rounded"
             />
           </div>
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+          <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
             Registrar
           </button>
         </form>

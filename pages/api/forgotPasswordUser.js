@@ -4,26 +4,27 @@ import crypto from 'crypto';
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
-    const { adminEmail } = request.body;
+    const { userEmail } = request.body;
 
     try {
       const client = await clientPromise;
       const db = client.db('users');
-      const collection = db.collection('admin-data');
+      const collection = db.collection('users-data');
 
-      // Buscar el administrador en la base de datos
-      const admin = await collection.findOne({ email: adminEmail });
+      // Buscar el usuario en la base de datos
+      const user = await collection.findOne({ email: userEmail });
 
-      if (!admin) {
-        return response.status(404).json({ success: false, message: 'Admin not found' });
+      if (!user) {
+        return response.status(404).json({ success: false, message: 'User not found' });
       }
 
       // Generar un token de recuperación de contraseña
       const token = crypto.randomBytes(20).toString('hex');
       const resetPasswordUrl = `https://evacor-ecommerce.vercel.app/resetPassword?token=${token}`;
 
+
       // Guardar el token en la base de datos
-      await collection.updateOne({ email: adminEmail }, { $set: { resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 } });
+      await collection.updateOne({ email: userEmail }, { $set: { resetPasswordToken: token, resetPasswordExpires: Date.now() + 3600000 } });
 
       // Configurar el transporte de correo
       const transporter = nodemailer.createTransport({
@@ -35,15 +36,15 @@ export default async function handler(request, response) {
       });
 
       // Configurar el correo electrónico
-    const mailOptions = {
-      to: adminEmail,
-      from: 'andres.evacor@gmail.com',
-      subject: 'Restablecimiento de contraseña',
-      text: `Has recibido este correo porque tú (u otra persona) ha solicitado el restablecimiento de la contraseña de tu cuenta.\n\n
-      Por favor haz clic en el siguiente enlace, o pégalo en tu navegador para completar el proceso:\n\n
-      ${resetPasswordUrl}\n\n
-      Si no solicitaste esto, por favor ignora este correo y tu contraseña permanecerá sin cambios.\n`,
-    };
+      const mailOptions = {
+        to: userEmail,
+        from: 'andres.evacor@gmail.com',
+        subject: 'Restablecimiento de contraseña',
+        text: `Has recibido este correo porque tú (u otra persona) ha solicitado el restablecimiento de la contraseña de tu cuenta.\n\n
+        Por favor haz clic en el siguiente enlace, o pégalo en tu navegador para completar el proceso:\n\n
+        ${resetPasswordUrl}\n\n
+        Si no solicitaste esto, por favor ignora este correo y tu contraseña permanecerá sin cambios.\n`,
+      };
 
       // Enviar el correo electrónico
       await transporter.sendMail(mailOptions);
