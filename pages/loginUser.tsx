@@ -49,7 +49,7 @@ const LoginUser = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Iniciar Sesión</h1>
+          <h1 className="text-2xl font-bold text-black">Iniciar Sesión</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
         </div>
         <form onSubmit={handleUserLogin}>
@@ -61,7 +61,7 @@ const LoginUser = () => {
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 border rounded text-black"
             />
           </div>
           <div className="mb-4 relative">
@@ -73,7 +73,7 @@ const LoginUser = () => {
                 value={userPassword}
                 onChange={(e) => setUserPassword(e.target.value)}
                 required
-                className="w-full px-3 py-2 border rounded pr-10"
+                className="w-full px-3 py-2 border rounded pr-10 text-black"
               />
               <span
                 onClick={() => setShowUserPassword(!showUserPassword)}
