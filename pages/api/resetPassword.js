@@ -8,12 +8,18 @@ export default async function handler(request, response) {
     try {
       const client = await clientPromise;
       const db = client.db('users');
-      const collection = db.collection('admin-data');
+      const adminCollection = db.collection('admin-data');
+      const userCollection = db.collection('users-data');
 
       // Buscar el administrador en la base de datos usando el token
-      const admin = await collection.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+      let account = await adminCollection.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
 
-      if (!admin) {
+      if (!account) {
+        // Buscar el usuario en la base de datos usando el token
+        account = await userCollection.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+      }
+
+      if (!account) {
         return response.status(400).json({ success: false, message: 'Token inválido o expirado' });
       }
 
@@ -21,6 +27,7 @@ export default async function handler(request, response) {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
       // Actualizar la contraseña en la base de datos
+      const collection = account.email.includes('@admin.com') ? adminCollection : userCollection;
       await collection.updateOne(
         { resetPasswordToken: token },
         { $set: { password: hashedPassword, resetPasswordToken: null, resetPasswordExpires: null } }
