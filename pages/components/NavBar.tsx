@@ -251,17 +251,17 @@ function Example() {
           </a>
           <button
             onClick={toggleUserDetails}
-            className="ml-4 p-2 rounded-full text-gray-700 hover:text-gray-900"
+            className="ml-4 rounded-full text-gray-700 hover:text-gray-900"
           >
             <UserIcon className="h-6 w-6" />
           </button>
         </div>
       </nav>
       {showUserDetails && user && ( // Check if user exists
-        <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg p-4">
+        <div className="absolute right-4 mt-2 w-48 bg-white shadow-lg rounded-lg p-4">
           <p className="text-sm font-semibold">Usuario: {user.name}</p>
-          <p className="text-sm text-gray-500">Email: {user.email}</p>
-          <p className="text-sm text-gray-500">Price List: {user.priceList}</p> {/* Display priceList */}
+          <p className="text-sm text-gray-500">{user.email}</p>
+          <p className="text-sm text-gray-500">Precio: {user.priceList}</p> {/* Display priceList */}
           <button
             onClick={handleLogout} // Use handleLogout instead of logout
             className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg"
