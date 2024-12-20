@@ -382,6 +382,13 @@ function Example() {
                     </div>
                   )}
                 </div>
+                <button
+                  onClick={toggleUserDetails}
+                  className="mt-4 p-1.5 rounded-full text-gray-700 hover:text-gray-900 border border-gray-900 text-center" // Added user icon inside mobile menu
+                >
+                  <UserIcon className="h-6 w-6 inline-block mr-2" />
+                  <span>Usuario</span>
+                </button>
               </div>
         
             </div>
