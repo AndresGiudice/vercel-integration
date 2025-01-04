@@ -27,14 +27,6 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
     { header: 'Total', key: 'total', width: 15 },
   ];
 
-  // Agregar datos del usuario si están disponibles
-  if (user) {
-    worksheet.addRow({ description: `Usuario: ${user.name}` });
-    worksheet.addRow({ description: `Email: ${user.email}` });
-    worksheet.addRow({ description: `Precio: ${user.priceList}` });
-    worksheet.addRow({}); // Empty row for spacing
-  }
-
   // Agregar filas
   Object.entries(cart).forEach(([product, item]) => {
     const { code, description, quantity, price } = item;
@@ -51,6 +43,14 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
   // Agregar fila de total
   worksheet.addRow({});
   worksheet.addRow({ description: 'Total', total: totalAmount });
+
+  // Agregar datos del usuario si están disponibles
+  if (user) {
+    worksheet.addRow({});
+    worksheet.addRow({ code: `Usuario: ${user.name}` });
+    worksheet.addRow({ code: `Email: ${user.email}` });
+    worksheet.addRow({ code: `Precio: ${user.priceList}` });
+  }
 
   // Generar el archivo Excel
   const buffer = await workbook.xlsx.writeBuffer();
