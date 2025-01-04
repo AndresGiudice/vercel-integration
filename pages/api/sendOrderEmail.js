@@ -8,7 +8,7 @@ function calculateDiscountedPrice(code, totalQuantity, price) {
   return price;
 }
 
-async function sendOrderEmail(cart, totalAmount) {
+async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
   // Calcular la cantidad total de productos con el código "Fb3"
   const totalQuantityFb3 = Object.values(cart).reduce((acc, item) => {
     return item.code === 'Fb3' ? acc + item.quantity : acc;
@@ -26,6 +26,14 @@ async function sendOrderEmail(cart, totalAmount) {
     { header: 'Precio Unitario', key: 'price', width: 15 },
     { header: 'Total', key: 'total', width: 15 },
   ];
+
+  // Agregar datos del usuario si están disponibles
+  if (user) {
+    worksheet.addRow({ description: `Usuario: ${user.name}` });
+    worksheet.addRow({ description: `Email: ${user.email}` });
+    worksheet.addRow({ description: `Precio: ${user.priceList}` });
+    worksheet.addRow({}); // Empty row for spacing
+  }
 
   // Agregar filas
   Object.entries(cart).forEach(([product, item]) => {
@@ -77,9 +85,9 @@ async function sendOrderEmail(cart, totalAmount) {
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { cart, totalAmount } = req.body;
+    const { cart, totalAmount, user } = req.body; // Add user to request body
     try {
-      await sendOrderEmail(cart, totalAmount);
+      await sendOrderEmail(cart, totalAmount, user); // Pass user to sendOrderEmail
       res.status(200).json({ message: 'Correo enviado con éxito' });
     } catch (error) {
       console.error('Error al enviar el correo:', error);

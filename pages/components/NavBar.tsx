@@ -8,9 +8,9 @@ import { useUser } from '../../context/UserContext'; // Assuming you have a User
 import axios from 'axios';
 import withAuth from '../../components/withAuth';
 
-const placeOrder = async (cart: any, totalAmount: number, clearCart: () => void) => {
+const placeOrder = async (cart: any, totalAmount: number, user: any, clearCart: () => void) => { // Add user parameter
   try {
-    await axios.post('/api/sendOrderEmail', { cart, totalAmount });
+    await axios.post('/api/sendOrderEmail', { cart, totalAmount, user }); // Include user in the request body
     alert('Pedido realizado con éxito!');
     clearCart();
   } catch (error) {
@@ -125,7 +125,7 @@ function Example() {
 
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true); // Add this line
-    await placeOrder(cart, totalAmount, clearCart);
+    await placeOrder(cart, totalAmount, user, clearCart); // Pass user to placeOrder
     setIsPlacingOrder(false); // Add this line
   };
 
