@@ -297,9 +297,9 @@ function Example() {
         </div>
       </nav>
       {/* Dark overlay */}
-      {(showCartDetails || showUserDetails || (openMenu && window.innerWidth >= 1024)) && <div className="fixed inset-0 bg-black opacity-50 z-40"></div>}
+      {(showCartDetails || (showUserDetails && !mobileMenuOpen) || (openMenu && window.innerWidth >= 1024)) && <div className="fixed inset-0 bg-black opacity-50 z-40 lg:block"></div>}
       {showUserDetails && user && (
-        <div className="absolute right-4 mt-2 w-48 bg-white shadow-lg rounded-lg p-4 z-50">
+        <div className="absolute right-4 mt-2 w-48 bg-white shadow-lg rounded-lg p-4 z-50 hidden lg:block">
           <div className="absolute top-0 left-0 right-0 h-14 bg-transparent z-50" onClick={toggleUserDetails}></div>
           <div className="max-w-md mx-auto mt-2">
             <p className="text-sm font-semibold">Usuario: {user.name}</p>
@@ -445,16 +445,22 @@ function Example() {
                     </div>
                   )}
                 </div>
-                <button
-                  onClick={() => {
-                    toggleUserDetails();
-                    setOpenMenu(null);
-                  }}
-                  className="mt-4 p-1.5 rounded-full text-gray-700 hover:text-gray-900 border border-gray-900 text-center" // Added user icon inside mobile menu
-                >
-                  <UserIcon className="h-6 w-6 inline-block mr-2" />
-                  <span>Usuario</span>
-                </button>
+                {user && (
+                  <div className="mt-4 bg-white shadow-lg rounded-lg p-4 lg:hidden">
+                    <p className="text-sm font-semibold">Usuario: {user.name}</p>
+                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <p className="text-sm text-gray-500">Precio: {user.priceList}</p>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg"
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                )}
               </div>
         
             </div>
