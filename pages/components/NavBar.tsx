@@ -319,9 +319,9 @@ function Example() {
         </div>
       )}
       {showCartDetails && totalItems > 0 && (
-        <div className="p-4 bg-white shadow-lg mt-4 w-full z-50 relative">
+        <div className="p-4 bg-white shadow-lg w-full z-50 relative">
           <div className="absolute top-0 left-0 right-0 h-14 bg-transparent z-50" onClick={toggleCartDetails}></div>
-          <div className="max-w-md mx-auto mt-14">
+          <div className="max-w-md mx-auto mt-2"> {/* Adjusted margin-top */}
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
             <ul className="mt-4 max-h-60 overflow-y-auto">
               {Object.entries(cart).map(([product, { quantity, description, price, code }]) => (
