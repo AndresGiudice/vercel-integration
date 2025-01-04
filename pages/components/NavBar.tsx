@@ -36,7 +36,7 @@ const bolsasDePapel = (priceList: string) => [
     submenu: [
       { name: 'Bolsas Fast Food "Cotillón" Estándar', href: `/listas/${priceList}/bolsas-fast-food-color` },
       { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: `/listas/${priceList}/bolsas-fast-food-color-x10` },
-      { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: `/listas/${priceList}/bolsas-fast-food-fantasia` },
+      { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: '#' },
       { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
       { name: 'Bolsas Fast Food Kraft', href: `/listas/${priceList}/bolsas-fast-food-kraft` },
     ],
@@ -77,6 +77,9 @@ function Example() {
 
   const handleLogout = () => {
     logout();
+    setShowUserDetails(false);
+    setMobileMenuOpen(false);
+    document.body.classList.remove('overlay-active');
     window.location.href = '/loginUser'; // Redirect to loginUser.tsx
   };
 
@@ -137,16 +140,49 @@ function Example() {
   }, 0);
 
   const toggleCartDetails = () => {
-    setShowCartDetails(!showCartDetails);
+    const newShowCartDetails = !showCartDetails;
+    setShowCartDetails(newShowCartDetails);
+    if (newShowCartDetails) {
+      setShowUserDetails(false);
+      setOpenMenu(null);
+      document.body.classList.add('overlay-active');
+    } else {
+      document.body.classList.remove('overlay-active');
+    }
+  };
+
+  const handleClearCart = () => {
+    clearCart();
+    setShowCartDetails(false);
+    document.body.classList.remove('overlay-active');
   };
 
   const toggleUserDetails = () => {
-    setShowUserDetails(!showUserDetails);
+    const newShowUserDetails = !showUserDetails;
+    setShowUserDetails(newShowUserDetails);
+    if (newShowUserDetails) {
+      setShowCartDetails(false);
+      setOpenMenu(null);
+      document.body.classList.add('overlay-active');
+    } else {
+      document.body.classList.remove('overlay-active');
+    }
+  };
+
+  const handleMenuClick = (menu: string) => {
+    setOpenMenu(openMenu === menu ? null : menu);
+    setShowCartDetails(false);
+    setShowUserDetails(false);
+    if (openMenu !== menu && window.innerWidth >= 1024) {
+      document.body.classList.add('overlay-active');
+    } else {
+      document.body.classList.remove('overlay-active');
+    }
   };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-[#A6CE39] z-50">
-      <nav aria-label="Global" className="mx-auto flex items-center justify-between h-14 lg:h-16 p-2 lg:px-8">
+      <nav aria-label="Global" className="relative mx-auto flex items-center justify-between h-14 lg:h-16 p-2 lg:px-8 z-50">
         <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
@@ -181,7 +217,7 @@ function Example() {
             <div className="relative">
               <button
                 className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 bg-[#A6CE39]"
-                onClick={() => setOpenMenu(openMenu === 'bolsas' ? null : 'bolsas')}
+                onClick={() => handleMenuClick('bolsas')}
               >
                 Bolsas de Papel
                 <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-black" />
@@ -221,7 +257,7 @@ function Example() {
           <div className="relative">
             <button
               className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 bg-[#A6CE39]"
-              onClick={() => setOpenMenu(openMenu === 'bobinas' ? null : 'bobinas')}
+              onClick={() => handleMenuClick('bobinas')}
             >
               Bobinas
               <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-black" />
@@ -260,22 +296,28 @@ function Example() {
           </button>
         </div>
       </nav>
-      {showUserDetails && user && ( // Check if user exists
-        <div className="absolute right-4 mt-2 w-48 bg-white shadow-lg rounded-lg p-4">
-          <p className="text-sm font-semibold">Usuario: {user.name}</p>
-          <p className="text-sm text-gray-500">{user.email}</p>
-          <p className="text-sm text-gray-500">Precio: {user.priceList}</p> {/* Display priceList */}
-          <button
-            onClick={handleLogout} // Use handleLogout instead of logout
-            className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg"
-          >
-            Cerrar Sesión
-          </button>
+      {/* Dark overlay */}
+      {(showCartDetails || showUserDetails || (openMenu && window.innerWidth >= 1024)) && <div className="fixed inset-0 bg-black opacity-50 z-40"></div>}
+      {showUserDetails && user && (
+        <div className="absolute right-4 mt-2 w-48 bg-white shadow-lg rounded-lg p-4 z-50">
+          <div className="absolute top-0 left-0 right-0 h-14 bg-transparent z-50" onClick={toggleUserDetails}></div>
+          <div className="max-w-md mx-auto mt-2">
+            <p className="text-sm font-semibold">Usuario: {user.name}</p>
+            <p className="text-sm text-gray-500">{user.email}</p>
+            <p className="text-sm text-gray-500">Precio: {user.priceList}</p>
+            <button
+              onClick={handleLogout}
+              className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
       )}
       {showCartDetails && totalItems > 0 && (
-        <div className="p-4 bg-white shadow-lg mt-4 w-full">
-          <div className="max-w-md mx-auto">
+        <div className="p-4 bg-white shadow-lg mt-4 w-full z-50 relative">
+          <div className="absolute top-0 left-0 right-0 h-14 bg-transparent z-50" onClick={toggleCartDetails}></div>
+          <div className="max-w-md mx-auto mt-14">
             <h2 className="text-lg font-semibold text-center">Carrito de Compras</h2>
             <ul className="mt-4 max-h-60 overflow-y-auto">
               {Object.entries(cart).map(([product, { quantity, description, price, code }]) => (
@@ -303,7 +345,7 @@ function Example() {
             </div>
             <div className="flex flex-col sm:flex-row justify-between mt-4 px-4 space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto md:w-auto">
               <button
-                onClick={clearCart}
+                onClick={handleClearCart}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto "
               >
                 Vaciar Carrito
@@ -329,6 +371,14 @@ function Example() {
           </div>
         </div>
       )}
+      {showCartDetails && totalItems === 0 && (
+        <div className="absolute right-4 mt-2 w-48 bg-white shadow-lg rounded-lg p-4 z-50">
+          <div className="absolute top-0 left-0 right-0 h-14 bg-transparent z-50" onClick={toggleCartDetails}></div>
+          <div className="max-w-md mx-auto mt-2">
+            <h2 className="text-lg font-semibold text-center">Su carrito está vacío</h2>
+          </div>
+        </div>
+      )}
       <Dialog open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} className="lg:hidden">
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 mt-10">
@@ -339,7 +389,7 @@ function Example() {
                 <div className="-mx-3">
                   <button
                     className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 bg-[#A6CE39]"
-                    onClick={() => setOpenMenu(openMenu === 'bolsas' ? null : 'bolsas')}
+                    onClick={() => handleMenuClick('bolsas')}
                   >
                     Bolsas de Papel
                     <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none group-data-[open]:rotate-180 text-black" />
@@ -376,7 +426,7 @@ function Example() {
                 <div className="-mx-3">
                   <button
                     className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 bg-[#A6CE39]"
-                    onClick={() => setOpenMenu(openMenu === 'bobinas' ? null : 'bobinas')}
+                    onClick={() => handleMenuClick('bobinas')}
                   >
                     Bobinas
                     <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none group-data-[open]:rotate-180 text-black" />
@@ -396,7 +446,10 @@ function Example() {
                   )}
                 </div>
                 <button
-                  onClick={toggleUserDetails}
+                  onClick={() => {
+                    toggleUserDetails();
+                    setOpenMenu(null);
+                  }}
                   className="mt-4 p-1.5 rounded-full text-gray-700 hover:text-gray-900 border border-gray-900 text-center" // Added user icon inside mobile menu
                 >
                   <UserIcon className="h-6 w-6 inline-block mr-2" />
