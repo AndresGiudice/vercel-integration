@@ -57,11 +57,15 @@ const bobinas = (priceList: string) => [
   { name: 'Bobinas de Papel Kraft', href: `/listas/${priceList}/bobinas-kraft` },
 ];
 
-const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number) => {
-  if (code === 'Fb3' && totalQuantity >= 100) {
-    return price * 0.9;
+const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number, priceList: string) => {
+  let finalPrice = price;
+  if (priceList === 'lista4') {
+    finalPrice = price / 1.105;
   }
-  return price;
+  if (code === 'Fb3' && totalQuantity >= 100) {
+    return finalPrice * 0.9;
+  }
+  return finalPrice;
 };
 
 function Example() {
@@ -135,7 +139,7 @@ function Example() {
 
   const totalAmountWithDiscount = Object.entries(cart).reduce((acc, [_, { quantity, description, price, code }]) => {
     const totalQuantity = totalQuantityByCode(code);
-    const discountedPrice = calculateDiscountedPrice(code, totalQuantity, price);
+    const discountedPrice = calculateDiscountedPrice(code, totalQuantity, price, user.priceList);
     return acc + discountedPrice * quantity;
   }, 0);
 
@@ -325,7 +329,7 @@ function Example() {
                   <div>
                     <span className="text-sm">{description}</span>
                     <p className="text-sm text-gray-500">
-                      ${calculateDiscountedPrice(code, totalQuantityByCode(code), price).toFixed(0)} x{quantity} = ${Number(calculateDiscountedPrice(code, totalQuantityByCode(code), price) * quantity).toFixed(0)}
+                      ${calculateDiscountedPrice(code, totalQuantityByCode(code), price, user.priceList).toFixed(0)} x{quantity} = ${Number(calculateDiscountedPrice(code, totalQuantityByCode(code), price, user.priceList) * quantity).toFixed(0)}
                     </p>
                   </div>
                   <div className="flex items-center">
