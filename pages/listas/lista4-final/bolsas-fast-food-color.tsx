@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
+import AddToCartButton from '../../components/AddToCartButton';
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -207,10 +208,13 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                         <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.systemCode)}>+</button>
                       </div>
                     </div>
-                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription )}>
-                      <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
-                      <span className="px-2 py-1">Agregar al carrito</span>
-                    </div>
+                    <AddToCartButton
+                      systemCode={bag.systemCode}
+                      description={bag.description}
+                      list4={bag.list4}
+                      quantity={quantities[bag.systemCode]}
+                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription)}
+                    />
                   </div>
                 </div>
               ))}

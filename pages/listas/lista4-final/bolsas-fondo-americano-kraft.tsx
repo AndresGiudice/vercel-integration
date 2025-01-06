@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
+import AddToCartButton from "@/pages/components/AddToCartButton";
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -15,26 +16,26 @@ type ConnectionStatus = {
 const inter = Inter({ subsets: ["latin"] });
 
 export const getServerSideProps: GetServerSideProps<
-ConnectionStatus
+  ConnectionStatus
 > = async () => {
-try {
-  const client = await clientPromise;
-  await client.connect();
-  return {
-    props: { isConnected: true },
-  };
-} catch (e) {
-  console.error(e);
-  return {
-    props: { isConnected: false },
-  };
-}
+  try {
+    const client = await clientPromise;
+    await client.connect();
+    return {
+      props: { isConnected: true },
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      props: { isConnected: false },
+    };
+  }
 };
 
 type Bag = {
   description: string;
   list4: number;
-  systemCode: string; 
+  systemCode: string;
 };
 
 export default function BolsasConManijaKraft({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -47,7 +48,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const order = ["BAK2", "BAK3", "BAK4", "BAK4A", "BAK5", "BAK6", "BAK6L", "BAK7" ]; 
+      const order = ["BAK2", "BAK3", "BAK4", "BAK4A", "BAK5", "BAK6", "BAK6L", "BAK7"];
       const processedData = data.baKr
         .map((bag: Bag) => ({
           ...bag,
@@ -106,7 +107,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem' }}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
@@ -196,10 +197,13 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                         <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.systemCode)}>+</button>
                       </div>
                     </div>
-                    <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={() => handleAddToCart(bag.systemCode, bag.description, bag.list4)}>
-                      <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
-                      <span className="px-2 py-1">Agregar al carrito</span>
-                    </div>
+                    <AddToCartButton
+                      systemCode={bag.systemCode}
+                      description={bag.description}
+                      list4={bag.list4}
+                      quantity={quantities[bag.systemCode]}
+                      handleAddToCart={handleAddToCart}
+                    />
                   </div>
                 </div>
               ))}

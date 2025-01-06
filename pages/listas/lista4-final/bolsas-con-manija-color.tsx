@@ -7,6 +7,7 @@ import { useEffect, useState, useCallback } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
+import AddToCartButton from '../../components/AddToCartButton';
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -90,7 +91,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem' }}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
@@ -217,10 +218,13 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
           </div>
         </div>
       ))}
-      <div className="w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer" onClick={handleAddToCart}>
-        <i className="fas fa-shopping-cart cart-icon text-xl mr-1"></i>
-        <span className="px-2 py-1">Agregar al carrito</span>
-      </div>
+      <AddToCartButton
+        systemCode={bags[0].systemCode}
+        description={` ${bags[0].description} ${additionalDescription}`}
+        list4={bags[0].list4}
+        quantity={quantities.reduce((acc, qty) => acc + qty, 0)}
+        handleAddToCart={handleAddToCart}
+      />
     </div>
   );
 };
