@@ -112,12 +112,16 @@ function Example() {
         const response = await axios.get('/api/listUsers');
         const { priceList } = response.data as { priceList: string[] };
         setPriceList(priceList[0]); // Assuming you want the first priceList
+        localStorage.setItem('priceList', JSON.stringify(priceList[0])); // Store price list in local storage
       } catch (error) {
         console.error('Error fetching price list:', error);
       }
     };
 
-    if (!priceList) {
+    const storedPriceList = localStorage.getItem('priceList');
+    if (storedPriceList) {
+      setPriceList(JSON.parse(storedPriceList));
+    } else {
       fetchPriceList();
     }
 
