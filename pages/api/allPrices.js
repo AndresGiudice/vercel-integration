@@ -327,7 +327,7 @@ export default async function handler(request, response) {
     // resultsBaKr.forEach(item => console.log(item.systemCode));
     // resultsBaSu.forEach(item => console.log(item.systemCode));
     // resultsBobinasObra.forEach(item => console.log(item.systemCode));
-    resultsBobinasSulfito.forEach(item => console.log(item.systemCode));
+    // resultsBobinasSulfito.forEach(item => console.log(item.systemCode));
 
     response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra, boSu : resultsBobinasSulfito, boKr : resultsBobinasKraft});
   } catch (e) {

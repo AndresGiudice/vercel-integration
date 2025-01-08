@@ -19,43 +19,62 @@ const placeOrder = async (cart: any, totalAmount: number, user: any, clearCart: 
   }
 };
 
-const bolsasDePapel = (priceList: string) => [
-  {
-    name: 'Bolsas de Fondo Cuadrado con Manija',
-    href: '#',
-    submenu: [
-      { name: 'Bolsas con Manija Kraft', href: `/listas/${priceList}/bolsas-con-manija-kraft` },
-      { name: 'Bolsas con Manija Blancas', href: `/listas/${priceList}/bolsas-con-manija-blancas` },
-      { name: 'Bolsas con Manija Color', href: `/listas/${priceList}/bolsas-con-manija-color` },
-      { name: 'Bolsas con Manija Fantasía', href: '#' },
-    ],
-  },
-  {
-    name: 'Bolsas de Fondo Cuadrado sin Manija',
-    href: '#',
-    submenu: [
-      { name: 'Bolsas Fast Food "Cotillón" Estándar', href: `/listas/${priceList}/bolsas-fast-food-color` },
-      { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: `/listas/${priceList}/bolsas-fast-food-color-x10` },
-      { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: `/listas/${priceList}/bolsas-fast-food-fantasia` },
-      { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
-      { name: 'Bolsas Fast Food Kraft', href: `/listas/${priceList}/bolsas-fast-food-kraft` },
-    ],
-  },
-  {
-    name: 'Bolsas de Fondo Americano',
-    href: '#',
-    submenu: [
-      { name: 'Bolsas de Fondo Americano Kraft', href: `/listas/${priceList}/bolsas-fondo-americano-kraft` },
-      { name: 'Bolsas de Fondo Americano Sulfito', href: `/listas/${priceList}/bolsas-fondo-americano-sulfito` },
-    ],
-  },
-];
+const validateUrl = (href: string, userPriceList: string) => {
+  const url = new URL(href, window.location.origin);
+  const pathParts = url.pathname.split('/');
+  const priceListInUrl = pathParts[2];
 
-const bobinas = (priceList: string) => [
-  { name: 'Bobinas de Papel Obra', href: `/listas/${priceList}/bobinas-obra` },
-  { name: 'Bobinas de Papel Sulfito', href: `/listas/${priceList}/bobinas-sulfito` },
-  { name: 'Bobinas de Papel Kraft', href: `/listas/${priceList}/bobinas-kraft` },
-];
+  if (
+    (userPriceList === 'lista4' && priceListInUrl === 'lista4-final') ||
+    (userPriceList === 'lista4-final' && priceListInUrl === 'lista4')
+  ) {
+    window.location.href = '/no-access';
+  }
+};
+
+const bolsasDePapel = (priceList: string, user: any) => {
+  if (!user) return [];
+  return [
+    {
+      name: 'Bolsas de Fondo Cuadrado con Manija',
+      href: '#',
+      submenu: [
+        { name: 'Bolsas con Manija Kraft', href: `/listas/${priceList}/bolsas-con-manija-kraft` },
+        { name: 'Bolsas con Manija Blancas', href: `/listas/${priceList}/bolsas-con-manija-blancas` },
+        { name: 'Bolsas con Manija Color', href: `/listas/${priceList}/bolsas-con-manija-color` },
+        { name: 'Bolsas con Manija Fantasía', href: '#' },
+      ],
+    },
+    {
+      name: 'Bolsas de Fondo Cuadrado sin Manija',
+      href: '#',
+      submenu: [
+        { name: 'Bolsas Fast Food "Cotillón" Estándar', href: `/listas/${priceList}/bolsas-fast-food-color` },
+        { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: `/listas/${priceList}/bolsas-fast-food-color-x10` },
+        { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: `/listas/${priceList}/bolsas-fast-food-fantasia` },
+        { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
+        { name: 'Bolsas Fast Food Kraft', href: `/listas/${priceList}/bolsas-fast-food-kraft` },
+      ],
+    },
+    {
+      name: 'Bolsas de Fondo Americano',
+      href: '#',
+      submenu: [
+        { name: 'Bolsas de Fondo Americano Kraft', href: `/listas/${priceList}/bolsas-fondo-americano-kraft` },
+        { name: 'Bolsas de Fondo Americano Sulfito', href: `/listas/${priceList}/bolsas-fondo-americano-sulfito` },
+      ],
+    },
+  ];
+};
+
+const bobinas = (priceList: string, user: any) => {
+  if (!user) return [];
+  return [
+    { name: 'Bobinas de Papel Obra', href: `/listas/${priceList}/bobinas-obra` },
+    { name: 'Bobinas de Papel Sulfito', href: `/listas/${priceList}/bobinas-sulfito` },
+    { name: 'Bobinas de Papel Kraft', href: `/listas/${priceList}/bobinas-kraft` },
+  ];
+};
 
 const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number, priceList: string) => {
   let finalPrice = price;
@@ -98,7 +117,9 @@ function Example() {
       }
     };
 
-    fetchPriceList();
+    if (!priceList) {
+      fetchPriceList();
+    }
 
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -115,7 +136,18 @@ function Example() {
     } else {
       console.error('No user found in localStorage');
     }
-  }, []);
+
+    const validateCurrentUrl = () => {
+      validateUrl(window.location.href, user.priceList);
+    };
+
+    validateCurrentUrl();
+    window.addEventListener('popstate', validateCurrentUrl);
+
+    return () => {
+      window.removeEventListener('popstate', validateCurrentUrl);
+    };
+  }, [priceList, setUser]); // Add priceList and setUser as dependencies
 
   const handleSubmenuClick = (name: string) => {
     setOpenSubmenu(openSubmenu === name ? null : name);
@@ -229,7 +261,7 @@ function Example() {
               {openMenu === 'bolsas' && (
                 <div className="absolute z-10 mt-3 w-screen max-w-sm overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                   <div className="p-4">
-                    {priceList && bolsasDePapel(user.priceList).map((item) => (
+                    {priceList && bolsasDePapel(user.priceList, user).map((item) => (
                       <div key={item.name} className="mb-2">
                         <button
                           className="flex w-full items-center justify-between rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 bg-gray-200"
@@ -269,7 +301,7 @@ function Example() {
             {openMenu === 'bobinas' && (
               <div className="absolute z-10 mt-3 w-screen max-w-[15rem] overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
-                  {bobinas(user.priceList).map((item) => (
+                  {bobinas(user.priceList, user).map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
@@ -400,7 +432,7 @@ function Example() {
                   </button>
                   {openMenu === 'bolsas' && (
                     <div className="mt-2 space-y-2">
-                      {priceList && bolsasDePapel(user.priceList).map((item) => (
+                      {priceList && bolsasDePapel(user.priceList, user).map((item) => (
                         <div key={item.name} className="mb-2">
                           <button
                             className="flex w-full items-center justify-between rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 bg-gray-200"
@@ -437,7 +469,7 @@ function Example() {
                   </button>
                   {openMenu === 'bobinas' && (
                     <div className="mt-2 space-y-2">
-                      {bobinas(user.priceList).map((item) => (
+                      {bobinas(user.priceList, user).map((item) => (
                         <a
                           key={item.name}
                           href={item.href}
