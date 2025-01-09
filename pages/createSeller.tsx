@@ -2,21 +2,20 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { setCookie } from 'nookies';
 
-const CreateUser = () => {
+const CreateSeller = () => {
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [priceList, setPriceList] = useState('');
+  const [sellerName, setSellerName] = useState('');
+  const [sellerEmail, setSellerEmail] = useState('');
+  const [sellerPassword, setSellerPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showAdminPassword, setShowAdminPassword] = useState(false);
-  const [showUserPassword, setShowUserPassword] = useState(false);
+  const [showSellerPassword, setShowSellerPassword] = useState(false);
 
   useEffect(() => {
-    setCookie(null, 'visitedCreateUser', 'true', { path: '/' });
+    setCookie(null, 'visitedCreateSeller', 'true', { path: '/' });
   }, []);
 
   const handleAdminLogin = async (event: React.FormEvent) => {
@@ -33,7 +32,6 @@ const CreateUser = () => {
     const data = await response.json();
     if (data.success) {
       setIsAuthenticated(true);
-      // setMessage('Login successful'); // Remove this line
     } else {
       setMessage('Login failed: ' + data.message);
     }
@@ -52,26 +50,26 @@ const CreateUser = () => {
     setMessage(data.message);
   };
 
-  const handleUserCreation = async (event: React.FormEvent) => {
+  const handleSellerCreation = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const response = await fetch('/api/createUser', {
+    const response = await fetch('/api/createSeller', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: userName, email: userEmail, password: userPassword, priceList }), // Ensure priceList is included
+      body: JSON.stringify({ name: sellerName, email: sellerEmail, password: sellerPassword }), // Remove priceList
     });
 
     const data = await response.json();
     if (data.success) {
-      setMessage('Usuario creado exitosamente');
-      localStorage.setItem('userCreated', 'true'); // Establecer bandera en localStorage
-      localStorage.setItem('priceList', priceList); // Guardar Lista de Precios en localStorage
+      setMessage('Vendedor creado exitosamente');
+      localStorage.setItem('sellerCreated', 'true');
+      // localStorage.setItem('priceList', priceList); // Remove saving priceList in localStorage
     } else if (data.message === 'Email already registered') {
       setMessage('El mail ya está registrado');
     } else {
-      setMessage('Error al crear el usuario: ' + data.message);
+      setMessage('Error al crear el vendedor: ' + data.message);
     }
   };
 
@@ -137,71 +135,56 @@ const CreateUser = () => {
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold">Crear Usuario</h1>
-              <Link href="/listUsers?token=expected_token_value" legacyBehavior>
+              <h1 className="text-2xl font-bold">Crear Vendedor</h1>
+              <Link href="/listSellers?token=expected_token_value" legacyBehavior>
                 <a className="text-green-500 hover:underline">
-                  Ver listado de usuarios
+                  Ver listado de vendedores
                 </a>
               </Link>
             </div>
-            <form onSubmit={handleUserCreation}>
+            <form onSubmit={handleSellerCreation}>
               <div className="mb-4">
-                <label htmlFor="userName" className="block text-gray-700 font-bold mb-2">Nombre:</label>
+                <label htmlFor="sellerName" className="block text-gray-700 font-bold mb-2">Nombre:</label>
                 <input
                   type="text"
-                  id="userName"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  id="sellerName"
+                  value={sellerName}
+                  onChange={(e) => setSellerName(e.target.value)}
                   required
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="userEmail" className="block text-gray-700 font-bold mb-2">Email:</label>
+                <label htmlFor="sellerEmail" className="block text-gray-700 font-bold mb-2">Email:</label>
                 <input
                   type="email"
-                  id="userEmail"
-                  value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
+                  id="sellerEmail"
+                  value={sellerEmail}
+                  onChange={(e) => setSellerEmail(e.target.value)}
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div className="mb-4 relative">
-                <label htmlFor="userPassword" className="block text-gray-700 font-bold mb-2">Contraseña:</label>
+                <label htmlFor="sellerPassword" className="block text-gray-700 font-bold mb-2">Contraseña:</label>
                 <div className="relative">
                   <input
-                    type={showUserPassword ? "text" : "password"}
-                    id="userPassword"
-                    value={userPassword}
-                    onChange={(e) => setUserPassword(e.target.value)}
+                    type={showSellerPassword ? "text" : "password"}
+                    id="sellerPassword"
+                    value={sellerPassword}
+                    onChange={(e) => setSellerPassword(e.target.value)}
                     required
                     className="w-full px-3 py-2 border rounded pr-10"
                   />
                   <span
-                    onClick={() => setShowUserPassword(!showUserPassword)}
+                    onClick={() => setShowSellerPassword(!showSellerPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                   >
-                    {showUserPassword ? '🔓' : '🔒'}
+                    {showSellerPassword ? '🔓' : '🔒'}
                   </span>
                 </div>
               </div>
-              <div className="mb-4">
-                <label htmlFor="priceList" className="block text-gray-700 font-bold mb-2">Lista de Precios:</label>
-                <select
-                  id="priceList"
-                  value={priceList}
-                  onChange={(e) => setPriceList(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border rounded"
-                >
-                  <option value="">seleccione una lista</option>
-                  <option value="lista4">lista4</option>
-                  <option value="lista4-10">lista4-10</option>
-                  <option value="lista4-final">lista4-final</option>
-                </select>
-              </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
-                Crear Usuario
+                Crear Vendedor
               </button>
             </form>
           </>
@@ -212,4 +195,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateSeller;

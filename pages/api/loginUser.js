@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
-    const { email, password } = request.body;
+    const { email, name, password } = request.body; // Include name in request body
 
     try {
       const client = await clientPromise;
@@ -11,7 +11,9 @@ export default async function handler(request, response) {
       const collection = db.collection('users-data'); // Change collection to 'users-data'
 
       // Buscar el usuario en la base de datos
-      const user = await collection.findOne({ email });
+      const user = await collection.findOne({ 
+        $or: [{ email }, { name }] // Search by email or name
+      });
 
       if (user && await bcrypt.compare(password, user.password)) {
         response.status(200).json({ 

@@ -120,7 +120,12 @@ function Example() {
 
     const storedPriceList = localStorage.getItem('priceList');
     if (storedPriceList) {
-      setPriceList(JSON.parse(storedPriceList));
+      try {
+        setPriceList(JSON.parse(storedPriceList));
+      } catch (error) {
+        console.error('Error parsing stored price list:', error);
+        fetchPriceList();
+      }
     } else {
       fetchPriceList();
     }

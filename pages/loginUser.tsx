@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 const LoginUser = () => {
   const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState(''); // Add state for userName
   const [userPassword, setUserPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showUserPassword, setShowUserPassword] = useState(false);
@@ -17,7 +18,7 @@ const LoginUser = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: userEmail, password: userPassword }),
+      body: JSON.stringify({ email: userEmail, name: userName, password: userPassword }), // Include name in request body
     });
 
     const data = await response.json();
@@ -54,13 +55,22 @@ const LoginUser = () => {
         </div>
         <form onSubmit={handleUserLogin}>
           <div className="mb-4">
+            <label htmlFor="userName" className="block text-gray-700 font-bold mb-2">Nombre:</label> {/* Add label for userName */}
+            <input
+              type="text"
+              id="userName"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              className="w-full px-3 py-2 border rounded text-black"
+            />
+          </div>
+          <div className="mb-4">
             <label htmlFor="userEmail" className="block text-gray-700 font-bold mb-2">Email:</label>
             <input
               type="email"
               id="userEmail"
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
-              required
               className="w-full px-3 py-2 border rounded text-black"
             />
           </div>
