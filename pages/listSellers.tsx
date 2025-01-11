@@ -8,7 +8,6 @@ const ListSellers = () => {
   interface Seller {
     name: string;
     email: string;
-    region: string;
   }
 
   const [sellers, setSellers] = useState<Seller[]>([]);
@@ -101,13 +100,7 @@ const ListSellers = () => {
                     name="email"
                     value={editedSeller?.email || ''}
                     onChange={handleInputChange}
-                    className="border p-1 mb-1 w-full"
-                  />
-                  <input
-                    type="text"
-                    name="region"
-                    value={editedSeller?.region || ''}
-                    onChange={handleInputChange}
+                    placeholder="e-mail"
                     className="border p-1 mb-1 w-full"
                   />
                   <button onClick={handleSaveClick} className="bg-green-500 text-white p-1 rounded">Guardar</button>
@@ -116,7 +109,6 @@ const ListSellers = () => {
                 <div>
                   <p><strong>Nombre:</strong> {seller.name}</p>
                   <p><strong>Email:</strong> {seller.email}</p>
-                  <p><strong>Región:</strong> {seller.region}</p>
                   <button onClick={() => handleEditClick(seller)} className="text-green-500 mr-2">
                     <FaPencilAlt />
                   </button>
