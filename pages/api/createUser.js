@@ -10,10 +10,12 @@ export default async function handler(request, response) {
       const db = client.db('users');
       const collection = db.collection('users-data');
 
-      // Verificar si el correo electrónico ya existe
-      const existingUser = await collection.findOne({ email });
-      if (existingUser) {
-        return response.status(400).json({ success: false, message: 'Ya existe un usuario con ese mail' });
+      if (email) {
+        // Verificar si el correo electrónico ya existe
+        const existingUser = await collection.findOne({ email });
+        if (existingUser) {
+          return response.status(400).json({ success: false, message: 'Ya existe un usuario con ese mail' });
+        }
       }
 
       // Encriptar la contraseña
