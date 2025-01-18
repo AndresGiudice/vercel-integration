@@ -4,17 +4,25 @@ import { GetServerSideProps } from 'next';
 import nookies from 'nookies';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa'; // Import trash icon
 
-const ListUsers = () => {
-  interface User {
-    name: string;
-    email: string;
-    priceList: string;
-  }
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  priceList: string;
+  seller: string | null; // Add seller field
+}
 
+interface Seller {
+  _id: string;
+  name: string;
+}
+
+const ListUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editedUser, setEditedUser] = useState<User | null>(null);
   const [priceLists, setPriceLists] = useState<string[]>(['lista4', 'lista4-10', 'lista4-final']);
+  const [sellers, setSellers] = useState<Seller[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,8 +46,19 @@ const ListUsers = () => {
       }
     };
 
+    const fetchSellers = async () => {
+      const response = await fetch('/api/listSellers');
+      const data = await response.json();
+      if (data.success) {
+        setSellers(data.sellers);
+      } else {
+        console.error('Error fetching sellers:', data.message);
+      }
+    };
+
     fetchUsers();
     fetchPriceLists();
+    fetchSellers();
   }, [router]);
 
   const handleEditClick = (user: User) => {
@@ -127,6 +146,17 @@ const ListUsers = () => {
                       </option>
                     ))}
                   </select>
+                  <select
+                    name="seller"
+                    value={editedUser?.seller || ''}
+                    onChange={handleInputChange}
+                    className="border p-1 mb-1 w-full"
+                  >
+                    <option value="">Seleccione un vendedor</option>
+                    {sellers.map((seller) => (
+                      <option key={seller._id} value={seller.name}>{seller.name}</option>
+                    ))}
+                  </select>
                   <button onClick={handleSaveClick} className="bg-green-500 text-white p-1 rounded">Guardar</button>
                 </div>
               ) : (
@@ -134,6 +164,7 @@ const ListUsers = () => {
                   <p><strong>Nombre:</strong> {user.name}</p>
                   <p><strong>Email:</strong> {user.email}</p>
                   <p><strong>Lista de Precios:</strong> {user.priceList}</p>
+                  <p><strong>Vendedor:</strong> {user.seller || 'No asignado'}</p> {/* Display seller name */}
                   <button onClick={() => handleEditClick(user)} className="text-green-500 mr-2">
                     <FaPencilAlt />
                   </button>

@@ -1,14 +1,16 @@
 import clientPromise from "../../lib/mongodb";
 import bcrypt from 'bcryptjs';
+import { ObjectId } from 'mongodb'; // Import ObjectId
 
 export default async function handler(request, response) {
   if (request.method === 'POST') {
-    const { name, email, password, priceList } = request.body;
+    const { name, email, password, priceList, seller } = request.body;
 
     try {
       const client = await clientPromise;
       const db = client.db('users');
       const collection = db.collection('users-data');
+      const sellersCollection = db.collection('sellers'); // Assuming sellers are stored in 'sellers'
 
       if (email) {
         // Verificar si el correo electrónico ya existe
@@ -17,6 +19,10 @@ export default async function handler(request, response) {
           return response.status(400).json({ success: false, message: 'Ya existe un usuario con ese mail' });
         }
       }
+
+      // Obtener el nombre del vendedor
+      const sellerData = await sellersCollection.findOne({ _id: new ObjectId(seller) }); // Convert seller to ObjectId
+      const sellerName = sellerData ? sellerData.name : null;
 
       // Encriptar la contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,6 +33,7 @@ export default async function handler(request, response) {
         email,
         password: hashedPassword,
         priceList,
+        seller: sellerName, // Store seller's name
         createdAt: new Date(),
       };
 

@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { setCookie } from 'nookies';
 
+interface Seller {
+  _id: string;
+  name: string;
+}
+
 const CreateUser = () => {
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
@@ -14,9 +19,21 @@ const CreateUser = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showAdminPassword, setShowAdminPassword] = useState(false);
   const [showUserPassword, setShowUserPassword] = useState(false);
+  const [sellers, setSellers] = useState<Seller[]>([]);
+  const [selectedSeller, setSelectedSeller] = useState('');
 
   useEffect(() => {
     setCookie(null, 'visitedCreateUser', 'true', { path: '/' });
+
+    const fetchSellers = async () => {
+      const response = await fetch('/api/listSellers');
+      const data = await response.json();
+      if (data.success) {
+        setSellers(data.sellers);
+      }
+    };
+
+    fetchSellers();
   }, []);
 
   const handleAdminLogin = async (event: React.FormEvent) => {
@@ -60,7 +77,7 @@ const CreateUser = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: userName, email: userEmail, password: userPassword, priceList }), // Ensure priceList is included
+      body: JSON.stringify({ name: userName, email: userEmail, password: userPassword, priceList, seller: selectedSeller || null }), // Ensure seller is included
     });
 
     const data = await response.json();
@@ -198,6 +215,21 @@ const CreateUser = () => {
                   <option value="lista4">lista4</option>
                   <option value="lista4-10">lista4-10</option>
                   <option value="lista4-final">lista4-final</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="seller" className="block text-gray-700 font-bold mb-2">Vendedor:</label>
+                <select
+                  id="seller"
+                  value={selectedSeller}
+                  onChange={(e) => setSelectedSeller(e.target.value)}
+                  className="w-full px-3 py-2 border rounded"
+                >
+                  <option value="">Seleccione un vendedor</option>
+                  <option value="none">Ninguno</option> {/* Add option for "ninguno" */}
+                  {sellers.map((seller) => (
+                    <option key={seller._id} value={seller._id}>{seller.name}</option>
+                  ))}
                 </select>
               </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
