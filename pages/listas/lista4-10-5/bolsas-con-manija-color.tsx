@@ -7,7 +7,7 @@ import { useEffect, useState, useCallback } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
-import AddToCartButton from '../../components/AddToCartButton';
+import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
 
 type ConnectionStatus = {
@@ -94,7 +94,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '4rem' }}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
@@ -197,7 +197,7 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
       {bags.map((bag, index) => (
         <div key={bag.systemCode}>
           <div className="flex justify-center mb-2">
-            <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100: <span className="font-bold">${Math.round(bag.list4)}</span></p>
+            <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100: <span className="font-bold">${Math.round((bag.list4 * 0.9 * 0.95) / 1.105)}</span></p>
           </div>
           <div className="w-full bg-gray-200 p-1 rounded-lg">
             <div className="flex items-center justify-between">
@@ -221,7 +221,7 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
           </div>
         </div>
       ))}
-      <AddToCartButton
+         <AddToCartButton
         systemCode={bags[0].systemCode}
         description={` ${bags[0].description} ${additionalDescription}`}
         list4={bags[0].list4}

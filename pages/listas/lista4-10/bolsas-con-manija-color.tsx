@@ -8,6 +8,7 @@ import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
+import { useRouter } from 'next/router';
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -41,6 +42,8 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
   const [bags, setBags] = useState<Bag[]>([]);
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
+  const router = useRouter();
+  const folderName = router.pathname.split('/').slice(-2, -1)[0];
 
   useEffect(() => {
     (async () => {
@@ -138,7 +141,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-        <p>LISTA 4</p>
+          <p>{folderName.toUpperCase()}</p>
       </footer>
     </div>
   );

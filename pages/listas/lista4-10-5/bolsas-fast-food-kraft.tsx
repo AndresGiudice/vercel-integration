@@ -37,10 +37,9 @@ type Bag = {
   description: string;
   list4: number;
   systemCode: string; 
-  additionalDescription: string;
 };
 
-export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function BolsasConManijaKraft({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
@@ -52,11 +51,13 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const processedData = data.fb3x10
+      const order = ["BFM501", "BFM901", "BFM101"];
+      const processedData = data.fm
         .map((bag: Bag) => ({
           ...bag,
-          description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
-        }));
+          description: bag.description.replace(/^Bolsa Fast Food\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
+        }))
+        .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
       setBags(processedData);
       const initialQuantities = processedData.reduce((acc: any, bag: Bag) => {
         acc[bag.systemCode] = 0;
@@ -90,10 +91,9 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     }
   };
 
-  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string = '') => {
-    const cleanedDescription = description.replace(/BOLSA FAST FOOD\s*/, '').replace(/(Kraft).*/, 'Kraft');
-    const cleanedAdditionalDescription = additionalDescription.replace(/BOLSA FAST FOOD\s*/, '');
-    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);
+  const handleAddToCart = (systemCode: string, description: string, list4: number) => {
+    const cleanedDescription = description.replace(/(Kraft).*/, 'Kraft');
+    addToCart(systemCode, quantities[systemCode], cleanedDescription, list4);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [systemCode]: 0,
@@ -105,10 +105,6 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
     clearCart();
-  };
-
-  const calculateDiscountedPrice = (price: number) => {
-    return totalItems >= 100 ? price * 0.9 : price;
   };
 
   return (
@@ -150,15 +146,10 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
                 >
-                  <div>
-                    <img 
-                      className="w-72 h-36 object-contain" 
-                      src={`/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.additionalDescription}.jpg`} 
-                      alt={bag.description} 
-                      onError={(e) => { e.currentTarget.src = `/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.systemCode}.jpg`; }}
-                    />
-                  </div>
-                 <div className="container mx-auto p-2">
+                  <img className="w-72 h-36 object-contain" 
+                       src={`/Bolsa Fast Food ${bag.systemCode}.png`}  
+                       alt="Bolsa Fast Food Kraft" />
+                  <div className="container mx-auto p-2">
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
                         <div className="py-2 inline-block min-w-full">
@@ -174,7 +165,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                               <tbody>
                                 <tr className="border-b">
                                   <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description.replace('BOLSA FAST FOOD', '')} {bag.additionalDescription}
+                                    {bag.description}
                                   </td>
                                 </tr>
                               </tbody>
@@ -185,7 +176,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice((bag.list4 * 0.9) / 1.105))}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x1000: <span className="font-bold">${Math.round((bag.list4 * 0.9 * 0.95 ) / 1.105)}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
@@ -216,7 +207,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                       description={bag.description}
                       list4={bag.list4}
                       quantity={quantities[bag.systemCode]}
-                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription)}
+                      handleAddToCart={handleAddToCart}
                     />
                   </div>
                 </div>

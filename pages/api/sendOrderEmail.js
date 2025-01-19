@@ -8,6 +8,9 @@ function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
   if (priceList === 'lista4-10') {
     price = (price * 0.9) / 1.105;
   }
+  if (priceList === 'lista4-10-5') {
+    price = (price * 0.9 * 0.95) / 1.105;
+  }
   if (code === 'Fb3' && totalQuantity >= 100) {
     return price * 0.9;
   }

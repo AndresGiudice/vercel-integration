@@ -40,7 +40,7 @@ type Bag = {
   additionalDescription: string;
 };
 
-export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function BolsasFastFoodColorFantasia({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
@@ -52,7 +52,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const processedData = data.fb3x10
+      const processedData = data.fantFb3x100
         .map((bag: Bag) => ({
           ...bag,
           description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
@@ -90,9 +90,9 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     }
   };
 
-  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string = '') => {
-    const cleanedDescription = description.replace(/BOLSA FAST FOOD\s*/, '').replace(/(Kraft).*/, 'Kraft');
-    const cleanedAdditionalDescription = additionalDescription.replace(/BOLSA FAST FOOD\s*/, '');
+  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
+    const cleanedDescription = description.replace(/Bolsa Fast Food\s*/, '').replace(/(Kraft).*/, 'Kraft');
+    const cleanedAdditionalDescription = additionalDescription.replace(/Bolsa Fast Food\s*/, '');
     addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
@@ -153,9 +153,8 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                   <div>
                     <img 
                       className="w-72 h-36 object-contain" 
-                      src={`/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.additionalDescription}.jpg`} 
-                      alt={bag.description} 
-                      onError={(e) => { e.currentTarget.src = `/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.systemCode}.jpg`; }}
+                      src={`/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`} 
+                      alt={bag.additionalDescription} 
                     />
                   </div>
                  <div className="container mx-auto p-2">
@@ -174,7 +173,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                               <tbody>
                                 <tr className="border-b">
                                   <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description.replace('BOLSA FAST FOOD', '')} {bag.additionalDescription}
+                                  {bag.description.replace('Fast Food', '')} {bag.additionalDescription}
                                   </td>
                                 </tr>
                               </tbody>
@@ -185,7 +184,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice((bag.list4 * 0.9) / 1.105))}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice((bag.list4 * 0.9 * 0.95)/ 1.105))}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">

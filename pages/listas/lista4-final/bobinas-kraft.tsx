@@ -8,6 +8,7 @@ import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
 import AddToCartButton from '../../components/AddToCartButton';
+import { useRouter } from 'next/router';
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -43,6 +44,9 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   const [bags, setBags] = useState<Bag[]>([]);
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
+  const router = useRouter();
+  const folderName = router.pathname.split('/').slice(-2, -1)[0];
+
 
   useEffect(() => {
     (async () => {
@@ -136,7 +140,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-        <p>LISTA 4 FINAL</p>
+          <p>{folderName.toUpperCase()}</p>
       </footer>
     </div>
   );

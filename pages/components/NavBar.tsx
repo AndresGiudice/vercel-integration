@@ -25,8 +25,13 @@ const validateUrl = (href: string, userPriceList: string) => {
   const priceListInUrl = pathParts[2];
 
   if (
-    (userPriceList === 'lista4' && priceListInUrl === 'lista4-final') ||
-    (userPriceList === 'lista4-final' && priceListInUrl === 'lista4') 
+    (userPriceList === 'lista4' && (priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5')) ||
+
+    (userPriceList === 'lista4-final' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5')) ||
+
+    (userPriceList === 'lista4-10' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10-5')) ||
+
+    (userPriceList === 'lista4-10-5' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10'))
   ) {
     window.location.href = '/no-access';
   }
@@ -51,7 +56,7 @@ const bolsasDePapel = (priceList: string, user: any) => {
       submenu: [
         { name: 'Bolsas Fast Food "Cotillón" Estándar', href: `/listas/${priceList}/bolsas-fast-food-color` },
         { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: `/listas/${priceList}/bolsas-fast-food-color-x10` },
-        { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: '#' },
+        { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: `/listas/${priceList}/bolsas-fast-food-fantasia` },
         { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
         { name: 'Bolsas Fast Food Kraft', href: `/listas/${priceList}/bolsas-fast-food-kraft` },
       ],
@@ -83,6 +88,9 @@ const calculateDiscountedPrice = (code: string, totalQuantity: number, price: nu
   }
   if (priceList === 'lista4-10') { // Fix the condition here
     finalPrice = (price * 0.9) / 1.105;
+  }
+  if (priceList === 'lista4-10-5') { // Fix the condition here
+    finalPrice = (price * 0.9 * 0.95) / 1.105;
   }
   if (code === 'Fb3' && totalQuantity >= 100) {
     return finalPrice * 0.9;

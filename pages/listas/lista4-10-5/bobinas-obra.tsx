@@ -7,7 +7,7 @@ import { useEffect, useState, useCallback } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
-import AddToCartButton from '../../components/AddToCartButton';
+import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
 
 type ConnectionStatus = {
@@ -16,29 +16,31 @@ type ConnectionStatus = {
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const getServerSideProps: GetServerSideProps<ConnectionStatus> = async () => {
-  try {
-    const client = await clientPromise;
-    await client.connect();
-    return {
-      props: { isConnected: true },
-    };
-  } catch (e) {
-    console.error(e);
-    return {
-      props: { isConnected: false },
-    };
-  }
+export const getServerSideProps: GetServerSideProps<
+ConnectionStatus
+> = async () => {
+try {
+  const client = await clientPromise;
+  await client.connect();
+  return {
+    props: { isConnected: true },
+  };
+} catch (e) {
+  console.error(e);
+  return {
+    props: { isConnected: false },
+  };
+}
 };
 
 type Bag = {
+  additionalDescription: string;
   description: string;
   list4: number;
-  systemCode: string;
-  additionalDescription: string;
+  systemCode: string; 
 };
 
-export default function BolsasConManijaColor({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function BolsasConManijaKraft({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bags, setBags] = useState<Bag[]>([]);
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
@@ -50,11 +52,10 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
       try {
         const response = await fetch("/api/allPrices");
         const data = await response.json();
-        const order = ["BG1P001", "BG1P002", "BG1P003", "BG1P004", "BG1P00S", "BG3P001", "BG3P002", "BG3P003", "BG3P004", "BG3P00S", "BG5P001", "BG5P002", "BG5P003", "BG5P004", "BG5P00S"];
-        const processedData = data.pa
+        const processedData = data.boObr
           .map((bag: Bag) => ({
             ...bag,
-            description: bag.description.slice(7, 9),
+            description: bag.description.replace(/^Bolsa Fast Food\s*/, "").replace(/\s*x\s*100\s*u\.?$/, "").replace("Fantasia", ""),
           }))
           .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
         setBags(processedData);
@@ -71,6 +72,8 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
     clearCart();
   }, [clearCart]);
 
+  const order = ["multicírculos rojo", "multicírculos naranja", "multicírculos verde", "multicírculos negro", "tejido rojo", "tejido naranja", "tejido verde", "tejido negro", "zigzag rojo", "zigzag naranja", "zigzag verde", "zigzag negro", "delivery negro", "delivery gris", "delivery marrón", "Pintita negro", "Pintita Naranja", "Pintita Verde", "Pintita Rojo", "regalos negro", "regalos naranja", "regalos verde", "regalos rojo", "animalitos naranja", "animalitos verde", "animalitos rojo", "Navidad Azul", "Navidad Verde", "Navidad Rojo"];
+
   const groupedBags = bags.reduce((acc: { [key: string]: Bag[] }, bag: Bag) => {
     if (!acc[bag.additionalDescription]) {
       acc[bag.additionalDescription] = [];
@@ -79,22 +82,17 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
     return acc;
   }, {});
 
-  const sortedGroupedBags = Object.keys(groupedBags).sort((a, b) => {
-    if (a === "Surtido") return 1;
-    if (b === "Surtido") return -1;
-    return a.localeCompare(b);
-  }).reduce((acc: { [key: string]: Bag[] }, key: string) => {
-    acc[key] = groupedBags[key].sort((a, b) => {
-      const order = ["G1", "G3", "G5"];
-      return order.indexOf(a.description.slice(0, 2)) - order.indexOf(b.description.slice(0, 2));
-    });
-    return acc;
-  }, {});
+  const sortedGroupedBags = Object.keys(groupedBags)
+    .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+    .reduce((acc: { [key: string]: Bag[] }, key: string) => {
+      acc[key] = groupedBags[key];
+      return acc;
+    }, {});
 
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '4rem' }}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
@@ -130,9 +128,9 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={additionalDescription}
                 >
-                  <img className="w-72 h-36 object-contain" src={`/Bolsa de Color ${additionalDescription}.jpg`} alt={additionalDescription} />
+                  <img className="w-72 h-36 object-contain" src={`/Bobina Obra ${additionalDescription}.png`} alt={additionalDescription} />
                   <div className="px-4 py-1 ">
-                    <BagCard bags={bags.slice(0, 3)} additionalDescription={additionalDescription} addToCart={addToCart} />
+                    <BagCard bags={bags} additionalDescription={additionalDescription} addToCart={addToCart} />
                   </div>
                 </div>
               ))}
@@ -141,7 +139,7 @@ export default function BolsasConManijaColor({ isConnected }: InferGetServerSide
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-          <p>{folderName.toUpperCase()}</p>
+        <p>{folderName.toUpperCase()}</p>
       </footer>
     </div>
   );
@@ -192,14 +190,25 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
     setQuantities(bags.map(() => 0));
   };
 
+  // Sort bags so that descriptions with "37 cm" appear first
+  const sortedBags = bags.sort((a, b) => {
+    if (a.description.includes("37 cm") && !b.description.includes("37 cm")) {
+      return -1;
+    }
+    if (!a.description.includes("37 cm") && b.description.includes("37 cm")) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <div>
-      {bags.map((bag, index) => (
+      {sortedBags.map((bag, index) => (
         <div key={bag.systemCode}>
           <div className="flex justify-center mb-2">
-            <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100: <span className="font-bold">${Math.round(bag.list4)}</span></p>
+            <p className="text-gray-700 text-base mt-2">{bag.description.replace("Fantasia", "")} - {bag.additionalDescription}</p>
           </div>
-          <div className="w-full bg-gray-200 p-1 rounded-lg">
+          <div className="w-full bg-gray-200 p-1 rounded-lg mb-2">
             <div className="flex items-center justify-between">
               <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(index)}>-</button>
               <input
@@ -219,9 +228,12 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
               <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(index)}>+</button>
             </div>
           </div>
+          <div className="flex justify-center mb-2">
+            <p className="text-gray-700 text-lg"> Precio x und. : <span className="font-bold">${Math.round((bag.list4 * 0.9 * 0.95) / 1.105)}</span></p>
+          </div>
         </div>
       ))}
-      <AddToCartButton
+       <AddToCartButton
         systemCode={bags[0].systemCode}
         description={` ${bags[0].description} ${additionalDescription}`}
         list4={bags[0].list4}
