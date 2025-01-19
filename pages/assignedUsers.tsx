@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface User {
   _id: string;
@@ -25,6 +26,18 @@ const AssignedUsers = () => {
     }
   }, [name]);
 
+  const handleLoginAsUser = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/loginAsUser?userId=${userId}`);
+      const data = await response.json();
+      if (data.success) {
+        router.push('/'); // Redirect to the home page
+      }
+    } catch (error) {
+      console.error('Error logging in as user:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
@@ -33,7 +46,12 @@ const AssignedUsers = () => {
         <ul>
           {users.map(user => (
             <li key={user._id} className="mb-2">
-              {user.name}
+              <button
+                onClick={() => handleLoginAsUser(user._id)}
+                className="text-blue-500 hover:underline"
+              >
+                {user.name}
+              </button>
             </li>
           ))}
         </ul>
