@@ -14,6 +14,9 @@ function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
   if (priceList === 'lista4-10-final') {
     price = (price * 0.9);
   }
+  if (priceList === 'lista4-10-5-final') {
+    price = (price * 0.9 * 0.95);
+  }
   if (code === 'Fb3' && totalQuantity >= 100) {
     return price * 0.9;
   }
