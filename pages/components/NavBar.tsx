@@ -25,13 +25,16 @@ const validateUrl = (href: string, userPriceList: string) => {
   const priceListInUrl = pathParts[2];
 
   if (
-    (userPriceList === 'lista4' && (priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5')) ||
+    (userPriceList === 'lista4' && (priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5' || priceListInUrl === 'lista4-10-final')) ||
 
-    (userPriceList === 'lista4-final' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5')) ||
+    (userPriceList === 'lista4-final' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5' || priceListInUrl === 'lista4-10-final' )) ||
 
-    (userPriceList === 'lista4-10' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10-5')) ||
+    (userPriceList === 'lista4-10' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10-5'|| priceListInUrl === 'lista4-10-final')) ||
 
-    (userPriceList === 'lista4-10-5' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10'))
+    (userPriceList === 'lista4-10-5' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-final'))  ||
+    
+    (userPriceList === 'lista4-10-final' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5'))
+   
   ) {
     window.location.href = '/no-access';
   }
@@ -91,6 +94,9 @@ const calculateDiscountedPrice = (code: string, totalQuantity: number, price: nu
   }
   if (priceList === 'lista4-10-5') { // Fix the condition here
     finalPrice = (price * 0.9 * 0.95) / 1.105;
+  }
+  if (priceList === 'lista4-10-final') { // Fix the condition here
+    finalPrice = (price * 0.9);
   }
   if (code === 'Fb3' && totalQuantity >= 100) {
     return finalPrice * 0.9;
