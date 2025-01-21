@@ -215,8 +215,9 @@ const CreateUser = () => {
                   <option value="lista4">lista4</option>
                   <option value="lista4-10">lista4-10</option>
                   <option value="lista4-10-5">lista4-10-5</option>
-                  <option value="lista4-10-final">lista4-10-final</option>
                   <option value="lista4-final">lista4-final</option>
+                  <option value="lista4-10-final">lista4-10-final</option>
+                  <option value="lista4-10-5-final">lista4-10-5-final</option>
                 </select>
               </div>
               <div className="mb-4">
