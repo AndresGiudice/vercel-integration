@@ -11,9 +11,7 @@ export default async function handler(request, response) {
       const collection = db.collection('users-data'); // Change collection to 'users-data'
 
       // Buscar el usuario en la base de datos
-      const user = await collection.findOne({ 
-        $or: [{ email }, { name }] // Search by email or name
-      });
+      const user = await collection.findOne({ email, name }); // Search by both email and name
 
       if (user && await bcrypt.compare(password, user.password)) {
         response.status(200).json({ 

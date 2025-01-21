@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const LoginUser = () => {
   const [userEmail, setUserEmail] = useState('');
-  const [userName, setUserName] = useState(''); // Add state for userName
+  const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showUserPassword, setShowUserPassword] = useState(false);
@@ -18,16 +18,16 @@ const LoginUser = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: userEmail, name: userName, password: userPassword }), // Include name in request body
+      body: JSON.stringify({ email: userEmail, name: userName, password: userPassword }),
     });
 
     const data = await response.json();
     if (data.success) {
-      console.log('Price List:', data.priceList); // Log the priceList to the console
+      console.log('Price List:', data.priceList);
       setMessage('Login successful');
-      localStorage.setItem('authToken', data.token); // Store the auth token
-      localStorage.setItem('user', JSON.stringify(data.user)); // Store the user information
-      router.push('/'); // Redirect to index page
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      router.push('/');
     } else {
       setMessage('Login failed: ' + data.message);
     }
@@ -55,7 +55,7 @@ const LoginUser = () => {
         </div>
         <form onSubmit={handleUserLogin}>
           <div className="mb-4">
-            <label htmlFor="userName" className="block text-gray-700 font-bold mb-2">Nombre:</label> {/* Add label for userName */}
+            <label htmlFor="userName" className="block text-gray-700 font-bold mb-2">Nombre:</label>
             <input
               type="text"
               id="userName"
