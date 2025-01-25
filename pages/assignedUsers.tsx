@@ -16,6 +16,13 @@ const AssignedUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
+    const authToken = localStorage.getItem('authToken');
+    const seller = localStorage.getItem('seller');
+    if (!authToken || !seller) {
+      router.push('/loginSeller');
+      return;
+    }
+
     if (name) {
       fetch(`/api/assignedUser?seller=${name}`)
         .then(response => response.json())
@@ -47,10 +54,20 @@ const AssignedUsers = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('assignedUser');
+    localStorage.removeItem('seller');
+    router.push('/loginSeller');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6">Bienvenido, {name}</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-black">Bienvenido, {name}</h1>
+          <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" /> {/* Add image */}
+        </div>
         <h2 className="text-xl mb-4">Usuarios asignados:</h2>
         <ul>
           {users.map(user => (
@@ -64,6 +81,9 @@ const AssignedUsers = () => {
             </li>
           ))}
         </ul>
+        <button onClick={handleLogout} className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 mt-4">
+          Cerrar Sesión
+        </button>
       </div>
     </div>
   );

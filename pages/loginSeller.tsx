@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 const LoginSeller = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -17,6 +18,8 @@ const LoginSeller = () => {
     });
     const data = await response.json();
     if (data.success) {
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('seller', JSON.stringify(data.seller));
       router.push(`/assignedUsers?name=${name}`);
     } else {
       setError(data.message);
@@ -38,13 +41,21 @@ const LoginSeller = () => {
           onChange={(e) => setName(e.target.value)}
           className="border p-2 mb-4 w-full"
         />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 mb-4 w-full"
-        />
+        <div className="mb-4 relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border p-2 w-full pr-10"
+          />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          >
+            {showPassword ? '🔓' : '🔒'}
+          </span>
+        </div>
         <button onClick={handleLogin} className="bg-green-500 text-white py-2 rounded hover:bg-green-600 w-full"> {/* Change button color */}
           Login
         </button>
