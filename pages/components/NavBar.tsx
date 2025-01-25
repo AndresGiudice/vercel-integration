@@ -153,7 +153,19 @@ function Example() {
     }
 
     const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+    const assignedUser = localStorage.getItem('assignedUser');
+    if (assignedUser) {
+      try {
+        const parsedUser = JSON.parse(assignedUser);
+        if (typeof setUser === 'function') {
+          setUser(parsedUser);
+        } else {
+          console.error('setUser is not a function');
+        }
+      } catch (error) {
+        console.error('Error parsing assigned user:', error);
+      }
+    } else if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         if (typeof setUser === 'function') {
