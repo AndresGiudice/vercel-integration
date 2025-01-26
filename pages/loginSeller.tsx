@@ -39,7 +39,7 @@ const LoginSeller = () => {
           placeholder="Nombre"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border p-2 mb-4 w-full"
+          className="border p-2 mb-4 w-full text-black"
         />
         <div className="mb-4 relative">
           <input
@@ -47,7 +47,7 @@ const LoginSeller = () => {
             placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 w-full pr-10"
+            className="border p-2 w-full pr-10 text-black"
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
