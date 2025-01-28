@@ -32,16 +32,15 @@ try {
   };
 }
 };
-
+  
 type Bag = {
   description: string;
   list4: number;
   list3: number;
   systemCode: string; 
-  additionalDescription: string;
 };
 
-export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function BolsasConManijaBlancas({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
@@ -53,11 +52,13 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const processedData = data.fb3x100
+      const order = ["B00B0", "BG0B0", "B1AB0", "BG1B0", "BG1BG", "BG2B0", "BG3B0", "BG4B0", "BG5B0", "BG7B0", "BBB00", "BG8B0", "B11B0"];
+      const processedData = data.blancas
         .map((bag: Bag) => ({
           ...bag,
           description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
-        }));
+        }))
+        .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
       setBags(processedData);
       const initialQuantities = processedData.reduce((acc: any, bag: Bag) => {
         acc[bag.systemCode] = 0;
@@ -91,14 +92,16 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     }
   };
 
-  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
-    const cleanedDescription = description.replace(/Bolsa Fast Food\s*/, '').replace(/(Kraft).*/, 'Kraft');
-    const cleanedAdditionalDescription = additionalDescription ? additionalDescription.replace(/Bolsa Fast Food\s*/, '') : '';
-    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: 0,
-    }));
+  const handleAddToCart = (systemCode: string, description: string) => {
+    const cleanedDescription = description.replace(/(Blancas).*/, 'Blancas');
+    const bag = bags.find(bag => bag.systemCode === systemCode);
+    if (bag) {
+      addToCart(systemCode, quantities[systemCode], cleanedDescription, bag.list3);
+      setQuantities((prevQuantities) => ({
+        ...prevQuantities,
+        [systemCode]: 0,
+      }));
+    }
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
@@ -106,10 +109,6 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
     clearCart();
-  };
-
-  const calculateDiscountedPrice = (price: number) => {
-    return totalItems >= 100 ? price * 0.9 : price;
   };
 
   return (
@@ -151,15 +150,8 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
                 >
-                  <div>
-                    <img 
-                      className="w-72 h-36 object-contain" 
-                      src={`/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription}.png`} 
-                      alt={bag.description} 
-                      onError={(e) => { e.currentTarget.src = `/Bolsa Fast Food FB3 Pleno ${bag.systemCode}.png`; }}
-                    />
-                  </div>
-                 <div className="container mx-auto p-2">
+                  <img className="w-72 h-36 object-contain" src="/bolsas-blancas.jpg" alt="Bolsa con Manija Blanca" />
+                  <div className="container mx-auto p-2">
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
                         <div className="py-2 inline-block min-w-full">
@@ -175,18 +167,18 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                               <tbody>
                                 <tr className="border-b">
                                   <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description.replace('Fast Food', '')} {bag.additionalDescription}
+                                    {bag.description}
                                   </td>
                                 </tr>
                               </tbody>
                             </table>
                           </div>
                         </div>
-                      </div> 
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice((bag.list4 * 0.9 * 0.95) / 1.105))}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(bag.list3 / 1.105)}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
@@ -218,7 +210,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                       list4={bag.list4}
                       list3={bag.list3}
                       quantity={quantities[bag.systemCode]}
-                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription)}
+                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description)}
                     />
                   </div>
                 </div>
@@ -228,7 +220,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-          <p>{folderName.toUpperCase()}</p>
+        <p>{folderName.toUpperCase()}</p>
       </footer>
     </div>
   );

@@ -36,6 +36,7 @@ try {
 type Bag = {
   description: string;
   list4: number;
+  list3: number;
   systemCode: string; 
 };
 
@@ -206,6 +207,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                       systemCode={bag.systemCode}
                       description={bag.description}
                       list4={bag.list4}
+                      list3={bag.list3}
                       quantity={quantities[bag.systemCode]}
                       handleAddToCart={handleAddToCart}
                     />

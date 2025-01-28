@@ -10,6 +10,7 @@ import '../../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
 
+
 type ConnectionStatus = {
   isConnected: boolean;
 };
@@ -41,7 +42,7 @@ type Bag = {
   additionalDescription: string;
 };
 
-export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function BolsasFastFoodColorFantasia({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bags, setBags] = useState<Bag[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
@@ -49,11 +50,12 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
   const router = useRouter();
   const folderName = router.pathname.split('/').slice(-2, -1)[0];
 
+
   useEffect(() => {
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const processedData = data.fb3x100
+      const processedData = data.fantFb3x100
         .map((bag: Bag) => ({
           ...bag,
           description: bag.description.replace(/^Bolsas\s*/, "").replace(/\s*x\s*100\s*u\.?$/, ""),
@@ -91,10 +93,10 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     }
   };
 
-  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
+  const handleAddToCart = (systemCode: string, description: string, list3: number, additionalDescription: string) => {
     const cleanedDescription = description.replace(/Bolsa Fast Food\s*/, '').replace(/(Kraft).*/, 'Kraft');
-    const cleanedAdditionalDescription = additionalDescription ? additionalDescription.replace(/Bolsa Fast Food\s*/, '') : '';
-    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);
+    const cleanedAdditionalDescription = additionalDescription.replace(/Bolsa Fast Food\s*/, '');
+    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list3);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [systemCode]: 0,
@@ -154,9 +156,8 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                   <div>
                     <img 
                       className="w-72 h-36 object-contain" 
-                      src={`/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription}.png`} 
-                      alt={bag.description} 
-                      onError={(e) => { e.currentTarget.src = `/Bolsa Fast Food FB3 Pleno ${bag.systemCode}.png`; }}
+                      src={`/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`} 
+                      alt={bag.additionalDescription} 
                     />
                   </div>
                  <div className="container mx-auto p-2">
@@ -182,11 +183,11 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                             </table>
                           </div>
                         </div>
-                      </div> 
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice((bag.list4 * 0.9 * 0.95) / 1.105))}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice(bag.list3 / 1.105))}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
@@ -218,7 +219,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                       list4={bag.list4}
                       list3={bag.list3}
                       quantity={quantities[bag.systemCode]}
-                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription)}
+                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list3, bag.additionalDescription)}
                     />
                   </div>
                 </div>

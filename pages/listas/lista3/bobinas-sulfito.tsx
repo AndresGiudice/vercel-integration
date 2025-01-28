@@ -7,8 +7,9 @@ import { useEffect, useState, useCallback } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
-import AddToCartButton from '../../components/AddToCartButton';
+import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
+
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -48,15 +49,16 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   const router = useRouter();
   const folderName = router.pathname.split('/').slice(-2, -1)[0];
 
+
   useEffect(() => {
     (async () => {
       try {
         const response = await fetch("/api/allPrices");
         const data = await response.json();
-        const processedData = data.boObr
+        const processedData = data.boSu
           .map((bag: Bag) => ({
             ...bag,
-            description: bag.description.replace(/^Bolsa Fast Food\s*/, "").replace(/\s*x\s*100\s*u\.?$/, "").replace("Fantasia", ""),
+            description: bag.description.replace(/^Bolsa Fast Food\s*/, "").replace(/\s*x\s*100\s*u\.?$/, "").replace("Fantasía", ""),
           }))
           .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
         setBags(processedData);
@@ -84,7 +86,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   }, {});
 
   const sortedGroupedBags = Object.keys(groupedBags)
-    .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+    .sort((a, b) => b.localeCompare(a))
     .reduce((acc: { [key: string]: Bag[] }, key: string) => {
       acc[key] = groupedBags[key];
       return acc;
@@ -129,7 +131,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={additionalDescription}
                 >
-                  <img className="w-72 h-36 object-contain" src={`/Bobina Obra ${additionalDescription}.png`} alt={additionalDescription} />
+                  <img className="w-72 h-36 object-contain" src={`/Bobina Sulfito ${additionalDescription}.png`} alt={additionalDescription} />
                   <div className="px-4 py-1 ">
                     <BagCard bags={bags} additionalDescription={additionalDescription} addToCart={addToCart} />
                   </div>
@@ -185,7 +187,7 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
   const handleAddToCart = () => {
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, bag.list4);
+        addToCart(bag.systemCode, quantities[index], ` ${bag.description} ${additionalDescription}`, bag.list3);
       }
     });
     setQuantities(bags.map(() => 0));
@@ -206,8 +208,9 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
     <div>
       {sortedBags.map((bag, index) => (
         <div key={bag.systemCode}>
-          <div className="flex justify-center mb-2">
-            <p className="text-gray-700 text-base mt-2">{bag.description.replace("Fantasia", "")} - {bag.additionalDescription}</p>
+          <div className="text-gray-700 text-base mt-4 text-center">
+            <p>{bag.description.replace("Fantasía", "")}</p>
+            <p>{bag.additionalDescription}</p>
           </div>
           <div className="w-full bg-gray-200 p-1 rounded-lg mb-2">
             <div className="flex items-center justify-between">
@@ -230,11 +233,11 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
             </div>
           </div>
           <div className="flex justify-center mb-2">
-            <p className="text-gray-700 text-lg"> Precio x und. : <span className="font-bold">${Math.round(bag.list4 * 0.9 * 0.95)}</span></p>
+            <p className="text-gray-700 text-lg"> Precio x und. : <span className="font-bold">${Math.round(bag.list3 / 1.105)}</span></p>
           </div>
         </div>
       ))}
-      <AddToCartButton
+       <AddToCartButton
         systemCode={bags[0].systemCode}
         description={` ${bags[0].description} ${additionalDescription}`}
         list4={bags[0].list4}

@@ -7,7 +7,7 @@ import { useEffect, useState, useCallback } from "react";
 import NavBar from '../../components/NavBar';
 import { useCart } from '../../../context/CartContext';
 import '../../../styles/styles.css';
-import AddToCartButton from '../../components/AddToCartButton';
+import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
 
 type ConnectionStatus = {
@@ -47,6 +47,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
   const [showCartDetails, setShowCartDetails] = useState(false);
   const router = useRouter();
   const folderName = router.pathname.split('/').slice(-2, -1)[0];
+
 
   useEffect(() => {
     (async () => {
@@ -140,7 +141,7 @@ export default function BolsasConManijaKraft({ isConnected }: InferGetServerSide
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-          <p>{folderName.toUpperCase()}</p>
+      <p>{folderName.toUpperCase()}</p>
       </footer>
     </div>
   );
@@ -185,7 +186,7 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
   const handleAddToCart = () => {
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, bag.list4);
+        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, bag.list3);
       }
     });
     setQuantities(bags.map(() => 0));
@@ -230,11 +231,11 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
             </div>
           </div>
           <div className="flex justify-center mb-2">
-            <p className="text-gray-700 text-lg"> Precio x und. : <span className="font-bold">${Math.round(bag.list4 * 0.9 * 0.95)}</span></p>
+            <p className="text-gray-700 text-lg"> Precio x und. : <span className="font-bold">${Math.round(bag.list3 / 1.105)}</span></p>
           </div>
         </div>
       ))}
-      <AddToCartButton
+       <AddToCartButton
         systemCode={bags[0].systemCode}
         description={` ${bags[0].description} ${additionalDescription}`}
         list4={bags[0].list4}

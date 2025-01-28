@@ -88,6 +88,9 @@ const bobinas = (priceList: string, user: any) => {
 
 const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number, priceList: string) => {
   let finalPrice = price;
+  if (priceList === 'lista3') {
+    finalPrice = price / 1.105;
+  }
   if (priceList === 'lista4') {
     finalPrice = price / 1.105;
   }

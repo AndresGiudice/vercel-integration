@@ -91,10 +91,10 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
     }
   };
 
-  const handleAddToCart = (systemCode: string, description: string, list4: number, additionalDescription: string) => {
+  const handleAddToCart = (systemCode: string, description: string, list3: number, additionalDescription: string) => {
     const cleanedDescription = description.replace(/Bolsa Fast Food\s*/, '').replace(/(Kraft).*/, 'Kraft');
     const cleanedAdditionalDescription = additionalDescription ? additionalDescription.replace(/Bolsa Fast Food\s*/, '') : '';
-    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list4);
+    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, list3);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [systemCode]: 0,
@@ -182,11 +182,11 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                             </table>
                           </div>
                         </div>
-                      </div> 
+                      </div>
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice((bag.list4 * 0.9 * 0.95) / 1.105))}</span></p>
+                    <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(calculateDiscountedPrice( bag.list3 / 1.105))}</span></p>
                   </div>
                   <div className="px-4 py-1 ">
                     <div className="w-full bg-gray-200 p-1 rounded-lg">
@@ -218,7 +218,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                       list4={bag.list4}
                       list3={bag.list3}
                       quantity={quantities[bag.systemCode]}
-                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription)}
+                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list3, bag.additionalDescription)}
                     />
                   </div>
                 </div>
