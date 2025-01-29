@@ -20,13 +20,14 @@ const placeOrder = async (cart: any, totalAmount: number, user: any, clearCart: 
 };
 
 const restrictedPriceLists: { [key: string]: string[] } = {
-  'lista4': ['lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
-  'lista4-final': ['lista4', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
-  'lista4-10': ['lista4', 'lista4-final', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
-  'lista4-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
-  'lista4-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-5-final', 'lista3'],
-  'lista4-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista3'],
-  'lista3': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final'],
+  'lista4': ['lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final'],
+  'lista4-final': ['lista4', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final'],
+  'lista4-10': ['lista4', 'lista4-final', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final'],
+  'lista4-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final'],
+  'lista4-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-5-final', 'lista3', 'lista3-final'],
+  'lista4-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista3', 'lista3-final'],
+  'lista3': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3-final'],
+  'lista3-final' : ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3']
 };
 
 const validateUrl = (href: string, userPriceList: string) => {

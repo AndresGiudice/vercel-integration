@@ -39,20 +39,24 @@ const CreateUser = () => {
   const handleAdminLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const response = await fetch('/api/loginAdmin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ adminName, adminEmail, adminPassword }),
-    });
+    try {
+      const response = await fetch('/api/loginAdmin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ adminName, adminEmail, adminPassword }),
+      });
 
-    const data = await response.json();
-    if (data.success) {
-      setIsAuthenticated(true);
-      // setMessage('Login successful'); // Remove this line
-    } else {
-      setMessage('Login failed: ' + data.message);
+      const data = await response.json();
+      if (data.success) {
+        setIsAuthenticated(true);
+        // setMessage('Login successful'); // Remove this line
+      } else {
+        setMessage('Login failed: ' + data.message);
+      }
+    } catch (error) {
+      setMessage('Error del servidor: ' + (error as Error).message);
     }
   };
 
@@ -213,6 +217,7 @@ const CreateUser = () => {
                 >
                   <option value="">seleccione una lista</option>
                   <option value="lista3">lista3</option>
+                  <option value="lista3-final">lista3-final</option>
                   <option value="lista4">lista4</option>
                   <option value="lista4-10">lista4-10</option>
                   <option value="lista4-10-5">lista4-10-5</option>
