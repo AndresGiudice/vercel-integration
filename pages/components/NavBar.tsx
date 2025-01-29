@@ -19,25 +19,22 @@ const placeOrder = async (cart: any, totalAmount: number, user: any, clearCart: 
   }
 };
 
+const restrictedPriceLists: { [key: string]: string[] } = {
+  'lista4': ['lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
+  'lista4-final': ['lista4', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
+  'lista4-10': ['lista4', 'lista4-final', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
+  'lista4-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-final', 'lista4-10-5-final', 'lista3'],
+  'lista4-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-5-final', 'lista3'],
+  'lista4-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista3'],
+  'lista3': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final'],
+};
+
 const validateUrl = (href: string, userPriceList: string) => {
   const url = new URL(href, window.location.origin);
   const pathParts = url.pathname.split('/');
   const priceListInUrl = pathParts[2];
 
-  if (
-    (userPriceList === 'lista4' && (priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5' || priceListInUrl === 'lista4-10-final' || priceListInUrl === 'lista4-10-5-final')) ||
-
-    (userPriceList === 'lista4-final' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5' || priceListInUrl === 'lista4-10-final' || priceListInUrl === 'lista4-10-5-final' )) ||
-
-    (userPriceList === 'lista4-10' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10-5'|| priceListInUrl === 'lista4-10-final' || priceListInUrl === 'lista4-10-5-final')) ||
-
-    (userPriceList === 'lista4-10-5' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-final' || priceListInUrl === 'lista4-10-5-final'))  ||
-    
-    (userPriceList === 'lista4-10-final' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5' || priceListInUrl === 'lista4-10-5-final')) ||
-
-    (userPriceList === 'lista4-10-5-final' && (priceListInUrl === 'lista4' || priceListInUrl === 'lista4-final' || priceListInUrl === 'lista4-10' || priceListInUrl === 'lista4-10-5' || priceListInUrl === 'lista4-10-final'))
-   
-  ) {
+  if (restrictedPriceLists[userPriceList]?.includes(priceListInUrl)) {
     window.location.href = '/no-access';
   }
 };
