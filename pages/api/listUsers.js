@@ -7,7 +7,7 @@ export default async function handler(request, response) {
       const db = client.db('users');
       const collection = db.collection('users-data');
 
-      const users = await collection.find({}).toArray();
+      const users = await collection.find({}).toArray(); // Ensure the API correctly fetches all users, including those with and without assigned sellers
       const priceList = users.map(user => user.priceList); // Obtener priceList de los usuarios
 
       response.status(200).json({ success: true, users, priceList });

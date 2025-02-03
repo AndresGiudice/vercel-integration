@@ -102,7 +102,14 @@ const ListUsers = () => {
     });
     const data = await response.json();
     if (data.success) {
-      setUsers(users.filter(user => user.email !== email));
+      // Volver a llamar a la API para obtener la lista actualizada de usuarios
+      const usersResponse = await fetch('/api/listUsers');
+      const usersData = await usersResponse.json();
+      if (usersData.success) {
+        setUsers(usersData.users);
+      } else {
+        console.error('Error fetching updated users:', usersData.message);
+      }
     } else {
       console.error('Error deleting user:', data.message);
     }
