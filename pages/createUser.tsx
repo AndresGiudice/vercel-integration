@@ -216,6 +216,7 @@ const CreateUser = () => {
                   className="w-full px-3 py-2 border rounded"
                 >
                   <option value="">seleccione una lista</option>
+                  <option value="lista2">lista2</option>
                   <option value="lista3">lista3</option>
                   <option value="lista3-10">lista3-10</option>
                   <option value="lista3-10-5">lista3-10-5</option>

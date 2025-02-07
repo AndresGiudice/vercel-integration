@@ -20,18 +20,19 @@ const placeOrder = async (cart: any, totalAmount: number, user: any, clearCart: 
 };
 
 const restrictedPriceLists: { [key: string]: string[] } = {
-  'lista4': ['lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista4-10': ['lista4', 'lista4-final', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista4-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista4-final': ['lista4', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista4-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista4-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista3': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista3-10': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista3-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista3-final' : ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
-  'lista3-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10', 'lista3-10-5-final'],
-  'lista3-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final'],
+  'lista4': ['lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista4-10': ['lista4', 'lista4-final', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista4-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista4-final': ['lista4', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista4-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista4-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista3': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista3-10': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista3-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista3-final' : ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2'],
+  'lista3-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10', 'lista3-10-5-final', 'lista2'],
+  'lista3-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista2'],
+  'lista2': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final'],
 };
 
 const validateUrl = (href: string, userPriceList: string) => {
@@ -90,6 +91,9 @@ const bobinas = (priceList: string, user: any) => {
 
 const calculateDiscountedPrice = (code: string, totalQuantity: number, price: number, priceList: string) => {
   let finalPrice = price;
+  if (priceList === 'lista2') {
+    finalPrice = price / 1.105;
+  }
   if (priceList === 'lista3') {
     finalPrice = price / 1.105;
   }

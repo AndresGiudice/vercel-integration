@@ -25,7 +25,8 @@ export default async function handler(request, response) {
           description: { $first: "$description" },
           additionalDescription: { $first: "$additionalDescription" },
           list4: { $first: "$list4" },
-          list3: { $first: "$list3" }
+          list3: { $first: "$list3" },
+          list2: { $first: "$list2" }
         }
       },
       {
@@ -44,7 +45,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -64,7 +66,8 @@ export default async function handler(request, response) {
           description: { $first: "$description" },
           additionalDescription: { $first: "$additionalDescription" },
           list4: { $first: "$list4" },
-          list3: { $first: "$list3" }
+          list3: { $first: "$list3" },
+          list2: { $first: "$list2" }
         }
       },
       {
@@ -83,7 +86,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -103,7 +107,8 @@ export default async function handler(request, response) {
           description: { $first: "$description" },
           additionalDescription: { $first: "$additionalDescription" },
           list4: { $first: "$list4" },
-          list3: { $first: "$list3" }
+          list3: { $first: "$list3" },
+          list2: { $first: "$list2" }
         }
       },
       {
@@ -118,7 +123,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -140,7 +146,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -157,7 +164,8 @@ export default async function handler(request, response) {
       {
         $addFields: {
           list4: { $multiply: ["$list4", 0.6] },
-          list3: { $multiply: ["$list3", 0.6] }
+          list3: { $multiply: ["$list3", 0.6] },
+          list2: { $multiply: ["$list2", 0.6] }
         }
       },
       {
@@ -167,7 +175,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -185,7 +194,8 @@ export default async function handler(request, response) {
       {
         $addFields: {
           list4: { $multiply: ["$list4", 10] },
-          list3: { $multiply: ["$list3", 10] }
+          list3: { $multiply: ["$list3", 10] },
+          list2: { $multiply: ["$list2", 10] }
         }
       },
       {
@@ -195,7 +205,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -216,7 +227,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -238,7 +250,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -259,7 +272,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -281,7 +295,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -303,7 +318,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();
@@ -326,7 +342,8 @@ export default async function handler(request, response) {
           description: 1,
           additionalDescription: 1,
           list4: 1,
-          list3: 1
+          list3: 1,
+          list2: 1
         }
       }
     ]).toArray();

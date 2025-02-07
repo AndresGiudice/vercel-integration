@@ -2,6 +2,9 @@ const nodemailer = require('nodemailer');
 const ExcelJS = require('exceljs');
 
 function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
+  if (priceList === 'lista2') {
+    price = price / 1.105;
+  }
   if (priceList === 'lista3') {
     price = price / 1.105;
   }
@@ -72,7 +75,7 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
 
   // Agregar fila de total
   worksheet.addRow({});
-  if (user.priceList === 'lista3' || user.priceList === 'lista4') {
+  if (user.priceList === 'lista2' || user.priceList === 'lista3' || user.priceList === 'lista4') {
     totalAmount = totalAmount / 1.105;
   } else if (user.priceList === 'lista3-10' || user.priceList === 'lista4-10' ) {
     totalAmount = (totalAmount * 0.9) / 1.105;

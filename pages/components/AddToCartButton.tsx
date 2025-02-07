@@ -5,17 +5,18 @@ type AddToCartButtonProps = {
   description: string;
   list4: number;
   list3: number;
+  list2: number;
   quantity: number;
-  handleAddToCart: (systemCode: string, description: string, list4: number, list3: number) => void;
+  handleAddToCart: (systemCode: string, description: string, list4: number, list3: number, list2: number) => void;
 };
 
-const AddToCartButton: React.FC<AddToCartButtonProps> = ({ systemCode, description, list4, list3, quantity, handleAddToCart }) => {
+const AddToCartButton: React.FC<AddToCartButtonProps> = ({ systemCode, description, list4, list3, list2, quantity, handleAddToCart }) => {
   return (
     <div
       className={`w-full bg-[#A6CE39] p-1 rounded-lg mt-2 flex items-center justify-center text-black cursor-pointer hover:bg-[#84B029] active:bg-[#84B029] active:shadow-inner active:translate-y-1 ${quantity === 0 ? 'cursor-not-allowed' : ''}`} 
       onClick={() => {
         if (quantity > 0) {
-          handleAddToCart(systemCode, description, list4, list3);
+          handleAddToCart(systemCode, description, list4, list3, list2);
         }
       }}
     >
