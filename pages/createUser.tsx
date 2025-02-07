@@ -218,6 +218,7 @@ const CreateUser = () => {
                   <option value="">seleccione una lista</option>
                   <option value="lista3">lista3</option>
                   <option value="lista3-10">lista3-10</option>
+                  <option value="lista3-10-5">lista3-10</option>
                   <option value="lista3-final">lista3-final</option>
                   <option value="lista4">lista4</option>
                   <option value="lista4-10">lista4-10</option>

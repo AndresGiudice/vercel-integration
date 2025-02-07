@@ -8,6 +8,9 @@ function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
   if (priceList === 'lista3-10') {
     price = (price * 0.9) / 1.105;
   }
+  if (priceList === 'lista3-10-5') {
+    price = (price * 0.9 * 0.95) / 1.105;
+  }
   if (priceList === 'lista4') {
     price = price / 1.105;
   }
@@ -63,12 +66,13 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
 
   // Agregar fila de total
   worksheet.addRow({});
-  if (user.priceList === 'lista3') {
+  if (user.priceList === 'lista3' || user.priceList === 'lista4') {
     totalAmount = totalAmount / 1.105;
-  } else if (user.priceList === 'lista3-10') {
+  } else if (user.priceList === 'lista3-10' || user.priceList === 'lista4-10' ) {
     totalAmount = (totalAmount * 0.9) / 1.105;
-  } else if (user.priceList === 'lista4' || user.priceList === 'lista4-10' || user.priceList === 'lista4-10-5') {
-    totalAmount = totalAmount / 1.105;
+  }
+  else if (user.priceList === 'lista3-10-5' || user.priceList === 'lista4-10-5' ) {
+    totalAmount = (totalAmount * 0.9 * 0.95) / 1.105;
   }
   worksheet.addRow({ description: 'Total', total: totalAmount });
 
