@@ -37,6 +37,7 @@ type Bag = {
   description: string;
   list4: number;
   list3: number;
+  list2: number;
   systemCode: string; 
   additionalDescription: string;
 };
@@ -217,6 +218,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
                       description={bag.description}
                       list4={bag.list4}
                       list3={bag.list3}
+                      list2={bag.list2}
                       quantity={quantities[bag.systemCode]}
                       handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list4, bag.additionalDescription)}
                     />

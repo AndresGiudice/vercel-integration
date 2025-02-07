@@ -36,6 +36,7 @@ try {
 type Bag = {
   additionalDescription: string;
   description: string;
+  list2: number;
   list3: number;
   list4: number;
   
@@ -241,6 +242,7 @@ const BagCard: React.FC<BagCardProps> = ({ bags, additionalDescription, addToCar
         description={` ${bags[0].description} ${additionalDescription}`}
         list4={bags[0].list4}
         list3={bags[0].list3}
+        list2={bags[0].list2}
         quantity={quantities.reduce((acc, qty) => acc + qty, 0)}
         handleAddToCart={handleAddToCart}
       />
