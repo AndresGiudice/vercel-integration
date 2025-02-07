@@ -2,37 +2,19 @@ const nodemailer = require('nodemailer');
 const ExcelJS = require('exceljs');
 
 function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
-  if (priceList === 'lista2') {
+  if (priceList === 'lista2' || priceList === 'lista3' || priceList === 'lista4') {
     price = price / 1.105;
   }
-  if (priceList === 'lista3') {
-    price = price / 1.105;
-  }
-  if (priceList === 'lista3-10') {
+  if ( priceList === 'lista2-10' || priceList === 'lista3-10' || priceList === 'lista4-10') {
     price = (price * 0.9) / 1.105;
   }
-  if (priceList === 'lista3-10-5') {
+  if (priceList === 'lista3-10-5' || priceList === 'lista4-10-5') {
     price = (price * 0.9 * 0.95) / 1.105;
   }
-  if (priceList === 'lista3-10-final') {
+  if (priceList === 'lista3-10-final' || priceList === 'lista4-10-final') {
     price = (price * 0.9);
   }
-  if (priceList === 'lista3-10-5-final') {
-    price = (price * 0.9 * 0.95);
-  }
-  if (priceList === 'lista4') {
-    price = price / 1.105;
-  }
-  if (priceList === 'lista4-10') {
-    price = (price * 0.9) / 1.105;
-  }
-  if (priceList === 'lista4-10-5') {
-    price = (price * 0.9 * 0.95) / 1.105;
-  }
-  if (priceList === 'lista4-10-final') {
-    price = (price * 0.9);
-  }
-  if (priceList === 'lista4-10-5-final') {
+  if (priceList === 'lista3-10-5-final' || priceList === 'lista4-10-5-final') {
     price = (price * 0.9 * 0.95);
   }
   if (code === 'Fb3' && totalQuantity >= 100) {
@@ -77,7 +59,7 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
   worksheet.addRow({});
   if (user.priceList === 'lista2' || user.priceList === 'lista3' || user.priceList === 'lista4') {
     totalAmount = totalAmount / 1.105;
-  } else if (user.priceList === 'lista3-10' || user.priceList === 'lista4-10' ) {
+  } else if (user.priceList === 'lista2-10' || user.priceList === 'lista3-10' || user.priceList === 'lista4-10' ) {
     totalAmount = (totalAmount * 0.9) / 1.105;
   }
   else if (user.priceList === 'lista3-10-5' || user.priceList === 'lista4-10-5' ) {
