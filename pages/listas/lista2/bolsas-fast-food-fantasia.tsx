@@ -221,7 +221,7 @@ export default function BolsasFastFoodColorFantasia({ isConnected }: InferGetSer
                       list3={bag.list3}
                       list2={bag.list2}
                       quantity={quantities[bag.systemCode]}
-                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list3, bag.additionalDescription)}
+                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list2, bag.additionalDescription)}
                     />
                   </div>
                 </div>
