@@ -348,7 +348,28 @@ export default async function handler(request, response) {
       }
     ]).toArray();
 
-
+    const resultsFae = await collection.aggregate([
+      {
+        $match: {
+          $or: [
+            { systemCode: { $in: ["BG1F0FC19", "BG1F0FC20", "BG1F0FC21", "BG1F0FC22","BG1F0FC23","BG1F0FC24","BG1F0FC25","BG1F0FC26","BG3F0FC19","BG3F0FC20","BG3F0FC21","BG3F0FC22","BG3F0FC23","BG3F0FC24","BG3F0FC25","BG3F0FC26","BG5F0FC19","BG5F0FC20","BG5F0FC21","BG5F0FC22","BG5F0FC23","BG5F0FC24","BG5F0FC25","BG5F0FC26", "BG1F0SU", "BG3F0SU", "BG5F0SU"
+ ] } }
+          ]
+        }
+      },
+      
+      {
+        $project: {
+          _id: 0,
+          systemCode: 1,
+          description: 1,
+          additionalDescription: 1,
+          list4: 1,
+          list3: 1,
+          list2: 1
+        }
+      }
+    ]).toArray();
 
     // Log systemCode for each result
     // resultsKraft.forEach(item => console.log(item.systemCode));
@@ -362,8 +383,10 @@ export default async function handler(request, response) {
     // resultsBaSu.forEach(item => console.log(item.systemCode));
     // resultsBobinasObra.forEach(item => console.log(item.systemCode));
     // resultsBobinasSulfito.forEach(item => console.log(item.systemCode));
+    //console.log(`Total elements in resultsFae: ${resultsFae.length}`);
+    //resultsFae.forEach(item => console.log(item.systemCode));
 
-    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra, boSu : resultsBobinasSulfito, boKr : resultsBobinasKraft});
+    response.status(200).json({ kraft: resultsKraft, blancas: resultsBlancas, pa: resultsPA, fb3x100: resultsFb3x100, fantFb3x100: resultsFantFb3x100, fb3x10: resultsFb3x10, fm : resultsFm, baKr : resultsBaKr, baSu : resultsBaSu, boObr : resultsBobinasObra, boSu : resultsBobinasSulfito, boKr : resultsBobinasKraft, boFae: resultsFae });
   } catch (e) {
     console.error(e);
     response.status(500).json(e);

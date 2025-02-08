@@ -61,7 +61,7 @@ const bolsasDePapel = (priceList: string, user: any) => {
         { name: 'Bolsas con Manija Kraft', href: `/listas/${priceList}/bolsas-con-manija-kraft` },
         { name: 'Bolsas con Manija Blancas', href: `/listas/${priceList}/bolsas-con-manija-blancas` },
         { name: 'Bolsas con Manija Color', href: `/listas/${priceList}/bolsas-con-manija-color` },
-        { name: 'Bolsas con Manija Fantasía', href: '#' },
+        { name: 'Bolsas con Manija Fantasía', href: `/listas/${priceList}/bolsas-con-manija-fantasia` },
       ],
     },
     {
@@ -71,7 +71,6 @@ const bolsasDePapel = (priceList: string, user: any) => {
         { name: 'Bolsas Fast Food "Cotillón" Estándar', href: `/listas/${priceList}/bolsas-fast-food-color` },
         { name: 'Bolsas Fast Food "Cotillón" Estándar x10', href: `/listas/${priceList}/bolsas-fast-food-color-x10` },
         { name: 'Bolsas Fast Food "Cotillón" Fantasía', href: `/listas/${priceList}/bolsas-fast-food-fantasia` },
-        { name: 'Bolsas Fast Food "Cotillón" Chica', href: '#' },
         { name: 'Bolsas Fast Food Kraft', href: `/listas/${priceList}/bolsas-fast-food-kraft` },
       ],
     },
