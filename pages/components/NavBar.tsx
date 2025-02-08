@@ -20,21 +20,22 @@ const placeOrder = async (cart: any, totalAmount: number, user: any, clearCart: 
 };
 
 const restrictedPriceLists: { [key: string]: string[] } = {
-  'lista4': ['lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista4-10': ['lista4', 'lista4-final', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista4-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista4-final': ['lista4', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista4-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista4-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista3': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista3-10': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista3-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista3-final' : ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista3-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista3-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista2', 'lista2-10', 'lista2-10-5'],
-  'lista2': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2-10', 'lista2-10-5'],
-  'lista2-10': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10-5'],
-  'lista2-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10'],
+  'lista4': ['lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista4-10': ['lista4', 'lista4-final', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista4-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista4-final': ['lista4', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista4-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista4-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista3': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista3-10': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista3-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista3-final' : ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista3-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10-5', 'lista3-10', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista3-10-5-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3','lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista2', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista2': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2-10', 'lista2-10-5', 'lista2-final'],
+  'lista2-10': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10-5', 'lista2-final'],
+  'lista2-10-5': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-final'],
+  'lista2-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-5', 'lista4-10-final', 'lista4-10-5-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-5', 'lista3-10-final', 'lista3-10-5-final', 'lista2', 'lista2-10', 'lista2-10-5']
 };
 
 const validateUrl = (href: string, userPriceList: string) => {
@@ -107,9 +108,6 @@ const calculateDiscountedPrice = (code: string, totalQuantity: number, price: nu
   }
   if (priceList === 'lista3-10-5-final' || priceList === 'lista4-10-5-final') {
     finalPrice = (price * 0.9 * 0.95);
-  }
-  if (code === 'Fb3' && totalQuantity >= 100) {
-    return finalPrice * 0.9;
   }
   if (code === 'Fb3' && totalQuantity >= 100) {
     return finalPrice * 0.9;
