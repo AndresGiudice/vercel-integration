@@ -11,7 +11,7 @@ function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
   if (priceList === 'lista2-10-5' || priceList === 'lista3-10-5' || priceList === 'lista4-10-5') {
     price = (price * 0.9 * 0.95) / 1.105;
   }
-  if (priceList === 'lista3-10-final' || priceList === 'lista4-10-final') {
+  if (priceList === 'lista2-10-final' || priceList === 'lista3-10-final' || priceList === 'lista4-10-final') {
     price = (price * 0.9);
   }
   if (priceList === 'lista3-10-5-final' || priceList === 'lista4-10-5-final') {
@@ -65,7 +65,7 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
   else if (user.priceList === 'lista2-10-5' || user.priceList === 'lista3-10-5' || user.priceList === 'lista4-10-5' ) {
     totalAmount = (totalAmount * 0.9 * 0.95) / 1.105;
   }
-  else if (user.priceList === 'lista3-10-final' || user.priceList === 'lista4-10-final' ) {
+  else if (user.priceList === 'lista2-10-final' || user.priceList === 'lista3-10-final' || user.priceList === 'lista4-10-final' ) {
     totalAmount = (totalAmount * 0.9 );
   }
     else if (user.priceList === 'lista3-10-5-final' || user.priceList === 'lista4-10-5-final' ) {
