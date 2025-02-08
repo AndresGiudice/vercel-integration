@@ -14,7 +14,7 @@ function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
   if (priceList === 'lista2-10-final' || priceList === 'lista3-10-final' || priceList === 'lista4-10-final') {
     price = (price * 0.9);
   }
-  if (priceList === 'lista3-10-5-final' || priceList === 'lista4-10-5-final') {
+  if (priceList === 'lista2-10-5-final' || priceList === 'lista3-10-5-final' || priceList === 'lista4-10-5-final') {
     price = (price * 0.9 * 0.95);
   }
   if (code === 'Fb3' && totalQuantity >= 100) {
@@ -68,7 +68,7 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
   else if (user.priceList === 'lista2-10-final' || user.priceList === 'lista3-10-final' || user.priceList === 'lista4-10-final' ) {
     totalAmount = (totalAmount * 0.9 );
   }
-    else if (user.priceList === 'lista3-10-5-final' || user.priceList === 'lista4-10-5-final' ) {
+    else if (user.priceList === 'lista2-10-5-final' || user.priceList === 'lista3-10-5-final' || user.priceList === 'lista4-10-5-final' ) {
     totalAmount = (totalAmount * 0.9 * 0.95 );
   }
 
