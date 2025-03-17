@@ -57,7 +57,7 @@ const LoginSeller = () => {
           </span>
         </div>
         <button onClick={handleLogin} className="bg-green-500 text-white py-2 rounded hover:bg-green-600 w-full"> {/* Change button color */}
-          Login
+          Ingresar
         </button>
       </div>
     </div>
