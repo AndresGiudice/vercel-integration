@@ -40,8 +40,9 @@ function HomePage() {
     fetchUser();
   }, [userId]);
 
+  // Remove the loading message
   if (!user) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (
