@@ -41,21 +41,28 @@ const ListSellers = () => {
   };
 
   const handleSaveClick = async () => {
-    if (editedSeller) {
-      const response = await fetch('/api/updateSeller', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editedSeller),
-      });
-      const data = await response.json();
-      if (data.success) {
-        setSellers(sellers.map(seller => seller.email === editedSeller.email ? editedSeller : seller));
+    if (editedSeller && editingSeller) {
+      const originalSeller = sellers.find(seller => seller.email === editingSeller);
+      if (originalSeller && (originalSeller.name !== editedSeller.name || originalSeller.email !== editedSeller.email)) {
+        const response = await fetch('/api/updateSeller', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editedSeller),
+        });
+        const data = await response.json();
+        if (data.success) {
+          setSellers(sellers.map(seller => seller.email === editedSeller.email ? editedSeller : seller));
+          setEditingSeller(null);
+          setEditedSeller(null);
+        } else {
+          console.error('Error updating seller:', data.message);
+        }
+      } else {
+        console.log('No changes detected');
         setEditingSeller(null);
         setEditedSeller(null);
-      } else {
-        console.error('Error updating seller:', data.message);
       }
     }
   };

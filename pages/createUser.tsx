@@ -235,6 +235,7 @@ const CreateUser = () => {
                   id="userEmail"
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
+                  required
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
