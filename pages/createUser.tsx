@@ -21,6 +21,8 @@ const CreateUser = () => {
   const [showUserPassword, setShowUserPassword] = useState(false);
   const [sellers, setSellers] = useState<Seller[]>([]);
   const [selectedSeller, setSelectedSeller] = useState('');
+  const [rememberAdmin, setRememberAdmin] = useState(false);
+  const [rememberUser, setRememberUser] = useState(false);
 
   useEffect(() => {
     setCookie(null, 'visitedCreateUser', 'true', { path: '/' });
@@ -34,6 +36,28 @@ const CreateUser = () => {
     };
 
     fetchSellers();
+
+    // Load remembered admin credentials
+    const savedAdminName = localStorage.getItem('adminName');
+    const savedAdminEmail = localStorage.getItem('adminEmail');
+    const savedAdminPassword = localStorage.getItem('adminPassword');
+    if (savedAdminName && savedAdminEmail && savedAdminPassword) {
+      setAdminName(savedAdminName);
+      setAdminEmail(savedAdminEmail);
+      setAdminPassword(savedAdminPassword);
+      setRememberAdmin(true);
+    }
+
+    // Load remembered user credentials
+    const savedUserName = localStorage.getItem('userName');
+    const savedUserEmail = localStorage.getItem('userEmail');
+    const savedUserPassword = localStorage.getItem('userPassword');
+    if (savedUserName && savedUserEmail && savedUserPassword) {
+      setUserName(savedUserName);
+      setUserEmail(savedUserEmail);
+      setUserPassword(savedUserPassword);
+      setRememberUser(true);
+    }
   }, []);
 
   const handleAdminLogin = async (event: React.FormEvent) => {
@@ -51,7 +75,15 @@ const CreateUser = () => {
       const data = await response.json();
       if (data.success) {
         setIsAuthenticated(true);
-        // setMessage('Login successful'); // Remove this line
+        if (rememberAdmin) {
+          localStorage.setItem('adminName', adminName);
+          localStorage.setItem('adminEmail', adminEmail);
+          localStorage.setItem('adminPassword', adminPassword);
+        } else {
+          localStorage.removeItem('adminName');
+          localStorage.removeItem('adminEmail');
+          localStorage.removeItem('adminPassword');
+        }
       } else {
         setMessage('Login failed: ' + data.message);
       }
@@ -89,6 +121,15 @@ const CreateUser = () => {
       setMessage('Usuario creado exitosamente');
       localStorage.setItem('userCreated', 'true'); // Establecer bandera en localStorage
       localStorage.setItem('priceList', priceList); // Guardar Lista de Precios en localStorage
+      if (rememberUser) {
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('userEmail', userEmail);
+        localStorage.setItem('userPassword', userPassword);
+      } else {
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userPassword');
+      }
     } else if (data.message === 'Email already registered') {
       setMessage('El mail ya está registrado');
     } else {
@@ -146,6 +187,16 @@ const CreateUser = () => {
                     {showAdminPassword ? '🔓' : '🔒'}
                   </span>
                 </div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">
+                  <input
+                    type="checkbox"
+                    checked={rememberAdmin}
+                    onChange={(e) => setRememberAdmin(e.target.checked)}
+                  />
+                  <span className="ml-2">Recordar datos</span>
+                </label>
               </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
                 Login
@@ -251,6 +302,7 @@ const CreateUser = () => {
                   ))}
                 </select>
               </div>
+         
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
                 Crear Usuario
               </button>

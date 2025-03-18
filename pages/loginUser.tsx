@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -8,13 +8,40 @@ const LoginUser = () => {
   const [userPassword, setUserPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showUserPassword, setShowUserPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const savedUserEmail = localStorage.getItem('userEmail');
+    const savedUserName = localStorage.getItem('userName');
+    const savedUserPassword = localStorage.getItem('userPassword');
+    const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
+
+    if (savedRememberMe) {
+      setUserEmail(savedUserEmail || '');
+      setUserName(savedUserName || '');
+      setUserPassword(savedUserPassword || '');
+      setRememberMe(savedRememberMe);
+    }
+  }, []);
 
   const handleUserLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
     // Clear localStorage to prevent conflicts with previous login
     localStorage.clear();
+
+    if (rememberMe) {
+      localStorage.setItem('userEmail', userEmail);
+      localStorage.setItem('userName', userName);
+      localStorage.setItem('userPassword', userPassword);
+      localStorage.setItem('rememberMe', 'true');
+    } else {
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userPassword');
+      localStorage.removeItem('rememberMe');
+    }
 
     const response = await fetch('/api/loginUser', {
       method: 'POST',
@@ -96,6 +123,17 @@ const LoginUser = () => {
                 {showUserPassword ? '🔓' : '🔒'}
               </span>
             </div>
+          </div>
+          <div className="mb-4">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="form-checkbox"
+              />
+              <span className="ml-2 text-gray-700">Recordar mis datos</span>
+            </label>
           </div>
           <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
             Ingresar

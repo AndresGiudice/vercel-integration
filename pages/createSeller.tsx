@@ -13,9 +13,19 @@ const CreateSeller = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showAdminPassword, setShowAdminPassword] = useState(false);
   const [showSellerPassword, setShowSellerPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false); // Add rememberMe state
 
   useEffect(() => {
     setCookie(null, 'visitedCreateSeller', 'true', { path: '/' });
+    const savedAdminName = localStorage.getItem('savedAdminName');
+    const savedAdminEmail = localStorage.getItem('savedAdminEmail');
+    const savedAdminPassword = localStorage.getItem('savedAdminPassword');
+    if (savedAdminName && savedAdminEmail && savedAdminPassword) {
+      setAdminName(savedAdminName);
+      setAdminEmail(savedAdminEmail);
+      setAdminPassword(savedAdminPassword);
+      setRememberMe(true);
+    }
   }, []);
 
   const handleAdminLogin = async (event: React.FormEvent) => {
@@ -31,6 +41,15 @@ const CreateSeller = () => {
 
     const data = await response.json();
     if (data.success) {
+      if (rememberMe) {
+        localStorage.setItem('savedAdminName', adminName);
+        localStorage.setItem('savedAdminEmail', adminEmail);
+        localStorage.setItem('savedAdminPassword', adminPassword);
+      } else {
+        localStorage.removeItem('savedAdminName');
+        localStorage.removeItem('savedAdminEmail');
+        localStorage.removeItem('savedAdminPassword');
+      }
       setIsAuthenticated(true);
     } else {
       setMessage('Login failed: ' + data.message);
@@ -123,6 +142,17 @@ const CreateSeller = () => {
                     {showAdminPassword ? '🔓' : '🔒'}
                   </span>
                 </div>
+              </div>
+              <div className="mb-4">
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2 text-black">Recordar Nombre, Email y Contraseña</span>
+                </label>
               </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
                 Login
