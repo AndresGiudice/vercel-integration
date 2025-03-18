@@ -133,7 +133,12 @@ function Example() {
     setShowUserDetails(false);
     setMobileMenuOpen(false);
     document.body.classList.remove('overlay-active');
-    window.location.href = '/loginUser'; // Redirect to loginUser.tsx
+    const loginSource = localStorage.getItem('loginSource');
+    if (loginSource === 'seller') {
+      window.location.href = '/loginSeller';
+    } else {
+      window.location.href = '/loginUser';
+    }
   };
 
   useEffect(() => {

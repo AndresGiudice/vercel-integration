@@ -20,6 +20,7 @@ const LoginSeller = () => {
     if (data.success) {
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('seller', JSON.stringify(data.seller));
+      localStorage.setItem('loginSource', 'seller'); // Store login source
       router.push(`/assignedUsers?name=${name}`);
     } else {
       setError(data.message);

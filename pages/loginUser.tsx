@@ -13,6 +13,9 @@ const LoginUser = () => {
   const handleUserLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    // Clear localStorage to prevent conflicts with previous login
+    localStorage.clear();
+
     const response = await fetch('/api/loginUser', {
       method: 'POST',
       headers: {
@@ -27,6 +30,7 @@ const LoginUser = () => {
       setMessage('Login successful');
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('loginSource', 'user'); // Store login source
       router.push('/');
     } else {
       setMessage('Login failed: ' + data.message);
