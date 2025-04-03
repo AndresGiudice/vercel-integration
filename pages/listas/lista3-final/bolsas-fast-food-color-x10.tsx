@@ -114,7 +114,7 @@ export default function BolsasFastFoodColorL4({ isConnected }: InferGetServerSid
   };
 
   const calculateDiscountedPrice = (price: number) => {
-    return totalItems >= 100 ? price * 0.9 : price;
+    return totalItems >= 100 ? price * 0.8923 : price;
   };
 
   return (

@@ -270,22 +270,22 @@ const CreateUser = () => {
                   <option value="">seleccione una lista</option>
                   <option value="lista2">lista2</option>
                   <option value="lista2-10">lista2-10</option>
-                  <option value="lista2-10-5">lista2-10-5</option>
+                  <option value="lista2-10-2">lista2-10-2</option>
                   <option value="lista2-final">lista2-final</option>
                   <option value="lista2-10-final">lista2-10-final</option>
-                  <option value="lista2-10-5-final">lista2-10-5-final</option>
+                  <option value="lista2-10-2-final">lista2-10-2-final</option>
                   <option value="lista3">lista3</option>
                   <option value="lista3-10">lista3-10</option>
-                  <option value="lista3-10-5">lista3-10-5</option>
+                  <option value="lista3-10-2">lista3-10-2</option>
                   <option value="lista3-final">lista3-final</option>
                   <option value="lista3-10-final">lista3-10-final</option>
-                  <option value="lista3-10-5-final">lista3-10-5-final</option>
+                  <option value="lista3-10-2-final">lista3-10-2-final</option>
                   <option value="lista4">lista4</option>
                   <option value="lista4-10">lista4-10</option>
-                  <option value="lista4-10-5">lista4-10-5</option>
+                  <option value="lista4-10-2">lista4-10-2</option>
                   <option value="lista4-final">lista4-final</option>
                   <option value="lista4-10-final">lista4-10-final</option>
-                  <option value="lista4-10-5-final">lista4-10-5-final</option>
+                  <option value="lista4-10-2-final">lista4-10-2-final</option>
                 </select>
               </div>
               <div className="mb-4">
