@@ -10,12 +10,6 @@ export default async function handler(request, response) {
       const db = client.db('users');
       const collection = db.collection('sellers');
 
-      // Verificar si el correo electrónico ya existe
-      const existingSeller = await collection.findOne({ email });
-      if (existingSeller) {
-        return response.status(400).json({ success: false, message: 'Ya existe un vendedor con ese mail' });
-      }
-
       // Encriptar la contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
 

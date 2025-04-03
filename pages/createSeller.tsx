@@ -77,16 +77,13 @@ const CreateSeller = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: sellerName, email: sellerEmail, password: sellerPassword }), // Remove priceList
+      body: JSON.stringify({ name: sellerName, email: sellerEmail, password: sellerPassword }),
     });
 
     const data = await response.json();
     if (data.success) {
       setMessage('Vendedor creado exitosamente');
       localStorage.setItem('sellerCreated', 'true');
-      // localStorage.setItem('priceList', priceList); // Remove saving priceList in localStorage
-    } else if (data.message === 'Email already registered') {
-      setMessage('El mail ya está registrado');
     } else {
       setMessage('Error al crear el vendedor: ' + data.message);
     }

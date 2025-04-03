@@ -12,14 +12,6 @@ export default async function handler(request, response) {
       const collection = db.collection('users-data');
       const sellersCollection = db.collection('sellers'); // Assuming sellers are stored in 'sellers'
 
-      if (email) {
-        // Verificar si el correo electrónico ya existe
-        const existingUser = await collection.findOne({ email });
-        if (existingUser) {
-          return response.status(400).json({ success: false, message: 'Ya existe un usuario con ese mail' });
-        }
-      }
-
       // Obtener el nombre del vendedor
       const sellerData = await sellersCollection.findOne({ _id: new ObjectId(seller) }); // Convert seller to ObjectId
       const sellerName = sellerData ? sellerData.name : null;

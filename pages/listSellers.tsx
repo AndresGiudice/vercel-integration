@@ -6,6 +6,7 @@ import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 
 const ListSellers = () => {
   interface Seller {
+    _id: string; // Agregamos _id como identificador único
     name: string;
     email: string;
   }
@@ -30,7 +31,7 @@ const ListSellers = () => {
   }, [router]);
 
   const handleEditClick = (seller: Seller) => {
-    setEditingSeller(seller.email);
+    setEditingSeller(seller._id); // Usamos _id en lugar de email
     setEditedSeller(seller);
   };
 
@@ -42,7 +43,7 @@ const ListSellers = () => {
 
   const handleSaveClick = async () => {
     if (editedSeller && editingSeller) {
-      const originalSeller = sellers.find(seller => seller.email === editingSeller);
+      const originalSeller = sellers.find(seller => seller._id === editingSeller); // Usamos _id para encontrar el vendedor
       if (originalSeller && (originalSeller.name !== editedSeller.name || originalSeller.email !== editedSeller.email)) {
         const response = await fetch('/api/updateSeller', {
           method: 'PUT',
@@ -53,7 +54,7 @@ const ListSellers = () => {
         });
         const data = await response.json();
         if (data.success) {
-          setSellers(sellers.map(seller => seller.email === editedSeller.email ? editedSeller : seller));
+          setSellers(sellers.map(seller => seller._id === editedSeller._id ? editedSeller : seller)); // Actualizamos usando _id
           setEditingSeller(null);
           setEditedSeller(null);
         } else {
@@ -92,8 +93,8 @@ const ListSellers = () => {
         </div>
         <ul>
           {sellers.map((seller) => (
-            <li key={seller.email} className="mb-2">
-              {editingSeller === seller.email ? (
+            <li key={seller._id} className="mb-2"> {/* Usamos _id como clave única */}
+              {editingSeller === seller._id ? ( // Comparamos _id para determinar el modo edición
                 <div>
                   <input
                     type="text"

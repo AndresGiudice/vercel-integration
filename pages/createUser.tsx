@@ -267,7 +267,7 @@ const CreateUser = () => {
                   required
                   className="w-full px-3 py-2 border rounded"
                 >
-                  <option value="">seleccione una lista</option>
+                  <option value="">Seleccione una lista</option>
                   <option value="lista2">lista2</option>
                   <option value="lista2-10">lista2-10</option>
                   <option value="lista2-10-2">lista2-10-2</option>
@@ -297,7 +297,7 @@ const CreateUser = () => {
                   className="w-full px-3 py-2 border rounded"
                 >
                   <option value="">Seleccione un vendedor</option>
-                  <option value="none">Ninguno</option> {/* Add option for "ninguno" */}
+                  <option value="">Ninguno</option> {/* Add option for "ninguno" */}
                   {sellers.map((seller) => (
                     <option key={seller._id} value={seller._id}>{seller.name}</option>
                   ))}

@@ -21,7 +21,14 @@ const ListUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editedUser, setEditedUser] = useState<User | null>(null);
-  const [priceLists, setPriceLists] = useState<string[]>(['lista4', 'lista4-10', 'lista4-final']);
+  const [priceLists, setPriceLists] = useState<string[]>([
+    'lista2', 'lista2-10', 'lista2-10-2', 
+    'lista2-final', 'lista2-10-final', 'lista2-10-2-final', 
+    'lista3', 'lista3-10', 'lista3-10-2', 
+    'lista3-final', 'lista3-10-final', 'lista3-10-2-final', 
+    'lista4', 'lista4-10', 'lista4-10-2', 
+    'lista4-final', 'lista4-10-final', 'lista4-10-2-final'
+ ]);
   const [sellers, setSellers] = useState<Seller[]>([]);
   const router = useRouter();
 
@@ -40,7 +47,12 @@ const ListUsers = () => {
       const response = await fetch('/api/getPriceLists');
       const data = await response.json();
       if (data.success) {
-        setPriceLists(['lista4', 'lista4-10', 'lista4-final']);
+        setPriceLists(['lista2', 'lista2-10', 'lista2-10-2', 
+    'lista2-final', 'lista2-10-final', 'lista2-10-2-final', 
+    'lista3', 'lista3-10', 'lista3-10-2', 
+    'lista3-final', 'lista3-10-final', 'lista3-10-2-final', 
+    'lista4', 'lista4-10', 'lista4-10-2', 
+    'lista4-final', 'lista4-10-final', 'lista4-10-2-final']);
       } else {
         console.error('Error fetching price lists:', data.message);
       }
@@ -62,8 +74,10 @@ const ListUsers = () => {
   }, [router]);
 
   const handleEditClick = (user: User) => {
-    setEditingUser(user.email);
-    setEditedUser(user);
+    if (editingUser !== user._id) { // Usar _id en lugar de email
+      setEditingUser(user._id);
+      setEditedUser(user);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -83,7 +97,7 @@ const ListUsers = () => {
       });
       const data = await response.json();
       if (data.success) {
-        setUsers(users.map(user => user.email === editedUser.email ? editedUser : user));
+        setUsers(users.map(user => user._id === editedUser._id ? editedUser : user)); // Comparar por _id
         setEditingUser(null);
         setEditedUser(null);
       } else {
@@ -122,10 +136,10 @@ const ListUsers = () => {
           <h1 className="text-2xl font-bold">Listado de Usuarios</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
         </div>
-        <ul>
+        <ul className="max-h-96 overflow-y-auto"> {/* Limitar altura y habilitar scroll */}
           {users.map((user) => (
-            <li key={user.email} className="mb-2">
-              {editingUser === user.email ? (
+            <li key={user._id} className="mb-2"> {/* Usar _id como key */}
+              {editingUser === user._id ? ( // Comparar por _id
                 <div>
                   <input
                     type="text"
