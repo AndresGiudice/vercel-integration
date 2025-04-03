@@ -144,18 +144,18 @@ const CreateSeller = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <label className="inline-flex items-center">
+                <label className="block text-gray-700 font-bold mb-2">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="form-checkbox"
                   />
-                  <span className="ml-2 text-black">Recordar Nombre, Email y Contraseña</span>
+                   <span className="ml-2">Recordar datos</span>
                 </label>
               </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
-                Login
+                Ingresar
               </button>
             </form>
             <button onClick={handleForgotPassword} className="w-full text-green-700 py-2 mt-4 hover:underline">

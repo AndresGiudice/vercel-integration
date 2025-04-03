@@ -199,7 +199,7 @@ const CreateUser = () => {
                 </label>
               </div>
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
-                Login
+                Ingresar
               </button>
             </form>
             <button onClick={handleForgotPassword} className="w-full text-green-700 py-2 mt-4 hover:underline">

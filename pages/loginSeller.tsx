@@ -83,7 +83,7 @@ const LoginSeller = () => {
               onChange={(e) => setRememberMe(e.target.checked)}
               className="form-checkbox"
             />
-            <span className="ml-2 text-black">Recordar Nombre y Contraseña</span>
+            <span className="ml-2 text-black">Recordar Datos</span>
           </label>
         </div>
         <button onClick={handleLogin} className="bg-green-500 text-white py-2 rounded hover:bg-green-600 w-full"> {/* Change button color */}
