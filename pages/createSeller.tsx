@@ -163,7 +163,7 @@ const CreateSeller = () => {
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold">Crear Vendedor</h1>
+              <h1 className="text-2xl font-bold text-black">Crear Vendedor</h1>
               <Link href="/listSellers?token=expected_token_value" legacyBehavior>
                 <a className="text-green-500 hover:underline">
                   Ver listado de vendedores
@@ -179,7 +179,7 @@ const CreateSeller = () => {
                   value={sellerName}
                   onChange={(e) => setSellerName(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded text-black"
                 />
               </div>
               <div className="mb-4">
@@ -189,7 +189,7 @@ const CreateSeller = () => {
                   id="sellerEmail"
                   value={sellerEmail}
                   onChange={(e) => setSellerEmail(e.target.value)}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded text-black"
                 />
               </div>
               <div className="mb-4 relative">
@@ -201,7 +201,7 @@ const CreateSeller = () => {
                     value={sellerPassword}
                     onChange={(e) => setSellerPassword(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border rounded pr-10"
+                    className="w-full px-3 py-2 border rounded pr-10 text-black"
                   />
                   <span
                     onClick={() => setShowSellerPassword(!showSellerPassword)}
