@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../styles/styles.css';
+
 
 const RegisterAdmin = () => {
   const [email, setEmail] = useState('');
@@ -28,7 +28,7 @@ const RegisterAdmin = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Registrar Administrador</h1>
+          <h1 className="text-2xl font-bold text-black">Registrar Administrador</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
         </div>
         <form onSubmit={handleSubmit}>
@@ -40,7 +40,7 @@ const RegisterAdmin = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 border rounded text-black"
             />
           </div>
           <div className="mb-4">
@@ -51,7 +51,7 @@ const RegisterAdmin = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 border rounded text-black"
             />
           </div>
           <div className="mb-4">
@@ -62,7 +62,7 @@ const RegisterAdmin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 border rounded text-black"
             />
           </div>
           <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">

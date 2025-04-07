@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import nookies from 'nookies';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
-import '../styles/styles.css';
+
 
 const ListSellers = () => {
   interface Seller {
@@ -89,7 +89,7 @@ const ListSellers = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Listado de Vendedores</h1>
+          <h1 className="text-2xl font-bold text-black">Listado de Vendedores</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
         </div>
         <ul>
@@ -116,8 +116,8 @@ const ListSellers = () => {
                 </div>
               ) : (
                 <div>
-                  <p><strong>Nombre:</strong> {seller.name}</p>
-                  <p><strong>Email:</strong> {seller.email}</p>
+                  <p className='text-black'><strong>Nombre:</strong> {seller.name}</p>
+                  <p className='text-black'><strong>Email:</strong> {seller.email}</p>
                   <button onClick={() => handleEditClick(seller)} className="text-green-500 mr-2">
                     <FaPencilAlt />
                   </button>

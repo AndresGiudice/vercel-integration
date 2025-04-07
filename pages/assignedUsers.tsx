@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Link from 'next/link'; // Add this import
-import '../styles/styles.css';
 
 interface User {
   _id: string;
@@ -69,7 +68,7 @@ const AssignedUsers = () => {
           <h1 className="text-2xl font-bold text-black">Bienvenido, {name}</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" /> {/* Add image */}
         </div>
-        <h2 className="text-xl mb-4">Usuarios asignados:</h2>
+        <h2 className="text-xl mb-4 text-black">Usuarios asignados:</h2>
         <ul className="max-h-60 overflow-y-auto"> {/* Add scrollable container */}
           {users.map(user => (
             <li key={user._id} className="mb-2">

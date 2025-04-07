@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import '../styles/styles.css';
+
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -31,7 +31,7 @@ const ResetPassword = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Reset Password</h1>
+          <h1 className="text-2xl font-bold text-black">Reset Password</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
         </div>
         <form onSubmit={handleResetPassword}>
@@ -43,7 +43,7 @@ const ResetPassword = () => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 border rounded text-black"
             />
           </div>
           <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">

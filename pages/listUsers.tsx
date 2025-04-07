@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import nookies from 'nookies';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa'; // Import trash icon
-import '../styles/styles.css';
+
 
 interface User {
   _id: string;
@@ -134,7 +134,7 @@ const ListUsers = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Listado de Usuarios</h1>
+          <h1 className="text-2xl font-bold text-black">Listado de Usuarios</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
         </div>
         <ul className="max-h-96 overflow-y-auto"> {/* Limitar altura y habilitar scroll */}
@@ -183,10 +183,10 @@ const ListUsers = () => {
                 </div>
               ) : (
                 <div>
-                  <p><strong>Nombre:</strong> {user.name}</p>
-                  <p><strong>Email:</strong> {user.email}</p>
-                  <p><strong>Lista de Precios:</strong> {user.priceList}</p>
-                  <p><strong>Vendedor:</strong> {user.seller || 'No asignado'}</p> {/* Display seller name */}
+                  <p className='text-black'><strong>Nombre:</strong> {user.name}</p>
+                  <p className='text-black'><strong>Email:</strong> {user.email}</p>
+                  <p className='text-black'><strong>Lista de Precios:</strong> {user.priceList}</p>
+                  <p className='text-black'><strong>Vendedor:</strong> {user.seller || 'No asignado'}</p> {/* Display seller name */}
                   <button onClick={() => handleEditClick(user)} className="text-green-500 mr-2">
                     <FaPencilAlt />
                   </button>

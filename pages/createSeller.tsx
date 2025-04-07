@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { setCookie } from 'nookies';
-import '../styles/styles.css';
+
 
 const CreateSeller = () => {
   const [adminName, setAdminName] = useState('');
@@ -96,7 +96,7 @@ const CreateSeller = () => {
         {!isAuthenticated ? (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold">Admin Login</h1>
+              <h1 className="text-2xl font-bold text-black">Admin Login</h1>
               <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
             </div>
             <form onSubmit={handleAdminLogin}>
@@ -108,7 +108,7 @@ const CreateSeller = () => {
                   value={adminName}
                   onChange={(e) => setAdminName(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded text-black"
                 />
               </div>
               <div className="mb-4">
@@ -119,7 +119,7 @@ const CreateSeller = () => {
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded text-black"
                 />
               </div>
               <div className="mb-4 relative">
@@ -131,7 +131,7 @@ const CreateSeller = () => {
                     value={adminPassword}
                     onChange={(e) => setAdminPassword(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border rounded pr-10"
+                    className="w-full px-3 py-2 border rounded pr-10 text-black"
                   />
                   <span
                     onClick={() => setShowAdminPassword(!showAdminPassword)}
