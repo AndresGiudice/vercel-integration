@@ -391,7 +391,7 @@ function Example() {
       {/* Dark overlay */}
       {(showCartDetails || (showUserDetails && !mobileMenuOpen) || (openMenu && window.innerWidth >= 1024)) && <div className="fixed inset-0 bg-black opacity-50 z-40 lg:block"></div>}
       {showUserDetails && user && (
-        <div className="absolute right-4 mt-2 w-48 bg-white shadow-lg rounded-lg p-4 z-50 hidden lg:block">
+        <div className="absolute right-4 mt-2 bg-white shadow-lg rounded-lg p-4 z-50 hidden lg:block w-auto">
           <div className="absolute top-0 left-0 right-0 h-14 bg-transparent z-50" onClick={toggleUserDetails}></div>
           <div className="max-w-md mx-auto mt-2">
             <p className="text-sm font-semibold">Usuario: {user.name}</p>
