@@ -50,7 +50,7 @@ function HomePage() {
       <NavBar />
       <main className={`main ${inter.className}`}>
         <h1 className="text-center text-4xl font-bold text-black">
-          Bienvenido a nuestro <br /> Comercio Electrónico
+          Bienvenido a nuestro <br /> E-Commerce
         </h1>
       </main>
     </div>
