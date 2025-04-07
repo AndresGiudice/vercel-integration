@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Link from 'next/link'; // Add this import
+import '../styles/styles.css';
 
 interface User {
   _id: string;

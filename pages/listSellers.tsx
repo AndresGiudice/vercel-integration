@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import nookies from 'nookies';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import '../styles/styles.css';
 
 const ListSellers = () => {
   interface Seller {

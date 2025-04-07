@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import '../styles/styles.css';
 
 const RegisterAdmin = () => {
   const [email, setEmail] = useState('');

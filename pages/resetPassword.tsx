@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import '../styles/styles.css';
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState('');

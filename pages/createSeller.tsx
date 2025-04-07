@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { setCookie } from 'nookies';
+import '../styles/styles.css';
 
 const CreateSeller = () => {
   const [adminName, setAdminName] = useState('');

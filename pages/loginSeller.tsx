@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import '../styles/styles.css';
 
 const LoginSeller = () => {
   const [name, setName] = useState('');
