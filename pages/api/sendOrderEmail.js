@@ -8,14 +8,14 @@ function calculateDiscountedPrice(code, totalQuantity, price, priceList) {
   if ( priceList === 'lista2-10' || priceList === 'lista3-10' || priceList === 'lista4-10') {
     price = (price * 0.9) / 1.105;
   }
-  if (priceList === 'lista2-10-5' || priceList === 'lista3-10-5' || priceList === 'lista4-10-5') {
-    price = (price * 0.9 * 0.95) / 1.105;
+  if (priceList === 'lista2-10-2' || priceList === 'lista3-10-2' || priceList === 'lista4-10-2') {
+    price = (price * 0.8802) / 1.105;
   }
   if (priceList === 'lista2-10-final' || priceList === 'lista3-10-final' || priceList === 'lista4-10-final') {
     price = (price * 0.9);
   }
-  if (priceList === 'lista2-10-5-final' || priceList === 'lista3-10-5-final' || priceList === 'lista4-10-5-final') {
-    price = (price * 0.9 * 0.95);
+  if (priceList === 'lista2-10-2-final' || priceList === 'lista3-10-2-final' || priceList === 'lista4-10-2-final') {
+    price = (price * 0.8802);
   }
   if (code === 'Fb3' && totalQuantity >= 100) {
     return price * 0.9;
@@ -62,14 +62,14 @@ async function sendOrderEmail(cart, totalAmount, user) { // Add user parameter
   } else if (user.priceList === 'lista2-10' || user.priceList === 'lista3-10' || user.priceList === 'lista4-10' ) {
     totalAmount = (totalAmount * 0.9) / 1.105;
   }
-  else if (user.priceList === 'lista2-10-5' || user.priceList === 'lista3-10-5' || user.priceList === 'lista4-10-5' ) {
-    totalAmount = (totalAmount * 0.9 * 0.95) / 1.105;
+  else if (user.priceList === 'lista2-10-2' || user.priceList === 'lista3-10-2' || user.priceList === 'lista4-10-2' ) {
+    totalAmount = (totalAmount * 0.8802) / 1.105;
   }
   else if (user.priceList === 'lista2-10-final' || user.priceList === 'lista3-10-final' || user.priceList === 'lista4-10-final' ) {
     totalAmount = (totalAmount * 0.9 );
   }
-    else if (user.priceList === 'lista2-10-5-final' || user.priceList === 'lista3-10-5-final' || user.priceList === 'lista4-10-5-final' ) {
-    totalAmount = (totalAmount * 0.9 * 0.95 );
+    else if (user.priceList === 'lista2-10-2-final' || user.priceList === 'lista3-10-2-final' || user.priceList === 'lista4-10-2-final' ) {
+    totalAmount = (totalAmount * 0.8802 );
   }
 
   worksheet.addRow({ description: 'Total', total: totalAmount });

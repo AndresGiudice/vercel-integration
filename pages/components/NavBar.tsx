@@ -102,14 +102,14 @@ const calculateDiscountedPrice = (code: string, totalQuantity: number, price: nu
   if (priceList === 'lista2-10' || priceList === 'lista3-10' || priceList === 'lista4-10') {
     finalPrice = (price * 0.9) / 1.105;
   }
-  if (priceList === 'lista2-10-5' || priceList === 'lista3-10-5' || priceList === 'lista4-10-5') {
-    finalPrice = (price * 0.9 * 0.95) / 1.105;
+  if (priceList === 'lista2-10-2' || priceList === 'lista3-10-2' || priceList === 'lista4-10-2') {
+    finalPrice = (price * 0.8802) / 1.105;
   }
   if (priceList === 'lista2-10-final' || priceList === 'lista3-10-final' || priceList === 'lista4-10-final') {
     finalPrice = (price * 0.9);
   }
-  if (priceList === 'lista2-10-5-final' || priceList === 'lista3-10-5-final' || priceList === 'lista4-10-5-final') {
-    finalPrice = (price * 0.9 * 0.95);
+  if (priceList === 'lista2-10-2-final' || priceList === 'lista3-10-2-final' || priceList === 'lista4-10-2-final') {
+    finalPrice = (price * 0.8802);
   }
   if (code === 'Fb3' && totalQuantity >= 100) {
     return finalPrice * 0.9;
