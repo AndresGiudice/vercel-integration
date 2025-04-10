@@ -147,20 +147,20 @@ const ListUsers = () => {
                     name="name"
                     value={editedUser?.name || ''}
                     onChange={handleInputChange}
-                    className="border p-1 mb-1 w-full"
+                    className="border p-1 mb-1 w-full text-black"
                   />
                   <input
                     type="text"
                     name="email"
                     value={editedUser?.email || ''}
                     onChange={handleInputChange}
-                    className="border p-1 mb-1 w-full"
+                    className="border p-1 mb-1 w-full text-black"
                   />
                   <select
                     name="priceList"
                     value={editedUser?.priceList || ''}
                     onChange={handleInputChange}
-                    className="border p-1 mb-1 w-full"
+                    className="border p-1 mb-1 w-full text-black"
                   >
                     {priceLists.map((priceList) => (
                       <option key={priceList} value={priceList}>
@@ -172,7 +172,7 @@ const ListUsers = () => {
                     name="seller"
                     value={editedUser?.seller || ''}
                     onChange={handleInputChange}
-                    className="border p-1 mb-1 w-full"
+                    className="border p-1 mb-1 w-full text-black"
                   >
                     <option value="">Seleccione un vendedor</option>
                     {sellers.map((seller) => (

@@ -102,7 +102,7 @@ const ListSellers = () => {
                     name="name"
                     value={editedSeller?.name || ''}
                     onChange={handleInputChange}
-                    className="border p-1 mb-1 w-full"
+                    className="border p-1 mb-1 w-full text-black"
                   />
                   <input
                     type="text"
@@ -110,7 +110,7 @@ const ListSellers = () => {
                     value={editedSeller?.email || ''}
                     onChange={handleInputChange}
                     placeholder="e-mail"
-                    className="border p-1 mb-1 w-full"
+                    className="border p-1 mb-1 w-full text-black"
                   />
                   <button onClick={handleSaveClick} className="bg-green-500 text-white p-1 rounded">Guardar</button>
                 </div>
