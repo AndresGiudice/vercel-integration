@@ -156,7 +156,7 @@ const ListUsers = () => {
             <FaSearch className="absolute top-3 left-3 text-gray-500" />
             <input
               type="text"
-              placeholder="Buscar Usuario..."
+              placeholder="Buscar Cliente..."
               value={searchTerm}
               onChange={handleSearchChange}
               className="w-full pl-10 pr-3 py-2 border rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
