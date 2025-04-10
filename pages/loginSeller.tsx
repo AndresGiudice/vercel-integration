@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 const LoginSeller = () => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState(''); // Add email state
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false); // Add rememberMe state
@@ -12,29 +13,38 @@ const LoginSeller = () => {
 
   useEffect(() => {
     const savedName = localStorage.getItem('savedName');
+    const savedEmail = localStorage.getItem('savedEmail'); // Retrieve saved email
     const savedPassword = localStorage.getItem('savedPassword');
-    if (savedName && savedPassword) {
+    if (savedName && savedEmail && savedPassword) {
       setName(savedName);
+      setEmail(savedEmail);
       setPassword(savedPassword);
       setRememberMe(true);
     }
   }, []);
 
   const handleLogin = async () => {
+    if (!name || !email || !password) { // Validate mandatory fields
+      setError('Todos los campos son obligatorios.');
+      return;
+    }
+
     const response = await fetch('/api/loginSeller', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, password }),
+      body: JSON.stringify({ name, email, password }), // Include email in the request body
     });
     const data = await response.json();
     if (data.success) {
       if (rememberMe) {
         localStorage.setItem('savedName', name);
+        localStorage.setItem('savedEmail', email); // Save email
         localStorage.setItem('savedPassword', password);
       } else {
         localStorage.removeItem('savedName');
+        localStorage.removeItem('savedEmail'); // Remove email
         localStorage.removeItem('savedPassword');
       }
       localStorage.setItem('authToken', data.token);
@@ -60,6 +70,15 @@ const LoginSeller = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="border p-2 mb-4 w-full text-black"
+          required // Make field required
+        />
+        <input
+          type="email"
+          placeholder="Correo Electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="border p-2 mb-4 w-full text-black"
+          required // Make field required
         />
         <div className="mb-4 relative">
           <input
@@ -68,6 +87,7 @@ const LoginSeller = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="border p-2 w-full pr-10 text-black"
+            required // Make field required
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
