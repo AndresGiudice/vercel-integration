@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import nookies from 'nookies';
-import { FaPencilAlt, FaTrash } from 'react-icons/fa'; // Import trash icon
+import { FaPencilAlt, FaTrash, FaSearch } from 'react-icons/fa'; // Import search icon
 
 
 interface User {
@@ -20,6 +20,7 @@ interface Seller {
 
 const ListUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // State for filtered users
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editedUser, setEditedUser] = useState<User | null>(null);
   const [priceLists, setPriceLists] = useState<string[]>([
@@ -31,6 +32,7 @@ const ListUsers = () => {
     'lista4-final', 'lista4-10-final', 'lista4-10-2-final'
  ]);
   const [sellers, setSellers] = useState<Seller[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // State for search term
   const router = useRouter();
 
   useEffect(() => {
@@ -39,6 +41,7 @@ const ListUsers = () => {
       const data = await response.json();
       if (data.success) {
         setUsers(data.users);
+        setFilteredUsers(data.users); // Initialize filtered users
       } else {
         console.error('Error fetching users:', data.message);
       }
@@ -130,6 +133,17 @@ const ListUsers = () => {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    setFilteredUsers(
+      users.filter(
+        (user) =>
+          user.name.toLowerCase().includes(term) || user.email.toLowerCase().includes(term)
+      )
+    );
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
@@ -137,8 +151,20 @@ const ListUsers = () => {
           <h1 className="text-2xl font-bold text-black">Listado de Usuarios</h1>
           <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
         </div>
+        <div className="mb-4">
+          <div className="relative">
+            <FaSearch className="absolute top-3 left-3 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Buscar Usuario..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full pl-10 pr-3 py-2 border rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
         <ul className="max-h-96 overflow-y-auto"> {/* Limitar altura y habilitar scroll */}
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <li key={user._id} className="mb-2"> {/* Usar _id como key */}
               {editingUser === user._id ? ( // Comparar por _id
                 <div>
