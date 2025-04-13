@@ -7,7 +7,6 @@ import { useCart } from '../../context/CartContext';
 import { useUser } from '../../context/UserContext'; // Assuming you have a UserContext
 import axios from 'axios';
 import withAuth from '../../components/withAuth';
-import { useRouter } from 'next/router';
 
 const placeOrder = async (cart: any, totalAmount: number, user: any, clearCart: () => void) => { // Add user parameter
   try {
@@ -38,7 +37,7 @@ const restrictedPriceLists: { [key: string]: string[] } = {
   'lista2-10-2': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-2', 'lista4-10-final', 'lista4-10-2-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-2', 'lista3-10-final', 'lista3-10-2-final', 'lista2', 'lista2-10', 'lista2-final', 'lista2-10-final', 'lista2-10-2-final'],
   'lista2-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-2', 'lista4-10-final', 'lista4-10-2-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-2', 'lista3-10-final', 'lista3-10-2-final', 'lista2', 'lista2-10', 'lista2-10-2', 'lista2-10-final', 'lista2-10-2-final'],
   'lista2-10-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-2', 'lista4-10-final', 'lista4-10-2-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-2', 'lista3-10-final', 'lista3-10-2-final', 'lista2', 'lista2-10', 'lista2-10-2', 'lista2-final', 'lista2-10-2-final'],
-  'lista2-10-2-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-2', 'lista4-10-final', 'lista4-10-2-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-2', 'lista3-10-final', 'lista2', 'lista2-10', 'lista2-10-2', 'lista2-final', 'lista2-10-final']
+  'lista2-10-2-final': ['lista4', 'lista4-final', 'lista4-10', 'lista4-10-2', 'lista4-10-final', 'lista4-10-2-final', 'lista3', 'lista3-final', 'lista3-10', 'lista3-10-2', 'lista3-10-final', 'lista3-10-2-final', 'lista2', 'lista2-10', 'lista2-10-2', 'lista2-final', 'lista2-10-final']
 };
 
 
@@ -128,8 +127,6 @@ function Example() {
   const { user, logout, setUser } = useUser(); // Ensure setUser is defined
   const [showUserDetails, setShowUserDetails] = useState(false); // Add this line
   const [isPlacingOrder, setIsPlacingOrder] = useState(false); // Add this line
-  const [searchQuery, setSearchQuery] = useState('');
-  const router = useRouter();
 
   const handleLogout = () => {
     logout();
@@ -275,13 +272,6 @@ function Example() {
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
-
   return (
     <header className="fixed top-0 left-0 right-0 bg-[#A6CE39] z-50">
       <nav aria-label="Global" className="relative mx-auto flex items-center justify-between h-14 lg:h-16 p-2 lg:px-8 z-50">
@@ -381,21 +371,6 @@ function Example() {
             )}
           </div>
         </div>
-        <form onSubmit={handleSearch} className="hidden lg:flex items-center ml-4">
-          <input
-            type="text"
-            placeholder="Buscar productos..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="px-4 py-2 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-green-500 text-white rounded-r-lg hover:bg-green-600"
-          >
-            Buscar
-          </button>
-        </form>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <a
             href="#"
