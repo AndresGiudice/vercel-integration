@@ -300,7 +300,7 @@ const BagCard: React.FC<BagCardProps & { folderName: string }> = ({ bags, additi
                   } else if (folderName === 'lista4') {
                     finalPrice = bag.list4 / 1.105;
                   } else if (folderName === 'lista4-10') {
-                    finalPrice = (bag.list4 * 0.9) / 1.105;
+                    finalPrice = bag.list4 * 0.9 / 1.105;
                   } else if (folderName === 'lista4-10-2') {
                     finalPrice = (bag.list4 * 0.8802) / 1.105;
                   } else if (folderName === 'lista4-final') {
@@ -321,9 +321,9 @@ const BagCard: React.FC<BagCardProps & { folderName: string }> = ({ bags, additi
        <AddToCartButton
         systemCode={bags[0].systemCode}
         description={` ${bags[0].description} ${additionalDescription}`}
-        list4={bags[0].list4}
-        list3={bags[0].list3}
         list2={bags[0].list2}
+        list3={bags[0].list3}
+        list4={bags[0].list4} // Changed from list3 to list4
         quantity={quantities.reduce((acc, qty) => acc + qty, 0)}
         handleAddToCart={handleAddToCart}
       />
