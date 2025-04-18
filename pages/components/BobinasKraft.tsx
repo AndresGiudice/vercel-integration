@@ -186,58 +186,12 @@ const BagCard: React.FC<BagCardProps & { folderName: keyof Bag | "lista2" | "lis
   const handleAddToCart = () => {
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        addToCart(
-          bag.systemCode,
-          quantities[index],
-          ` ${bag.description} ${additionalDescription}`,
-          (() => {
-            let finalPrice = 0;
-
-            if (folderName === 'lista2') {
-              finalPrice = bag.list2;
-            } else if (folderName === 'lista2-10') {
-              finalPrice = bag.list2;
-            } else if (folderName === 'lista2-10-2') {
-              finalPrice = bag.list2;
-            }  else if (folderName === 'lista2-final') {
-                finalPrice = bag.list2;
-            } else if (folderName === 'lista2-10-final') {
-              finalPrice = bag.list2;
-            } else if (folderName === 'lista2-10-2-final') {
-              finalPrice = bag.list2;
-            } else if (folderName === 'lista3') {
-              finalPrice = bag.list3;
-            } else if (folderName === 'lista3-10') {
-              finalPrice = bag.list3;
-            } else if (folderName === 'lista3-10-2') {
-              finalPrice = bag.list3;
-            } else if (folderName === 'lista3-final') {
-              finalPrice = bag.list3;
-            } else if (folderName === 'lista3-10-final') {
-              finalPrice = bag.list3;
-            } else if (folderName === 'lista3-10-2-final') {
-              finalPrice = bag.list3;
-            } else if (folderName === 'lista4') {
-              finalPrice = bag.list4;
-            } else if (folderName === 'lista4-10') {
-              finalPrice = bag.list4;
-            } else if (folderName === 'lista4-10-2') {
-              finalPrice = bag.list4;
-            } else if (folderName === 'lista4-final') {
-              finalPrice = bag.list4;
-            } else if (folderName === 'lista4-10-final') {
-              finalPrice = bag.list4;
-            } else if (folderName === 'lista4-10-2-final') {
-              finalPrice = bag.list4;
-            }
-
-            return Math.round(finalPrice);
-          })()
-        );
+        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, bag.list2);
       }
     });
     setQuantities(bags.map(() => 0));
   };
+
 
   // Sort bags so that descriptions with "37 cm" appear first
   const sortedBags = bags.sort((a, b) => {
