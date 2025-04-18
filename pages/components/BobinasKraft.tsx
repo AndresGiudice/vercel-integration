@@ -186,12 +186,47 @@ const BagCard: React.FC<BagCardProps & { folderName: keyof Bag | "lista2" | "lis
   const handleAddToCart = () => {
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, bag.list2);
+        let price = bag.list2; // Default to list2
+        if (folderName === 'lista2-10') {
+          price = bag.list2;
+        } else if (folderName === 'lista2-10-2') {
+          price = bag.list2;
+        } else if (folderName === 'lista2-final') {
+          price = bag.list2;
+        } else if (folderName === 'lista2-10-final') {
+          price = bag.list2;
+        } else if (folderName === 'lista2-10-2-final') {
+          price = bag.list2;
+        } else if (folderName === 'lista3') {
+          price = bag.list3;
+        } else if (folderName === 'lista3-10') {
+          price = bag.list3;
+        } else if (folderName === 'lista3-10-2') {
+          price = bag.list3;
+        } else if (folderName === 'lista3-final') {
+          price = bag.list3;
+        } else if (folderName === 'lista3-10-final') {
+          price = bag.list3;
+        } else if (folderName === 'lista3-10-2-final') {
+          price = bag.list3;
+        } else if (folderName === 'lista4') {
+          price = bag.list4;
+        } else if (folderName === 'lista4-10') {
+          price = bag.list4;
+        } else if (folderName === 'lista4-10-2') {
+          price = bag.list4;
+        } else if (folderName === 'lista4-final') {
+          price = bag.list4;
+        } else if (folderName === 'lista4-10-final') {
+          price = bag.list4;
+        } else if (folderName === 'lista4-10-2-final') {
+          price = bag.list4;
+        }
+        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, price);
       }
     });
     setQuantities(bags.map(() => 0));
   };
-
 
   // Sort bags so that descriptions with "37 cm" appear first
   const sortedBags = bags.sort((a, b) => {
