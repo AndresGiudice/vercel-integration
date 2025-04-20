@@ -86,9 +86,22 @@ const BolsasConManijaFantasia = ({ isConnected }: InferGetServerSidePropsType<ty
     if (b === "Surtido") return -1;
     return a.localeCompare(b);
   }).reduce((acc: { [key: string]: Bag[] }, key: string) => {
+    const order = ["G1", "G3", "G5"];
     acc[key] = groupedBags[key].sort((a, b) => {
-      const order = ["G1", "G3", "G5"];
-      return order.indexOf(a.description.slice(0, 2)) - order.indexOf(b.description.slice(0, 2));
+      const aPrefix = a.description.slice(0, 2);
+      const bPrefix = b.description.slice(0, 2);
+      const aIndex = order.indexOf(aPrefix);
+      const bIndex = order.indexOf(bPrefix);
+
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      } else if (aIndex !== -1) {
+        return -1;
+      } else if (bIndex !== -1) {
+        return 1;
+      } else {
+        return aPrefix.localeCompare(bPrefix);
+      }
     });
     return acc;
   }, {});
