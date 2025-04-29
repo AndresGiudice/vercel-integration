@@ -40,7 +40,12 @@ export const handleAddToCartUtil = (
     ) {
       price = bag.list4;
     }
-    addToCart(systemCode, quantities[systemCode], bag.description, price);
+    addToCart(
+      systemCode,
+      quantities[systemCode],
+      `${description} ${bag.additionalDescription || ''}`.trim(),
+      price
+    );
     setQuantities((prevQuantities: { [key: string]: number }) => ({
       ...prevQuantities,
       [systemCode]: 0,

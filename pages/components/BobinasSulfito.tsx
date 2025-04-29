@@ -173,7 +173,7 @@ const BagCard: React.FC<BagCardProps & { folderName: string }> = ({ bags, additi
       if (quantities[index] > 0) {
         handleAddToCartUtil(
           bag.systemCode,
-          ` ${bag.description} ${additionalDescription}`,
+          ` ${bag.description}`,
           bag.list2,
           bags,
           folderName,
