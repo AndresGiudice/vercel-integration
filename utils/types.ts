@@ -5,6 +5,7 @@ export type ConnectionStatus = {
   
   // Tipo para las bolsas
   export type Bag = {
+    additionalDescription: string;
     description: string;
     list4: number;
     list3: number;

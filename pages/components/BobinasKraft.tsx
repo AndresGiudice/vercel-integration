@@ -9,43 +9,17 @@ import { useCart } from '../../context/CartContext';
 import '../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
+import { ConnectionStatus, Bag } from "@/utils/types"; // Importar tipos desde el archivo utils/types.ts
 import { getServerSidePropsUtil } from "@/utils/getServerSidePropsUtil";
 import { useQuantityHandler } from "@/hooks/useQuantityHandler";
 import { handleAddToCartUtil } from "@/utils/addToCartUtil";
 import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
 import QuantityControls from "@/pages/components/QuantityControls";
 
-type ConnectionStatus = {
-  isConnected: boolean;
-};
-
 const inter = Inter({ subsets: ["latin"] });
 
-export const getServerSideProps: GetServerSideProps<
-ConnectionStatus
-> = async () => {
-try {
-  const client = await clientPromise;
-  await client.connect();
-  return {
-    props: { isConnected: true },
-  };
-} catch (e) {
-  console.error(e);
-  return {
-    props: { isConnected: false },
-  };
-}
-};
-
-type Bag = {
-  additionalDescription: string;
-  description: string;
-  list4: number; 
-  list3: number;
-  list2: number;
-  systemCode: string; 
-};
+// Función para obtener datos del servidor
+export const getServerSideProps = getServerSidePropsUtil;
 
 const BobinasKraft = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [bags, setBags] = useState<Bag[]>([]);
