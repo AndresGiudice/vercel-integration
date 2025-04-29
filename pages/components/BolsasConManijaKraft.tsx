@@ -52,8 +52,11 @@ const BolsasConManijaKraft = ({ isConnected }: InferGetServerSidePropsType<typeo
   }, []);
 
   // Función para agregar productos al carrito
-  const handleAddToCart = (systemCode: string, description: string, list2: number) => {
-    handleAddToCartUtil(systemCode, description, list2, bags, folderName, quantities, addToCart, setQuantities);
+  const handleAddToCart = (systemCode: string, description: string) => {
+    const bag = bags.find((b) => b.systemCode === systemCode);
+    if (bag) {
+      handleAddToCartUtil(systemCode, description, bag.list2, bags, folderName, quantities, addToCart, setQuantities);
+    }
   };
 
   // Función para calcular el total de ítems en el carrito

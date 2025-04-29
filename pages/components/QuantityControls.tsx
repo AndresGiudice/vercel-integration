@@ -3,13 +3,13 @@ import AddToCartButton from "@/pages/components/AddToCartButton";
 import { Bag } from "@/utils/types";
 
 interface QuantityControlsProps {
-  bag: Bag;
+  bag?: Bag; // Make bag optional to handle undefined cases
   quantities: { [key: string]: number };
   handleIncrement: (systemCode: string) => void;
   handleDecrement: (systemCode: string) => void;
   handleQuantityChange: (systemCode: string, value: string) => void;
-  setQuantities: (quantities: { [key: string]: number } | ((prevQuantities: { [key: string]: number }) => { [key: string]: number })) => void;
-  handleAddToCart: (systemCode: string, description: string, list2: number) => void;
+  setQuantities: React.Dispatch<React.SetStateAction<{ [key: string]: number }>>;
+  handleAddToCart: (systemCode: string, description: string) => void;
 }
 
 const QuantityControls: React.FC<QuantityControlsProps> = ({
@@ -21,6 +21,10 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
   setQuantities,
   handleAddToCart,
 }) => {
+  if (!bag) {
+    return null; // Return null if bag is undefined
+  }
+
   return (
     <div className="px-4 py-1 ">
       <div className="w-full bg-gray-200 p-1 rounded-lg">
@@ -34,11 +38,11 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
           <input
             type="number"
             className="w-16 text-center bg-gray-200 no-arrows text-black"
-            value={quantities[bag.systemCode]}
+            value={quantities[bag.systemCode] || 0} // Default to 0 if undefined
             onChange={(e) => {
               const value = e.target.value;
               if (value === "") {
-                setQuantities((prevQuantities: { [key: string]: number }) => ({
+                setQuantities((prevQuantities) => ({
                   ...prevQuantities,
                   [bag.systemCode]: 0,
                 }));
@@ -62,7 +66,7 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
         list2={bag.list2}
         list3={bag.list3}
         list4={bag.list4}
-        quantity={quantities[bag.systemCode]}
+        quantity={quantities[bag.systemCode] || 0} // Default to 0 if undefined
         handleAddToCart={handleAddToCart}
       />
     </div>
