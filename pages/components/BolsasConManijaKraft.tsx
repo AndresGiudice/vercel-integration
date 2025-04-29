@@ -24,6 +24,7 @@ export const getServerSideProps = getServerSidePropsUtil;
 const BolsasConManijaKraft = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   // Estados y variables
   const [bags, setBags] = useState<Bag[]>([]);
+  // useQuantityHandler es un hook personalizado que maneja la lógica de cantidades
   const { quantities, setQuantities, handleIncrement, handleDecrement, handleQuantityChange } = useQuantityHandler();
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
@@ -143,7 +144,7 @@ const BolsasConManijaKraft = ({ isConnected }: InferGetServerSidePropsType<typeo
                   </div>
                   {/* Precio calculado */}
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: 
+                    <p className="text-gray-700 text-lg"> Precio x100: {' '}
                       <span className="font-bold">
                         {calculateFinalPrice(folderName, bag)}
                       </span>

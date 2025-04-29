@@ -9,47 +9,31 @@ import { useCart } from '../../context/CartContext';
 import '../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
+import { ConnectionStatus, Bag } from "@/utils/types"; // Importar tipos desde el archivo utils/types.ts
+import { getServerSidePropsUtil } from "@/utils/getServerSidePropsUtil";
+import { useQuantityHandler } from "@/hooks/useQuantityHandler";
+import { handleAddToCartUtil } from "@/utils/addToCartUtil";
+import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
+import QuantityControls from "@/pages/components/QuantityControls";
 
-
-type ConnectionStatus = {
-  isConnected: boolean;
-};
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const getServerSideProps: GetServerSideProps<
-ConnectionStatus
-> = async () => {
-try {
-  const client = await clientPromise;
-  await client.connect();
-  return {
-    props: { isConnected: true },
-  };
-} catch (e) {
-  console.error(e);
-  return {
-    props: { isConnected: false },
-  };
-}
-};
-  
-type Bag = {
-  description: string;
-  list4: number;
-  list3: number;
-  list2: number;
-  systemCode: string; 
-};
+// Función para obtener datos del servidor
+export const getServerSideProps = getServerSidePropsUtil;
 
+// Componente principal
 const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  // Estados y variables
   const [bags, setBags] = useState<Bag[]>([]);
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  // useQuantityHandler es un hook personalizado que maneja la lógica de cantidades
+  const { quantities, setQuantities, handleIncrement, handleDecrement, handleQuantityChange } = useQuantityHandler();
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
   const router = useRouter();
   const folderName = router.pathname.split('/').slice(-2, -1)[0];
 
+ // Efecto para cargar datos de las bolsas
   useEffect(() => {
     (async () => {
       const response = await fetch("/api/allPrices");
@@ -70,87 +54,32 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
     })();
   }, []);
 
-  const handleIncrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: prevQuantities[systemCode] + 1,
-    }));
-  };
-
-  const handleDecrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: Math.max(prevQuantities[systemCode] - 1, 0),
-    }));
-  };
-
-  const handleQuantityChange = (systemCode: string, value: string) => {
-    const numberValue = parseInt(value, 10);
-    if (!isNaN(numberValue) && numberValue >= 0) {
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [systemCode]: numberValue,
-      }));
-    }
-  };
-
-  const handleAddToCart = (systemCode: string, description: string) => {
-    bags.forEach((bag, index) => {
-      if (quantities[bag.systemCode] > 0) {
-        let price = bag.list2; // Default to list2
-        if (folderName === 'lista2-10') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-2') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-2-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista3') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-2') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-2-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista4') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-2') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-final') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-final') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-2-final') {
-          price = bag.list4;
-        }
-        addToCart(bag.systemCode, quantities[bag.systemCode], `${bag.description}`, price);
+    // Función para agregar productos al carrito
+    const handleAddToCart = (systemCode: string, description: string) => {
+      const bag = bags.find((b) => b.systemCode === systemCode);
+      if (bag) {
+        handleAddToCartUtil(systemCode, description, bag.list2, bags, folderName, quantities, addToCart, setQuantities);
       }
-    });
-    setQuantities(bags.reduce((acc, bag) => ({ ...acc, [bag.systemCode]: 0 }), {}));
-  };
-
+    };
+  
+   // Función para calcular el total de ítems en el carrito
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
 
+   // Función para realizar el pedido
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
     clearCart();
   };
 
+  // Renderizado del componente
   return (
     <div>
+      {/* Barra de navegación */}
       <NavBar />
       <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
+        {/* Contenedor principal */}
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
+          {/* Detalles del carrito */}
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
               <h2 className="text-lg font-semibold">Carrito de Compras</h2>
@@ -178,6 +107,7 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
               </div>
             </div>
           )}
+          {/* Listado de bolsas */}
           <div className="lg:flex-1 order-2 lg:order-1">
             <div className="flex flex-wrap justify-evenly">
               {bags.map((bag, index) => (
@@ -185,8 +115,10 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
                 >
+                   {/* Imagen y descripción */}
                   <img className="w-72 h-36 object-contain" src="/bolsas-blancas.jpg" alt="Bolsa con Manija Blanca" />
                   <div className="container mx-auto p-2">
+                    {/* Tabla con descripción */}
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
                         <div className="py-2 inline-block min-w-full">
@@ -212,89 +144,25 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
                       </div>
                     </div>
                   </div>
+                  {/* Precio calculado */}
                   <div className="flex justify-center mb-2">
                     <p className="text-gray-700 text-lg">
-                      Precio x und. : 
+                      Precio x100:  {' '}
                       <span className="font-bold">
-                        {(() => {
-                          let finalPrice = 0;
-
-                          if (folderName === 'lista2') {
-                            finalPrice = bag.list2 / 1.105;
-                          } else if (folderName === 'lista2-10') {
-                            finalPrice = (bag.list2 * 0.9) / 1.105;
-                          } else if (folderName === 'lista2-10-2') {
-                            finalPrice = (bag.list2 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista2-final') {
-                            finalPrice = bag.list2;
-                          } else if (folderName === 'lista2-10-final') {
-                            finalPrice = bag.list2 * 0.9;
-                          } else if (folderName === 'lista2-10-2-final') {
-                            finalPrice = bag.list2 * 0.8802;
-                          } else if (folderName === 'lista3') {
-                            finalPrice = bag.list3 / 1.105;
-                          } else if (folderName === 'lista3-10') {
-                            finalPrice = (bag.list3 * 0.9) / 1.105;
-                          } else if (folderName === 'lista3-10-2') {
-                            finalPrice = (bag.list3 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista3-final') {
-                            finalPrice = bag.list3;
-                          } else if (folderName === 'lista3-10-final') {
-                            finalPrice = bag.list3 * 0.9;
-                          } else if (folderName === 'lista3-10-2-final') {
-                            finalPrice = bag.list3 * 0.8802;
-                          } else if (folderName === 'lista4') {
-                            finalPrice = bag.list4 / 1.105;
-                          } else if (folderName === 'lista4-10') {
-                            finalPrice = (bag.list4 * 0.9) / 1.105;
-                          } else if (folderName === 'lista4-10-2') {
-                            finalPrice = (bag.list4 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista4-final') {
-                            finalPrice = bag.list4;
-                          } else if (folderName === 'lista4-10-final') {
-                            finalPrice = bag.list4 * 0.9;
-                          } else if (folderName === 'lista4-10-2-final') {
-                            finalPrice = bag.list4 * 0.8802;
-                          }
-                          return `$${Math.round(finalPrice)}`;
-                        })()}
+                         {calculateFinalPrice(folderName, bag)}
                       </span>
                     </p>
                   </div>
-                  <div className="px-4 py-1 ">
-                    <div className="w-full bg-gray-200 p-1 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(bag.systemCode)}>-</button>
-                        <input
-                          type="number"
-                          className="w-16 text-center bg-gray-200 no-arrows text-black"
-                          value={quantities[bag.systemCode]}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (value === '') {
-                              setQuantities((prevQuantities) => ({
-                                ...prevQuantities,
-                                [bag.systemCode]: 0,
-                              }));
-                            } else {
-                              handleQuantityChange(bag.systemCode, value);
-                            }
-                          }}
-                          onFocus={(e) => e.target.select()}
-                        />
-                        <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.systemCode)}>+</button>
-                      </div>
-                    </div>
-                    <AddToCartButton
-                      systemCode={bag.systemCode}
-                      description={bag.description}
-                      list4={bag.list4}
-                      list3={bag.list3}
-                      list2={bag.list2}
-                      quantity={quantities[bag.systemCode]}
-                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description)}
-                    />
-                  </div>
+                    {/* Controles de cantidad y botón de agregar */}
+                    <QuantityControls
+                    bag={bag}
+                    quantities={quantities}
+                    handleIncrement={handleIncrement}
+                    handleDecrement={handleDecrement}
+                    handleQuantityChange={handleQuantityChange}
+                    setQuantities={setQuantities}
+                    handleAddToCart={handleAddToCart}
+                  />
                 </div>
               ))}
             </div>
