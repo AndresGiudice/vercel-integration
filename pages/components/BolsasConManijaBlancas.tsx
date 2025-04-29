@@ -9,22 +9,40 @@ import { useCart } from '../../context/CartContext';
 import '../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
-import { ConnectionStatus, Bag } from "@/utils/types"; // Importar tipos desde el archivo utils/types.ts
-import { getServerSidePropsUtil } from "@/utils/getServerSidePropsUtil";
-import { useQuantityHandler } from "@/hooks/useQuantityHandler";
-import { handleAddToCartUtil } from "@/utils/addToCartUtil";
-import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
-import QuantityControls from "@/pages/components/QuantityControls";
 
+
+type ConnectionStatus = {
+  isConnected: boolean;
+};
 
 const inter = Inter({ subsets: ["latin"] });
 
-// Función para obtener datos del servidor
-export const getServerSideProps = getServerSidePropsUtil;
+export const getServerSideProps: GetServerSideProps<
+ConnectionStatus
+> = async () => {
+try {
+  const client = await clientPromise;
+  await client.connect();
+  return {
+    props: { isConnected: true },
+  };
+} catch (e) {
+  console.error(e);
+  return {
+    props: { isConnected: false },
+  };
+}
+};
   
-// Componente principal
+type Bag = {
+  description: string;
+  list4: number;
+  list3: number;
+  list2: number;
+  systemCode: string; 
+};
+
 const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-   // Estados y variables
   const [bags, setBags] = useState<Bag[]>([]);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
@@ -48,7 +66,7 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
         acc[bag.systemCode] = 0;
         return acc;
       }, {});
-      setQuantities(initialQuantities); // Usar setQuantities del hook
+      setQuantities(initialQuantities);
     })();
   }, []);
 
