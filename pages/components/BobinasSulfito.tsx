@@ -9,40 +9,18 @@ import { useCart } from '../../context/CartContext';
 import '../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
+import { ConnectionStatus, Bag } from "@/utils/types"; // Importar tipos desde el archivo utils/types.ts
+import { getServerSidePropsUtil } from "@/utils/getServerSidePropsUtil";
+import { useQuantityHandler } from "@/hooks/useQuantityHandler";
+import { handleAddToCartUtil } from "@/utils/addToCartUtil";
+import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
+import QuantityControls from "@/pages/components/QuantityControls";
 
-
-
-type ConnectionStatus = {
-  isConnected: boolean;
-};
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const getServerSideProps: GetServerSideProps<
-ConnectionStatus
-> = async () => {
-try {
-  const client = await clientPromise;
-  await client.connect();
-  return {
-    props: { isConnected: true },
-  };
-} catch (e) {
-  console.error(e);
-  return {
-    props: { isConnected: false },
-  };
-}
-};
-
-type Bag = {
-  additionalDescription: string;
-  description: string;
-  list4: number;
-  list3: number;
-  list2: number;
-  systemCode: string; 
-};
+// Función para obtener datos del servidor
+export const getServerSideProps = getServerSidePropsUtil;
 
 const BobinasSulfito = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [bags, setBags] = useState<Bag[]>([]);
@@ -186,45 +164,23 @@ const BagCard: React.FC<BagCardProps & { folderName: string }> = ({ bags, additi
   };
 
   const handleAddToCart = () => {
+    const quantitiesObject = bags.reduce((acc, bag, index) => {
+      acc[bag.systemCode] = quantities[index];
+      return acc;
+    }, {} as { [key: string]: number });
+
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        let price = bag.list2; // Default to list2
-        if (folderName === 'lista2-10') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-2') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-2-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista3') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-2') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-2-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista4') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-2') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-final') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-final') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-2-final') {
-          price = bag.list4;
-        }
-        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, price);
+        handleAddToCartUtil(
+          bag.systemCode,
+          ` ${bag.description} ${additionalDescription}`,
+          bag.list2,
+          bags,
+          folderName,
+          quantitiesObject,
+          addToCart,
+          () => setQuantities(bags.map(() => 0)) // Reset quantities correctly
+        );
       }
     });
     setQuantities(bags.map(() => 0));
@@ -273,48 +229,7 @@ const BagCard: React.FC<BagCardProps & { folderName: string }> = ({ bags, additi
           <p className="text-gray-700 text-lg">
               Precio x und. : 
               <span className="font-bold">
-                {(() => {
-                  let finalPrice = 0;
-
-                  if (folderName === 'lista2') {
-                    finalPrice = (bag.list2 / 1.105);
-                  } else if (folderName === 'lista2-10') {
-                    finalPrice = (bag.list2 * 0.9) / 1.105;
-                  } else if (folderName === 'lista2-10-2') {
-                    finalPrice = (bag.list2 * 0.8802) / 1.105;
-                  } else if (folderName === 'lista2-final') {
-                    finalPrice = (bag.list2);
-                  } else if (folderName === 'lista2-10-final') {
-                    finalPrice = bag.list2 * 0.9;
-                  } else if (folderName === 'lista2-10-2-final') {
-                    finalPrice = bag.list2 * 0.8802;
-                  } else if (folderName === 'lista3') {
-                    finalPrice = bag.list3 / 1.105;
-                  } else if (folderName === 'lista3-10') {
-                    finalPrice = (bag.list3 * 0.9) / 1.105;
-                  } else if (folderName === 'lista3-10-2') {
-                    finalPrice = (bag.list3 * 0.8802) / 1.105;
-                  } else if (folderName === 'lista3-final') {
-                    finalPrice = (bag.list3);
-                  } else if (folderName === 'lista3-10-final') {
-                    finalPrice = bag.list3 * 0.9;
-                  } else if (folderName === 'lista3-10-2-final') {
-                    finalPrice = bag.list3 * 0.8802;
-                  } else if (folderName === 'lista4') {
-                    finalPrice = bag.list4 / 1.105;
-                  } else if (folderName === 'lista4-10') {
-                    finalPrice = bag.list4 * 0.9 / 1.105;
-                  } else if (folderName === 'lista4-10-2') {
-                    finalPrice = (bag.list4 * 0.8802) / 1.105;
-                  } else if (folderName === 'lista4-final') {
-                    finalPrice = bag.list4; 
-                  } else if (folderName === 'lista4-10-final') {
-                    finalPrice = bag.list4 * 0.9;
-                  } else if (folderName === 'lista4-10-2-final') {
-                    finalPrice = bag.list4 * 0.8802;
-                  }
-                  return `$${Math.round(finalPrice)}`;
-                })()}
+                 {calculateFinalPrice(folderName, bag)}
               </span>
             </p>
 
@@ -333,6 +248,5 @@ const BagCard: React.FC<BagCardProps & { folderName: string }> = ({ bags, additi
     </div>
   );
 };
-
 
 export default BobinasSulfito;
