@@ -9,6 +9,11 @@ import { useCart } from '../../context/CartContext';
 import '../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
+import { getServerSidePropsUtil } from "@/utils/getServerSidePropsUtil";
+import { useQuantityHandler } from "@/hooks/useQuantityHandler";
+import { handleAddToCartUtil } from "@/utils/addToCartUtil";
+import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
+import QuantityControls from "@/pages/components/QuantityControls";
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -184,45 +189,23 @@ const BagCard: React.FC<BagCardProps & { folderName: keyof Bag | "lista2" | "lis
   };
 
   const handleAddToCart = () => {
+    const quantitiesObject = bags.reduce((acc, bag, index) => {
+      acc[bag.systemCode] = quantities[index];
+      return acc;
+    }, {} as { [key: string]: number });
+
     bags.forEach((bag, index) => {
       if (quantities[index] > 0) {
-        let price = bag.list2; // Default to list2
-        if (folderName === 'lista2-10') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-2') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista2-10-2-final') {
-          price = bag.list2;
-        } else if (folderName === 'lista3') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-2') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista3-10-2-final') {
-          price = bag.list3;
-        } else if (folderName === 'lista4') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-2') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-final') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-final') {
-          price = bag.list4;
-        } else if (folderName === 'lista4-10-2-final') {
-          price = bag.list4;
-        }
-        addToCart(bag.systemCode, quantities[index], ` ${bag.description}  ${additionalDescription}`, price);
+        handleAddToCartUtil(
+          bag.systemCode,
+          ` ${bag.description} ${additionalDescription}`,
+          bag.list2,
+          bags,
+          folderName,
+          quantitiesObject,
+          addToCart,
+          () => setQuantities(bags.map(() => 0)) // Reset quantities correctly
+        );
       }
     });
     setQuantities(bags.map(() => 0));
