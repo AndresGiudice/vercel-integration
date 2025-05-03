@@ -22,6 +22,10 @@ const inter = Inter({ subsets: ["latin"] });
 // Función para obtener datos del servidor
 export const getServerSideProps = getServerSidePropsUtil;
 
+const calculateDiscountedPrice = (price: number, totalItems: number) => {
+  return totalItems >= 100 ? price * 0.9 : price;
+};
+
 const BolsasFb3 = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { quantities, setQuantities, handleIncrement, handleDecrement, handleQuantityChange } = useQuantityHandler();
   const [bags, setBags] = useState<Bag[]>([]);
@@ -57,10 +61,6 @@ const BolsasFb3 = ({ isConnected }: InferGetServerSidePropsType<typeof getServer
   const placeOrder = () => {
     alert('Pedido realizado con éxito!');
     clearCart();
-  };
-
-  const calculateDiscountedPrice = (price: number) => {
-    return totalItems >= 100 ? price * 0.9 : price;
   };
 
   return (
@@ -139,7 +139,11 @@ const BolsasFb3 = ({ isConnected }: InferGetServerSidePropsType<typeof getServer
                   <div className="flex justify-center mb-2">
                     <p className="text-gray-700 text-lg"> Precio x100: 
                     <span className="font-bold">
-                        {calculateFinalPrice(folderName, bag)}
+                        {(() => {
+                          const finalPriceString = calculateFinalPrice(folderName, bag);
+                          const finalPrice = parseFloat(finalPriceString.replace('$', '')); // Extract numeric value
+                          return `$${Math.floor(calculateDiscountedPrice(finalPrice, totalItems))}`; // Round down
+                        })()}
                       </span> 
                     </p>
                   </div>
