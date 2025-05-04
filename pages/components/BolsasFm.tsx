@@ -28,6 +28,7 @@ const BolsasFm = ({ isConnected }: InferGetServerSidePropsType<typeof getServerS
   const [showCartDetails, setShowCartDetails] = useState(false);
   const router = useRouter();
   const folderName = router.pathname.split('/').slice(-2, -1)[0];
+  const searchQuery = router.query.search as string;
 
   const { quantities, setQuantities, handleIncrement, handleDecrement, handleQuantityChange } = useQuantityHandler();
 
@@ -61,6 +62,10 @@ const BolsasFm = ({ isConnected }: InferGetServerSidePropsType<typeof getServerS
     alert('Pedido realizado con éxito!');
     clearCart();
   };
+
+  const filteredBags = bags.filter((bag) =>
+    bag.description.toLowerCase().includes(searchQuery?.toLowerCase() || '')
+  );
 
   return (
     <div>
@@ -96,7 +101,7 @@ const BolsasFm = ({ isConnected }: InferGetServerSidePropsType<typeof getServerS
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
             <div className="flex flex-wrap justify-evenly">
-              {bags.map((bag, index) => (
+              {filteredBags.map((bag, index) => (
                 <div
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={index}
