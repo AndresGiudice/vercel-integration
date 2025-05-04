@@ -9,47 +9,27 @@ import { useCart } from '../../context/CartContext';
 import '../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
+import { ConnectionStatus, Bag } from "@/utils/types"; // Importar tipos desde el archivo utils/types.ts
+import { getServerSidePropsUtil } from "@/utils/getServerSidePropsUtil";
+import { useQuantityHandler } from "@/hooks/useQuantityHandler";
+import { handleAddToCartUtil } from "@/utils/addToCartUtil";
+import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
+import QuantityControls from "@/pages/components/QuantityControls";
 
-
-type ConnectionStatus = {
-  isConnected: boolean;
-};
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const getServerSideProps: GetServerSideProps<
-ConnectionStatus
-> = async () => {
-try {
-  const client = await clientPromise;
-  await client.connect();
-  return {
-    props: { isConnected: true },
-  };
-} catch (e) {
-  console.error(e);
-  return {
-    props: { isConnected: false },
-  };
-}
-};
-
-type Bag = {
-  description: string;
-  list4: number;
-  list3: number;
-  list2: number;
-  systemCode: string; 
-};
+// Función para obtener datos del servidor
+export const getServerSideProps = getServerSidePropsUtil;
 
 const BolsasFdoAmericanoKraft = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [bags, setBags] = useState<Bag[]>([]);
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
   const router = useRouter();
   const folderName: 'lista2' | 'lista2-10' | 'lista2-10-2' | 'lista2-final' | 'lista2-10-final' | 'lista2-10-2-final' | 'lista3' | 'lista3-10' | 'lista3-10-2' | 'lista3-final' | 'lista3-10-final' | 'lista3-10-2-final' | 'lista4' | 'lista4-10' | 'lista4-10-2' | 'lista4-final' | 'lista4-10-final' | 'lista4-10-2-final' = router.pathname.split('/').slice(-2, -1)[0] as 'lista2' | 'lista2-10' | 'lista2-10-2' | 'lista2-final' | 'lista2-10-final' | 'lista2-10-2-final' | 'lista3' | 'lista3-10' | 'lista3-10-2' | 'lista3-final' | 'lista3-10-final' | 'lista3-10-2-final' | 'lista4' | 'lista4-10' | 'lista4-10-2' | 'lista4-final' | 'lista4-10-final' | 'lista4-10-2-final';
 
+  const { quantities, setQuantities, handleIncrement, handleDecrement, handleQuantityChange } = useQuantityHandler();
 
   useEffect(() => {
     (async () => {
@@ -69,52 +49,10 @@ const BolsasFdoAmericanoKraft = ({ isConnected }: InferGetServerSidePropsType<ty
       }, {});
       setQuantities(initialQuantities);
     })();
-  }, []);
+  }, [setQuantities]);
 
-  const handleIncrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: prevQuantities[systemCode] + 1,
-    }));
-  };
-
-  const handleDecrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: Math.max(prevQuantities[systemCode] - 1, 0),
-    }));
-  };
-
-  const handleQuantityChange = (systemCode: string, value: string) => {
-    const numberValue = parseInt(value, 10);
-    if (!isNaN(numberValue) && numberValue >= 0) {
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [systemCode]: numberValue,
-      }));
-    }
-  };
-
-  const handleAddToCart = (systemCode: string, description: string, list2: number) => {
-    const bag = bags.find(bag => bag.systemCode === systemCode);
-    if (bag) {
-      let price = bag.list2; // Default to list2
-      if (folderName === 'lista2-10' || folderName === 'lista2-10-2' || folderName === 'lista2-final' || 
-          folderName === 'lista2-10-final' || folderName === 'lista2-10-2-final') {
-        price = bag.list2;
-      } else if (folderName === 'lista3' || folderName === 'lista3-10' || folderName === 'lista3-10-2' || 
-                 folderName === 'lista3-final' || folderName === 'lista3-10-final' || folderName === 'lista3-10-2-final') {
-        price = bag.list3;
-      } else if (folderName === 'lista4' || folderName === 'lista4-10' || folderName === 'lista4-10-2' || 
-                 folderName === 'lista4-final' || folderName === 'lista4-10-final' || folderName === 'lista4-10-2-final') {
-        price = bag.list4;
-      }
-    addToCart(systemCode, quantities[systemCode], bag.description, price);
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [systemCode]: 0,
-      }));
-    }
+  const handleAddToCart = (systemCode: string, description: string, list2: number, additionalDescription: string) => {
+    handleAddToCartUtil(systemCode, description, list2, bags, folderName, quantities, addToCart, setQuantities);
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
@@ -193,84 +131,19 @@ const BolsasFdoAmericanoKraft = ({ isConnected }: InferGetServerSidePropsType<ty
                   <div className="flex justify-center mb-2">
                     <p className="text-gray-700 text-lg"> Precio x1000: 
                     <span className="font-bold">
-                        {(() => {
-                          let finalPrice = 0;
-                          if (folderName === 'lista2') {
-                            finalPrice = bag.list2 / 1.105;
-                          } else if (folderName === 'lista2-10') {
-                            finalPrice = (bag.list2 * 0.9) / 1.105;
-                          } else if (folderName === 'lista2-10-2') {
-                            finalPrice = (bag.list2 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista2-final') {
-                            finalPrice = bag.list2;
-                          } else if (folderName === 'lista2-10-final') {
-                            finalPrice = bag.list2 * 0.9;
-                          } else if (folderName === 'lista2-10-2-final') {
-                            finalPrice = bag.list2 * 0.8802;
-                          } else if (folderName === 'lista3') {
-                            finalPrice = bag.list3 / 1.105;
-                          } else if (folderName === 'lista3-10') {
-                            finalPrice = (bag.list3 * 0.9) / 1.105;
-                          } else if (folderName === 'lista3-10-2') {
-                            finalPrice = (bag.list3 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista3-final') {
-                            finalPrice = bag.list3;
-                          } else if (folderName === 'lista3-10-final') {
-                            finalPrice = bag.list3 * 0.9;
-                          } else if (folderName === 'lista3-10-2-final') {
-                            finalPrice = bag.list3 * 0.8802;
-                          } else if (folderName === 'lista4') {
-                            finalPrice = bag.list4 / 1.105;
-                          } else if (folderName === 'lista4-10') {
-                            finalPrice = (bag.list4 * 0.9) / 1.105;
-                          } else if (folderName === 'lista4-10-2') {
-                            finalPrice = (bag.list4 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista4-final') {
-                            finalPrice = bag.list4;
-                          } else if (folderName === 'lista4-10-final') {
-                            finalPrice = bag.list4 * 0.9;
-                          } else if (folderName === 'lista4-10-2-final') {
-                            finalPrice = bag.list4 * 0.8802;
-                          }
-                          return `$${Math.round(finalPrice)}`;
-                        })()}
+                        {calculateFinalPrice(folderName, bag)}
                       </span> 
                       </p>
                   </div>
-                  <div className="px-4 py-1 ">
-                    <div className="w-full bg-gray-200 p-1 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(bag.systemCode)}>-</button>
-                        <input
-                          type="number"
-                          className="w-16 text-center bg-gray-200 no-arrows text-black"
-                          value={quantities[bag.systemCode]}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (value === '') {
-                              setQuantities((prevQuantities) => ({
-                                ...prevQuantities,
-                                [bag.systemCode]: 0,
-                              }));
-                            } else {
-                              handleQuantityChange(bag.systemCode, value);
-                            }
-                          }}
-                          onFocus={(e) => e.target.select()}
-                        />
-                        <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.systemCode)}>+</button>
-                      </div>
-                    </div>
-                    <AddToCartButton
-                      systemCode={bag.systemCode}
-                      description={bag.description}
-                      list4={bag.list4}
-                      list3={bag.list3}
-                      list2={bag.list2}
-                      quantity={quantities[bag.systemCode]}
-                      handleAddToCart={handleAddToCart}
-                    />
-                  </div>
+                  <QuantityControls
+                    bag={bag}
+                    quantities={quantities}
+                    handleIncrement={handleIncrement}
+                    handleDecrement={handleDecrement}
+                    handleQuantityChange={handleQuantityChange}
+                    setQuantities={setQuantities}
+                    handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list3, bag.additionalDescription)}
+                  />
                 </div>
               ))}
             </div>
