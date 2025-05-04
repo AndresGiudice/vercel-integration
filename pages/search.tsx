@@ -6,6 +6,7 @@ import AddToCartButton from './components/AddToCartButton';
 import { calculateFinalPrice } from '../utils/calculateFinalPrice';
 import { Bag } from '../utils/types';
 import { useUser } from '../context/UserContext'; // Import useUser
+import { handleAddToCartUtil } from "@/utils/addToCartUtil";
 
 export default function SearchPage() {
   const router = useRouter();
@@ -53,11 +54,16 @@ export default function SearchPage() {
   };
 
   const handleAddToCart = (systemCode: string, description: string, list4: number) => {
-    addToCart(systemCode, quantities[systemCode] || 0, description, list4);
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: 0,
-    }));
+    handleAddToCartUtil(
+      systemCode,
+      description,
+      list4,
+      results,
+      user.priceList,
+      quantities,
+      addToCart,
+      setQuantities
+    );
   };
 
   if (!user) {
