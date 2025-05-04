@@ -21,9 +21,14 @@ export default function SearchPage() {
       (async () => {
         const response = await fetch(`/api/allPrices`);
         const data = await response.json();
-        const filteredResults = data.kraft.filter((bag: Bag) =>
-          bag.description.toLowerCase().includes((query as string).toLowerCase())
-        );
+        const filteredResults = [
+          ...data.kraft.filter((bag: Bag) =>
+            bag.description.toLowerCase().includes((query as string).toLowerCase())
+          ),
+          ...data.blancas.filter((bag: Bag) =>
+            bag.description.toLowerCase().includes((query as string).toLowerCase())
+          ),
+        ];
         setResults(filteredResults);
       })();
     }
