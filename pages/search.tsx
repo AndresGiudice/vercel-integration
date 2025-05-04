@@ -3,12 +3,9 @@ import { useEffect, useState } from 'react';
 import NavBar from './components/NavBar';
 import { useCart } from '../context/CartContext';
 import AddToCartButton from './components/AddToCartButton';
-
-type Bag = {
-  description: string;
-  list4: number;
-  systemCode: string;
-};
+import { calculateFinalPrice } from '../utils/calculateFinalPrice';
+import { Bag } from '../utils/types';
+import { useUser } from '../context/UserContext'; // Import useUser
 
 export default function SearchPage() {
   const router = useRouter();
@@ -16,6 +13,7 @@ export default function SearchPage() {
   const [results, setResults] = useState<Bag[]>([]);
   const { addToCart } = useCart();
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const { user } = useUser(); // Get user from context
 
   useEffect(() => {
     if (query) {
@@ -62,6 +60,10 @@ export default function SearchPage() {
     }));
   };
 
+  if (!user) {
+    return null; // Ensure user is loaded before rendering
+  }
+
   return (
     <div>
       <NavBar />
@@ -102,7 +104,8 @@ export default function SearchPage() {
                   </div>
                 </div>
                 <div className="flex justify-center mb-2">
-                  <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold">${Math.round(bag.list4 / 1.105)}</span></p>
+                  <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold"> {calculateFinalPrice(user.priceList, bag)}
+                  </span></p>
                 </div>
                 <div className="px-4 py-1">
                   <div className="w-full bg-gray-200 p-1 rounded-lg">
