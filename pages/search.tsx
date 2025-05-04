@@ -91,8 +91,18 @@ export default function SearchPage() {
               >
                 <img
                   className="w-72 h-36 object-contain"
-                  src={results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca")) ? "/bolsas-blancas.jpg" : "/bolsas-kraft.jpg"}
-                  alt={bag.description || "Bolsa"}
+                  src={
+                    results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
+                      ? "/bolsas-blancas.jpg"
+                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                      ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                      : "/bolsas-kraft.jpg"
+                  }
+                  alt={
+                    results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                      ? `Bolsa de Color ${bag.description.replace(/Bolsas\s*/i, '')}`
+                      : bag.description || "Bolsa"
+                  }
                 />
                 <div className="container mx-auto p-2">
                   <div className="flex flex-col">
