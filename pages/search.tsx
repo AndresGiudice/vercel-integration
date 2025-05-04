@@ -28,6 +28,9 @@ export default function SearchPage() {
           ...data.blancas.filter((bag: Bag) =>
             bag.description.toLowerCase().includes((query as string).toLowerCase())
           ),
+          ...data.pa.filter((bag: Bag) => // Add search for data.pa
+            bag.description.toLowerCase().includes((query as string).toLowerCase())
+          ),
         ];
         setResults(filteredResults);
       })();
@@ -79,7 +82,6 @@ export default function SearchPage() {
     <div>
       <NavBar />
       <main className="main" style={{ marginTop: '4rem' }}>
-        <h1 className="text-2xl font-bold text-center mb-4">Resultados de búsqueda para: "{query}"</h1>
         <div className="flex flex-wrap justify-evenly">
           {results.length > 0 ? (
             results.map((bag, index) => (
@@ -108,7 +110,7 @@ export default function SearchPage() {
                             <tbody>
                               <tr className="border-b">
                                 <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description}
+                                  {bag.description.replace(/Bolsas\s*/i, '')}
                                 </td>
                               </tr>
                             </tbody>
