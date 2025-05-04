@@ -9,48 +9,25 @@ import { useCart } from '../../context/CartContext';
 import '../../styles/styles.css';
 import AddToCartButton from "@/pages/components/AddToCartButton";
 import { useRouter } from 'next/router';
+import { ConnectionStatus, Bag } from "@/utils/types"; // Importar tipos desde el archivo utils/types.ts
+import { getServerSidePropsUtil } from "@/utils/getServerSidePropsUtil";
+import { useQuantityHandler } from "@/hooks/useQuantityHandler";
+import { handleAddToCartUtil } from "@/utils/addToCartUtil";
+import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
+import QuantityControls from "@/pages/components/QuantityControls";
 
-
-type ConnectionStatus = {
-  isConnected: boolean;
-};
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const getServerSideProps: GetServerSideProps<
-ConnectionStatus
-> = async () => {
-try {
-  const client = await clientPromise;
-  await client.connect();
-  return {
-    props: { isConnected: true },
-  };
-} catch (e) {
-  console.error(e);
-  return {
-    props: { isConnected: false },
-  };
-}
-};
-
-type Bag = {
-  description: string;
-  list4: number;
-  list3: number;
-  list2: number;
-  systemCode: string; 
-  additionalDescription: string;
-};
+// Función para obtener datos del servidor
+export const getServerSideProps = getServerSidePropsUtil;
 
 const BolsasFb3Fantasia = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { quantities, setQuantities, handleIncrement, handleDecrement, handleQuantityChange } = useQuantityHandler();
   const [bags, setBags] = useState<Bag[]>([]);
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
   const router = useRouter();
   const folderName = router.pathname.split('/').slice(-2, -1)[0];
-
 
   useEffect(() => {
     (async () => {
@@ -68,55 +45,10 @@ const BolsasFb3Fantasia = ({ isConnected }: InferGetServerSidePropsType<typeof g
       }, {});
       setQuantities(initialQuantities);
     })();
-  }, []);
-
-  const handleIncrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: prevQuantities[systemCode] + 1,
-    }));
-  };
-
-  const handleDecrement = (systemCode: string) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [systemCode]: Math.max(prevQuantities[systemCode] - 1, 0),
-    }));
-  };
-
-  const handleQuantityChange = (systemCode: string, value: string) => {
-    const numberValue = parseInt(value, 10);
-    if (!isNaN(numberValue) && numberValue >= 0) {
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [systemCode]: numberValue,
-      }));
-    }
-  };
-
+  }, [setQuantities]);
 
   const handleAddToCart = (systemCode: string, description: string, list2: number, additionalDescription: string) => {
-    const cleanedDescription = description.replace(/Bolsa Fast Food\s*/, '').replace(/(Kraft).*/, 'Kraft');
-    const cleanedAdditionalDescription = additionalDescription ? additionalDescription.replace(/Bolsa Fast Food\s*/, '') : '';
-    const bag = bags.find(bag => bag.systemCode === systemCode);
-    if (bag) {
-      let price = bag.list2; // Default to list2
-      if (folderName === 'lista2-10' || folderName === 'lista2-10-2' || folderName === 'lista2-final' || 
-          folderName === 'lista2-10-final' || folderName === 'lista2-10-2-final') {
-        price = bag.list2;
-      } else if (folderName === 'lista3' || folderName === 'lista3-10' || folderName === 'lista3-10-2' || 
-                 folderName === 'lista3-final' || folderName === 'lista3-10-final' || folderName === 'lista3-10-2-final') {
-        price = bag.list3;
-      } else if (folderName === 'lista4' || folderName === 'lista4-10' || folderName === 'lista4-10-2' || 
-                 folderName === 'lista4-final' || folderName === 'lista4-10-final' || folderName === 'lista4-10-2-final') {
-        price = bag.list4;
-      }
-    addToCart(systemCode, quantities[systemCode], `${cleanedDescription} ${cleanedAdditionalDescription}`, price);
-      setQuantities((prevQuantities) => ({
-        ...prevQuantities,
-        [systemCode]: 0,
-      }));
-    }
+    handleAddToCartUtil(systemCode, description, list2, bags, folderName, quantities, addToCart, setQuantities);
   };
 
   const totalItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
@@ -126,14 +58,14 @@ const BolsasFb3Fantasia = ({ isConnected }: InferGetServerSidePropsType<typeof g
     clearCart();
   };
 
-  const calculateDiscountedPrice = (price: number) => {
+  const calculateDiscountedPrice = (price: number, totalItems: number) => {
     return totalItems >= 100 ? price * 0.9 : price;
   };
 
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem' }}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
@@ -170,13 +102,13 @@ const BolsasFb3Fantasia = ({ isConnected }: InferGetServerSidePropsType<typeof g
                   key={index}
                 >
                   <div>
-                    <img 
-                      className="w-72 h-36 object-contain" 
-                      src={`/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`} 
-                      alt={bag.additionalDescription} 
+                    <img
+                      className="w-72 h-36 object-contain"
+                      src={`/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`}
+                      alt={bag.additionalDescription}
                     />
                   </div>
-                 <div className="container mx-auto p-2">
+                  <div className="container mx-auto p-2">
                     <div className="flex flex-col">
                       <div className="overflow-x-auto">
                         <div className="py-2 inline-block min-w-full">
@@ -192,7 +124,7 @@ const BolsasFb3Fantasia = ({ isConnected }: InferGetServerSidePropsType<typeof g
                               <tbody>
                                 <tr className="border-b">
                                   <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description.replace('Fast Food', '')} {bag.additionalDescription}
+                                    {bag.description.replace('Fast Food', '')} {bag.additionalDescription}
                                   </td>
                                 </tr>
                               </tbody>
@@ -203,87 +135,25 @@ const BolsasFb3Fantasia = ({ isConnected }: InferGetServerSidePropsType<typeof g
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x100: 
-                    <span className="font-bold">
+                    <p className="text-gray-700 text-lg"> Precio x100:
+                      <span className="font-bold">
                         {(() => {
-                          let finalPrice = 0;
-                          if (folderName === 'lista2') {
-                            finalPrice = bag.list2 / 1.105;
-                          } else if (folderName === 'lista2-10') {
-                            finalPrice = (bag.list2 * 0.9) / 1.105;
-                          } else if (folderName === 'lista2-10-2') {
-                            finalPrice = (bag.list2 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista2-final') {
-                            finalPrice = bag.list2;
-                          } else if (folderName === 'lista2-10-final') {
-                            finalPrice = bag.list2 * 0.9;
-                          } else if (folderName === 'lista2-10-2-final') {
-                            finalPrice = bag.list2 * 0.8802;
-                          } else if (folderName === 'lista3') {
-                            finalPrice = bag.list3 / 1.105;
-                          } else if (folderName === 'lista3-10') {
-                            finalPrice = (bag.list3 * 0.9) / 1.105;
-                          } else if (folderName === 'lista3-10-2') {
-                            finalPrice = (bag.list3 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista3-final') {
-                            finalPrice = bag.list3;
-                          } else if (folderName === 'lista3-10-final') {
-                            finalPrice = bag.list3 * 0.9;
-                          } else if (folderName === 'lista3-10-2-final') {
-                            finalPrice = bag.list3 * 0.8802;
-                          } else if (folderName === 'lista4') {
-                            finalPrice = bag.list4 / 1.105;
-                          } else if (folderName === 'lista4-10') {
-                            finalPrice = (bag.list4 * 0.9) / 1.105;
-                          } else if (folderName === 'lista4-10-2') {
-                            finalPrice = (bag.list4 * 0.8802) / 1.105;
-                          } else if (folderName === 'lista4-final') {
-                            finalPrice = bag.list4;
-                          } else if (folderName === 'lista4-10-final') {
-                            finalPrice = bag.list4 * 0.9;
-                          } else if (folderName === 'lista4-10-2-final') {
-                            finalPrice = bag.list4 * 0.8802;
-                          }
-                          return `$${Math.round(calculateDiscountedPrice(finalPrice))}`;
+                          const finalPriceString = calculateFinalPrice(folderName, bag);
+                          const finalPrice = parseFloat(finalPriceString.replace('$', '')); // Extract numeric value
+                          return `$${Math.floor(calculateDiscountedPrice(finalPrice, totalItems))}`; // Round down
                         })()}
-                      </span> 
-
-                      </p>
+                      </span>
+                    </p>
                   </div>
-                  <div className="px-4 py-1 ">
-                    <div className="w-full bg-gray-200 p-1 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <button className="px-8 py-1 rounded-l text-black" onClick={() => handleDecrement(bag.systemCode)}>-</button>
-                        <input
-                          type="number"
-                          className="w-16 text-center bg-gray-200 no-arrows text-black"
-                          value={quantities[bag.systemCode]}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (value === '') {
-                              setQuantities((prevQuantities) => ({
-                                ...prevQuantities,
-                                [bag.systemCode]: 0,
-                              }));
-                            } else {
-                              handleQuantityChange(bag.systemCode, value);
-                            }
-                          }}
-                          onFocus={(e) => e.target.select()}
-                        />
-                        <button className="px-8 py-1 rounded-r text-black" onClick={() => handleIncrement(bag.systemCode)}>+</button>
-                      </div>
-                    </div>
-                    <AddToCartButton
-                      systemCode={bag.systemCode}
-                      description={bag.description}
-                      list4={bag.list4}
-                      list3={bag.list3}
-                      list2={bag.list2}
-                      quantity={quantities[bag.systemCode]}
-                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list2, bag.additionalDescription)}
-                    />
-                  </div>
+                  <QuantityControls
+                    bag={bag}
+                    quantities={quantities}
+                    handleIncrement={handleIncrement}
+                    handleDecrement={handleDecrement}
+                    handleQuantityChange={handleQuantityChange}
+                    setQuantities={setQuantities}
+                    handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list2, bag.additionalDescription)}
+                  />
                 </div>
               ))}
             </div>
@@ -291,7 +161,7 @@ const BolsasFb3Fantasia = ({ isConnected }: InferGetServerSidePropsType<typeof g
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-          <p>{folderName.toUpperCase()}</p>
+        <p>{folderName.toUpperCase()}</p>
       </footer>
     </div>
   );
