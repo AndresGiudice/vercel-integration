@@ -43,7 +43,7 @@ export const handleAddToCartUtil = (
     addToCart(
       systemCode,
       quantities[systemCode],
-      `${description} ${bag.additionalDescription || ''}`.trim(),
+      `${bag.description.replace('FAST FOOD', '').replace('Fast Food', '')} ${bag.additionalDescription || ''}`.trim(),
       price
     );
     setQuantities((prevQuantities: { [key: string]: number }) => ({
