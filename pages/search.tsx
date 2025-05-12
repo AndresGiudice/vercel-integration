@@ -21,22 +21,22 @@ export default function SearchPage() {
       (async () => {
         const response = await fetch(`/api/allPrices`);
         const data = await response.json();
-        const filteredResults = [
-          ...data.kraft.filter((bag: Bag) =>
-            bag.description.toLowerCase().includes((query as string).toLowerCase())
-          ),
-          ...data.blancas.filter((bag: Bag) =>
-            bag.description.toLowerCase().includes((query as string).toLowerCase())
-          ),
-          ...data.pa.filter((bag: Bag) => // Add search for data.pa
-            bag.description.toLowerCase().includes((query as string).toLowerCase())
-          ),
-          ...data.boFae.filter((bag: Bag) => {
+
+        const filterBags = (bags: Bag[]) => {
+          const queryWords = (query as string).toLowerCase().split(/\s+/);
+          return bags.filter((bag: Bag) => {
             const combinedText = `${bag.description} ${bag.additionalDescription || ''}`.toLowerCase();
-            const queryWords = (query as string).toLowerCase().split(/\s+/); // Divide la consulta en palabras
-            return queryWords.every((word) => combinedText.includes(word)); // Verifica que todas las palabras estén presentes
-          }),
+            return queryWords.every((word) => combinedText.includes(word));
+          });
+        };
+
+        const filteredResults = [
+          ...filterBags(data.kraft),
+          ...filterBags(data.blancas),
+          ...filterBags(data.pa),
+          ...filterBags(data.boFae),
         ];
+
         setResults(filteredResults);
       })();
     }
