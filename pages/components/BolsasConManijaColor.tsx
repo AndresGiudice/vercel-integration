@@ -114,7 +114,12 @@ const BolsasConManijaColor = ({ isConnected }: InferGetServerSidePropsType<typeo
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={additionalDescription}
                 >
-                  <img className="w-72 h-36 object-contain" src={`/Bolsa de Color ${additionalDescription}.jpg`} alt={additionalDescription} />
+                  <img 
+                    className="w-72 h-36 object-contain" 
+                    src={`/Bolsa de Color ${additionalDescription}.jpg`} 
+                    alt={additionalDescription} 
+                    onError={(e) => (e.currentTarget.src = "/Bolsa de Color Surtido.jpg")} 
+                  />
                   <div className="px-4 py-1 ">
                     <BagCard bags={bags.slice(0, 3)} additionalDescription={additionalDescription} addToCart={addToCart} folderName={folderName} />
                   </div>
