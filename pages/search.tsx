@@ -31,6 +31,11 @@ export default function SearchPage() {
           ...data.pa.filter((bag: Bag) => // Add search for data.pa
             bag.description.toLowerCase().includes((query as string).toLowerCase())
           ),
+          ...data.boFae.filter((bag: Bag) => {
+            const combinedText = `${bag.description} ${bag.additionalDescription || ''}`.toLowerCase();
+            const queryWords = (query as string).toLowerCase().split(/\s+/); // Divide la consulta en palabras
+            return queryWords.every((word) => combinedText.includes(word)); // Verifica que todas las palabras estén presentes
+          }),
         ];
         setResults(filteredResults);
       })();
@@ -95,8 +100,10 @@ export default function SearchPage() {
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
                       ? "/bolsas-blancas.jpg"
                       : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                      ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                      : "/bolsas-kraft.jpg"
+                        ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                          ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                          : "/bolsas-kraft.jpg"
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
@@ -120,7 +127,7 @@ export default function SearchPage() {
                             <tbody>
                               <tr className="border-b">
                                 <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description.replace(/Bolsas\s*/i, '')}
+                                  {bag.description.replace(/\bBolsa(s)?\b\s*/i, '')}
                                 </td>
                               </tr>
                             </tbody>
@@ -159,11 +166,11 @@ export default function SearchPage() {
                     </div>
                   </div>
                   <AddToCartButton
-                            systemCode={bag.systemCode}
-                            description={bag.description}
-                            list4={bag.list4}
-                            quantity={quantities[bag.systemCode] || 0}
-                            handleAddToCart={handleAddToCart} list3={0} list2={0}                  />
+                    systemCode={bag.systemCode}
+                    description={bag.description}
+                    list4={bag.list4}
+                    quantity={quantities[bag.systemCode] || 0}
+                    handleAddToCart={handleAddToCart} list3={0} list2={0} />
                 </div>
               </div>
             ))
