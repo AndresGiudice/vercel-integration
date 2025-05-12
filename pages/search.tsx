@@ -35,6 +35,7 @@ export default function SearchPage() {
           ...filterBags(data.blancas),
           ...filterBags(data.pa),
           ...filterBags(data.boFae),
+          ...filterBags(data.fb3x100),
         ];
 
         setResults(filteredResults);
@@ -97,13 +98,21 @@ export default function SearchPage() {
                 <img
                   className="w-72 h-36 object-contain"
                   src={
-                    results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
-                      ? "/bolsas-blancas.jpg"
-                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                        ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                          ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
-                          : "/bolsas-kraft.jpg"
+                    results.some((b: Bag) => b.systemCode === bag.systemCode && (
+                      b.description.toLowerCase().includes("fast food fb3 pleno x 100 u.") ||
+                      b.description.toLowerCase().includes("fm3") ||
+                      b.description.toLowerCase().includes("fast food fb3 blanca x 100 u.")
+                    ))
+                      ? `/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription || bag.systemCode}.png`
+                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
+                        ? "/bolsas-blancas.jpg"
+                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                          ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                          : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                            ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
+                              ? "/bolsas-kraft.jpg"
+                              : ""
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))

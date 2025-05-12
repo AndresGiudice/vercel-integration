@@ -381,7 +381,7 @@ function Example() {
             )}
           </div>
         </div>
-        <form onSubmit={handleSearch} className="hidden lg:flex items-center ml-4">
+        <form onSubmit={handleSearch} className="hidden lg:flex items-center ml-16">
           <input
             type="text"
             placeholder="Buscar productos..."
