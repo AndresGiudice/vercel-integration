@@ -37,7 +37,7 @@ const BolsasConManijaFantasia = ({ isConnected }: InferGetServerSidePropsType<ty
         const processedData = data.boFae
           .map((bag: Bag) => ({
             ...bag,
-            description: bag.description.slice(7, 9),
+            description: bag.description.slice(6, 9),
           }))
           .sort((a: Bag, b: Bag) => order.indexOf(a.systemCode) - order.indexOf(b.systemCode));
         setBags(processedData);
@@ -208,7 +208,7 @@ const BagCard: React.FC<BagCardProps & {folderName: string }> = ({ bags, additio
       {bags.map((bag, index) => (
         <div key={bag.systemCode}>
           <div className="flex justify-center mb-2">
-            <p className="text-gray-700 text-base mt-2">G{bag.description} - Precio x100:   
+            <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100:   
               <span className="font-bold">
                   {calculateFinalPrice(folderName, bag)}
               </span>
