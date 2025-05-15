@@ -389,7 +389,7 @@ export default async function handler(request, response) {
     // resultsKraft.forEach(item => console.log(item.systemCode));
     // resultsBlancas.forEach(item => console.log(item.systemCode));
     // resultsPA.forEach(item => console.log(item.systemCode));
-     resultsFb3x100.forEach(item => console.log(item.systemCode));
+    //resultsFb3x100.forEach(item => console.log(item.systemCode));
     // resultsFantFb3x100.forEach(item => console.log(item.systemCode));
     // resultsFb3x10.forEach(item => console.log(item.systemCode));
     // resultsFm.forEach(item => console.log(item.systemCode));

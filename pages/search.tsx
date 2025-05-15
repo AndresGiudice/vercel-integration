@@ -36,6 +36,7 @@ export default function SearchPage() {
           ...filterBags(data.pa),
           ...filterBags(data.boFae),
           ...filterBags(data.fb3x100),
+          ...filterBags(data.fb3x10),
         ];
 
         setResults(filteredResults);
@@ -114,19 +115,27 @@ export default function SearchPage() {
                   src={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && (
                       b.description.toLowerCase().includes("fast food fb3 pleno x 100 u.") ||
-                      b.description.toLowerCase().includes("fm3") ||
+                      b.systemCode.toLowerCase().includes("bfm301") ||
                       b.description.toLowerCase().includes("fast food fb3 blanca x 100 u.")
                     ))
                       ? `/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription || bag.systemCode}.png`
-                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
-                        ? "/bolsas-blancas.jpg"
-                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                          ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                          : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                            ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
-                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
-                              ? "/bolsas-kraft.jpg"
-                              : ""
+                      : results.some((b: Bag) => 
+                        b.systemCode === bag.systemCode && (
+                          b.description.toLowerCase().includes("fast food fb3 blanca x 10 u.") ||
+                          b.description.toLowerCase().includes("fast food fb3 pleno x 10 u.") ||
+                          b.systemCode.toLowerCase().includes("bfm3p10")
+                        )
+                      )
+                        ? `/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.additionalDescription || bag.systemCode}.jpg`
+                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
+                          ? "/bolsas-blancas.jpg"
+                          : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                            ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                              ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
+                                ? "/bolsas-kraft.jpg"
+                                : ""
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
@@ -162,7 +171,7 @@ export default function SearchPage() {
                 </div>
                 <div className="flex justify-center mb-2">
                   <p className="text-gray-700 text-lg">
-                    Precio x100: 
+                    Precio x100:
                     <span className="font-bold">
                       {(() => {
                         const finalPriceString = calculateFinalPrice(user.priceList, bag);
