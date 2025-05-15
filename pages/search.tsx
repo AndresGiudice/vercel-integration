@@ -12,7 +12,7 @@ export default function SearchPage() {
   const router = useRouter();
   const { query } = router.query;
   const [results, setResults] = useState<Bag[]>([]);
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const { user } = useUser(); // Get user from context
 
@@ -80,12 +80,17 @@ export default function SearchPage() {
     );
   };
 
-  const calculateDiscountedPrice = (price: number, totalItems: number, systemCode: string, totalEligibleItems: number) => {
+  const calculateDiscountedPrice = (price: number, systemCode: string) => {
     const eligibleSystemCodes = [
       "BFB3F53", "BFB3F54", "BFB3F45", "BFB3F40", "BFB3F57", "BFB3F50",
       "BFB3F36", "BFB3F41", "BFB3F38", "BFB3F58", "BFB301", "BFB3F44",
       "BFB3F56", "BFB3F52", "BFB3F51", "BFM301", "BFB3F39"
     ];
+
+    const totalEligibleItems = Object.values(cart)
+      .filter((item) => eligibleSystemCodes.includes(item.code))
+      .reduce((sum, item) => sum + item.quantity, 0); // Calculate total quantity for eligible system codes
+
     return eligibleSystemCodes.includes(systemCode) && totalEligibleItems >= 100 ? price * 0.9 : price;
   };
 
@@ -162,15 +167,7 @@ export default function SearchPage() {
                       {(() => {
                         const finalPriceString = calculateFinalPrice(user.priceList, bag);
                         const finalPrice = parseFloat(finalPriceString.replace('$', '')); // Extract numeric value
-                        const eligibleSystemCodes = [
-                          "BFB3F53", "BFB3F54", "BFB3F45", "BFB3F40", "BFB3F57", "BFB3F50",
-                          "BFB3F36", "BFB3F41", "BFB3F38", "BFB3F58", "BFB301", "BFB3F44",
-                          "BFB3F56", "BFB3F52", "BFB3F51", "BFM301", "BFB3F39"
-                        ];
-                        const totalEligibleItems = Object.entries(quantities)
-                          .filter(([code]) => eligibleSystemCodes.includes(code))
-                          .reduce((sum, [, qty]) => sum + qty, 0); // Calculate total quantity for eligible system codes
-                        return `$${Math.floor(calculateDiscountedPrice(finalPrice, quantities[bag.systemCode] || 0, bag.systemCode, totalEligibleItems))}`; // Round down
+                        return `$${Math.floor(calculateDiscountedPrice(finalPrice, bag.systemCode))}`; // Round down
                       })()}
                     </span>
                   </p>
