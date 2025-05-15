@@ -53,12 +53,12 @@ export default function SearchPage() {
                 queryString.includes("fb3 x100") ||
                 queryString.includes("fast food x100")
               )
-              
+
             ) {
               return true;
             }
 
-            
+
 
             return queryWords.every((word) => combinedText.includes(word));
           });
@@ -79,6 +79,13 @@ export default function SearchPage() {
               : filterBags(data.fb3x10, true)
           ),
           ...filterBags(data.fantFb3x100),
+          ...filterBags(
+            data.fm.map((bag: Bag) => ({
+              ...bag,
+          
+              isFM: true, // Marca las bolsas FM
+            }))
+          ),
         ];
 
         setResults(filteredResults);
@@ -163,7 +170,7 @@ export default function SearchPage() {
     if (
       (
         (eligibleSystemCodesFb3.includes(systemCode) ||
-         eligibleSystemCodesFb3Fant.includes(systemCode)
+          eligibleSystemCodesFb3Fant.includes(systemCode)
         ) && totalEligibleItems >= 100
       ) ||
       (eligibleSystemCodesFb310.includes(systemCode) && totalEligibleItems10 >= 100)
@@ -189,7 +196,7 @@ export default function SearchPage() {
                 key={index}
               >
                 <img
-                  className="w-72 h-36 object-contain"
+                  className="w-72 h-36 object-contain mx-auto block"
                   src={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && (
                       b.description.toLowerCase().includes("fast food fb3 pleno x 100 u.") ||
@@ -197,25 +204,27 @@ export default function SearchPage() {
                       b.description.toLowerCase().includes("fast food fb3 blanca x 100 u.")
                     ))
                       ? `/Bolsa Fast Food FB3 Pleno ${bag.additionalDescription || bag.systemCode}.png`
-                      : results.some((b: Bag) => 
-                          b.systemCode === bag.systemCode && (
-                            b.description.toLowerCase().includes("fast food fb3 blanca x 10 u.") ||
-                            b.description.toLowerCase().includes("fast food fb3 pleno x 10 u.") ||
-                            b.systemCode.toLowerCase().includes("bfm3p10")
-                          )
+                      : results.some((b: Bag) =>
+                        b.systemCode === bag.systemCode && (
+                          b.description.toLowerCase().includes("fast food fb3 blanca x 10 u.") ||
+                          b.description.toLowerCase().includes("fast food fb3 pleno x 10 u.") ||
+                          b.systemCode.toLowerCase().includes("bfm3p10")
                         )
-                          ? `/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.additionalDescription || bag.systemCode}.jpg`
-                          : results.some((b: Bag) => 
-                              b.systemCode === bag.systemCode && 
-                              b.description.toLowerCase().includes("fast food fb3 fantasía")
-                            )
-                            ? `/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`
-                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
-                              ? "/bolsas-blancas.jpg"
-                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                                ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                                  ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                      )
+                        ? `/BOLSA FAST FOOD FB3 PLENO X 10 U. ${bag.additionalDescription || bag.systemCode}.jpg`
+                        : results.some((b: Bag) =>
+                          b.systemCode === bag.systemCode &&
+                          b.description.toLowerCase().includes("fast food fb3 fantasía")
+                        )
+                          ? `/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`
+                          : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
+                            ? "/bolsas-blancas.jpg"
+                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                              ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                                ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
+                                  ? `/Bolsa Fast Food ${bag.systemCode}.png`
                                   : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
                                     ? "/bolsas-kraft.jpg"
                                     : ""
@@ -254,7 +263,7 @@ export default function SearchPage() {
                 </div>
                 <div className="flex justify-center mb-2">
                   <p className="text-gray-700 text-lg">
-                    Precio x100:
+                    {bag.isFM ? "Precio x1000:" : "Precio x100:"}
                     <span className="font-bold">
                       {(() => {
                         const finalPriceString = calculateFinalPrice(user.priceList, bag);
