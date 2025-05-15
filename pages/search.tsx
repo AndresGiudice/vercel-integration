@@ -82,17 +82,33 @@ export default function SearchPage() {
   };
 
   const calculateDiscountedPrice = (price: number, systemCode: string) => {
-    const eligibleSystemCodes = [
+    const eligibleSystemCodesFb3 = [
       "BFB3F53", "BFB3F54", "BFB3F45", "BFB3F40", "BFB3F57", "BFB3F50",
       "BFB3F36", "BFB3F41", "BFB3F38", "BFB3F58", "BFB301", "BFB3F44",
       "BFB3F56", "BFB3F52", "BFB3F51", "BFM301", "BFB3F39"
     ];
 
-    const totalEligibleItems = Object.values(cart)
-      .filter((item) => eligibleSystemCodes.includes(item.code))
-      .reduce((sum, item) => sum + item.quantity, 0); // Calculate total quantity for eligible system codes
+    const eligibleSystemCodesFb310 = [
+      "BFB3P133", "BFB3P113", "BFB3P122", "BFB3P10", "BFB3P114", "BFB3P116",
+      "BFB3P126", "BFB3P115", "BFB3P132", "BFB3P125", "BFB3P112", "BFM3P10",
+      "BFB3P117", "BFB3P124", "BFB3P123", "BFB3P134", "BFB3P160"
+    ];
 
-    return eligibleSystemCodes.includes(systemCode) && totalEligibleItems >= 100 ? price * 0.9 : price;
+    const totalEligibleItems = Object.values(cart)
+      .filter((item) => eligibleSystemCodesFb3.includes(item.code))
+      .reduce((sum, item) => sum + item.quantity, 0);
+
+    const totalEligibleItems10 = Object.values(cart)
+      .filter((item) => eligibleSystemCodesFb310.includes(item.code))
+      .reduce((sum, item) => sum + item.quantity, 0);
+
+    if (
+      (eligibleSystemCodesFb3.includes(systemCode) && totalEligibleItems >= 100) ||
+      (eligibleSystemCodesFb310.includes(systemCode) && totalEligibleItems10 >= 100)
+    ) {
+      return price * 0.9;
+    }
+    return price;
   };
 
   if (!user) {
