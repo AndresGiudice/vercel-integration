@@ -113,7 +113,21 @@ export default async function handler(request, response) {
       },
       {
         $addFields: {
-          systemCode: "$_id"
+          systemCode: "$_id",
+          additionalDescription: {
+            $cond: {
+              if: { $in: ["$_id", ["BG1P00S", "BG3P00S", "BG5P00S"]] },
+              then: "Surtido",
+              else: "$additionalDescription"
+            }
+          },
+          description: {
+            $cond: {
+              if: { $in: ["$_id", ["BG1P00S", "BG3P00S", "BG5P00S"]] },
+              then: { $replaceOne: { input: "$description", find: "Surtido", replacement: "" } },
+              else: "$description"
+            }
+          }
         }
       },
       {

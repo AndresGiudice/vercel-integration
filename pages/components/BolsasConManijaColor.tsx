@@ -78,7 +78,7 @@ const BolsasConManijaColor = ({ isConnected }: InferGetServerSidePropsType<typeo
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem' }}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
@@ -114,12 +114,7 @@ const BolsasConManijaColor = ({ isConnected }: InferGetServerSidePropsType<typeo
                   className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
                   key={additionalDescription}
                 >
-                  <img 
-                    className="w-72 h-36 object-contain" 
-                    src={`/Bolsa de Color ${additionalDescription}.jpg`} 
-                    alt={additionalDescription} 
-                    onError={(e) => (e.currentTarget.src = "/Bolsa de Color Surtido.jpg")} 
-                  />
+                  <img className="w-72 h-36 object-contain" src={`/Bolsa de Color ${additionalDescription}.jpg`} alt={additionalDescription} />
                   <div className="px-4 py-1 ">
                     <BagCard bags={bags.slice(0, 3)} additionalDescription={additionalDescription} addToCart={addToCart} folderName={folderName} />
                   </div>
@@ -142,7 +137,7 @@ type BagCardProps = {
   addToCart: (systemCode: string, quantity: number, description: string, price: number) => void;
 };
 
-const BagCard: React.FC<BagCardProps & {folderName: string }> = ({ bags, additionalDescription, addToCart, folderName }) => {
+const BagCard: React.FC<BagCardProps & { folderName: string }> = ({ bags, additionalDescription, addToCart, folderName }) => {
   const [quantities, setQuantities] = useState<number[]>(bags.map(() => 0));
 
   const handleIncrement = (index: number) => {
@@ -200,9 +195,9 @@ const BagCard: React.FC<BagCardProps & {folderName: string }> = ({ bags, additio
       {bags.map((bag, index) => (
         <div key={bag.systemCode}>
           <div className="flex justify-center mb-2">
-            <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100:  
+            <p className="text-gray-700 text-base mt-2">{bag.description} - Precio x100:
               <span className="font-bold">
-                  {calculateFinalPrice(folderName, bag)}
+                {calculateFinalPrice(folderName, bag)}
               </span>
             </p>
           </div>
@@ -228,7 +223,7 @@ const BagCard: React.FC<BagCardProps & {folderName: string }> = ({ bags, additio
           </div>
         </div>
       ))}
-         <AddToCartButton
+      <AddToCartButton
         systemCode={bags[0].systemCode}
         description={` ${bags[0].description} ${additionalDescription}`}
         list4={bags[0].list4}
