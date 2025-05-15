@@ -80,6 +80,15 @@ export default function SearchPage() {
     );
   };
 
+  const calculateDiscountedPrice = (price: number, totalItems: number, systemCode: string, totalEligibleItems: number) => {
+    const eligibleSystemCodes = [
+      "BFB3F53", "BFB3F54", "BFB3F45", "BFB3F40", "BFB3F57", "BFB3F50",
+      "BFB3F36", "BFB3F41", "BFB3F38", "BFB3F58", "BFB301", "BFB3F44",
+      "BFB3F56", "BFB3F52", "BFB3F51", "BFM301", "BFB3F39"
+    ];
+    return eligibleSystemCodes.includes(systemCode) && totalEligibleItems >= 100 ? price * 0.9 : price;
+  };
+
   if (!user) {
     return null; // Ensure user is loaded before rendering
   }
@@ -147,8 +156,24 @@ export default function SearchPage() {
                   </div>
                 </div>
                 <div className="flex justify-center mb-2">
-                  <p className="text-gray-700 text-lg"> Precio x100: <span className="font-bold"> {calculateFinalPrice(user.priceList, bag)}
-                  </span></p>
+                  <p className="text-gray-700 text-lg">
+                    Precio x100: 
+                    <span className="font-bold">
+                      {(() => {
+                        const finalPriceString = calculateFinalPrice(user.priceList, bag);
+                        const finalPrice = parseFloat(finalPriceString.replace('$', '')); // Extract numeric value
+                        const eligibleSystemCodes = [
+                          "BFB3F53", "BFB3F54", "BFB3F45", "BFB3F40", "BFB3F57", "BFB3F50",
+                          "BFB3F36", "BFB3F41", "BFB3F38", "BFB3F58", "BFB301", "BFB3F44",
+                          "BFB3F56", "BFB3F52", "BFB3F51", "BFM301", "BFB3F39"
+                        ];
+                        const totalEligibleItems = Object.entries(quantities)
+                          .filter(([code]) => eligibleSystemCodes.includes(code))
+                          .reduce((sum, [, qty]) => sum + qty, 0); // Calculate total quantity for eligible system codes
+                        return `$${Math.floor(calculateDiscountedPrice(finalPrice, quantities[bag.systemCode] || 0, bag.systemCode, totalEligibleItems))}`; // Round down
+                      })()}
+                    </span>
+                  </p>
                 </div>
                 <div className="px-4 py-1">
                   <div className="w-full bg-gray-200 p-1 rounded-lg">
