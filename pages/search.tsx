@@ -22,21 +22,54 @@ export default function SearchPage() {
         const response = await fetch(`/api/allPrices`);
         const data = await response.json();
 
-        const filterBags = (bags: Bag[]) => {
-          const queryWords = (query as string).toLowerCase().split(/\s+/);
+        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false) => {
+          const queryString = (query as string).toLowerCase();
+          const queryWords = queryString.split(/\s+/);
+
           return bags.filter((bag: Bag) => {
             const combinedText = `${bag.description} ${bag.additionalDescription || ''}`.toLowerCase();
+
+            // Si es fb3x10 y la búsqueda es "fb3 x10" o "fast food x10", mostrar todos los fb3x10
+            if (
+              isFb3x10 &&
+              (
+                queryString.includes("fb3 x10") ||
+                queryString.includes("fast food x10")
+              )
+            ) {
+              return true;
+            }
+
+            // Si es fb3x100 y la búsqueda es "fb3 x100" o "fast food x100", mostrar todos los fb3x100
+            if (
+              isFb3x100 &&
+              (
+                queryString.includes("fb3 x100") ||
+                queryString.includes("fast food x100")
+              )
+              
+            ) {
+              return true;
+            }
+
             return queryWords.every((word) => combinedText.includes(word));
           });
         };
+
+        const queryString = (query as string).toLowerCase();
 
         const filteredResults = [
           ...filterBags(data.kraft),
           ...filterBags(data.blancas),
           ...filterBags(data.pa),
           ...filterBags(data.boFae),
-          ...filterBags(data.fb3x100),
-          ...filterBags(data.fb3x10),
+          ...filterBags(data.fb3x100, false, true), // Pasa true para fb3x100
+          // Solo incluye fb3x10 si la búsqueda NO es "fb3 x100" o "fast food x100"
+          ...(
+            queryString.includes("fb3 x100") || queryString.includes("fast food x100")
+              ? []
+              : filterBags(data.fb3x10, true)
+          ),
         ];
 
         setResults(filteredResults);
