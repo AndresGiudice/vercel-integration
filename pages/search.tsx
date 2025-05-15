@@ -23,11 +23,17 @@ export default function SearchPage() {
         const data = await response.json();
 
         const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false) => {
-          const queryString = (query as string).toLowerCase();
+          // Función para quitar acentos
+          const normalize = (str: string) =>
+            str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+          const queryString = normalize((query as string).toLowerCase());
           const queryWords = queryString.split(/\s+/);
 
           return bags.filter((bag: Bag) => {
-            const combinedText = `${bag.description} ${bag.additionalDescription || ''}`.toLowerCase();
+            const combinedText = normalize(
+              `${bag.description} ${bag.additionalDescription || ''}`.toLowerCase()
+            );
 
             // Si es fb3x10 y la búsqueda es "fb3 x10" o "fast food x10", mostrar todos los fb3x10
             if (
@@ -130,8 +136,24 @@ export default function SearchPage() {
       "BFB3P117", "BFB3P124", "BFB3P123", "BFB3P134", "BFB3P160"
     ];
 
+    const eligibleSystemCodesFb3Fant = [
+      "BFB3F81",
+      "BFB3F79",
+      "BFB3F76",
+      "BFB3F82",
+      "BFB3F73",
+      "BFB3F78",
+      "BFB3F74",
+      "BFB3F75",
+      "BFB3F80",
+      "BFB3F77"
+    ];
+
     const totalEligibleItems = Object.values(cart)
-      .filter((item) => eligibleSystemCodesFb3.includes(item.code))
+      .filter((item) =>
+        eligibleSystemCodesFb3.includes(item.code) ||
+        eligibleSystemCodesFb3Fant.includes(item.code)
+      )
       .reduce((sum, item) => sum + item.quantity, 0);
 
     const totalEligibleItems10 = Object.values(cart)
@@ -139,7 +161,11 @@ export default function SearchPage() {
       .reduce((sum, item) => sum + item.quantity, 0);
 
     if (
-      (eligibleSystemCodesFb3.includes(systemCode) && totalEligibleItems >= 100) ||
+      (
+        (eligibleSystemCodesFb3.includes(systemCode) ||
+         eligibleSystemCodesFb3Fant.includes(systemCode)
+        ) && totalEligibleItems >= 100
+      ) ||
       (eligibleSystemCodesFb310.includes(systemCode) && totalEligibleItems10 >= 100)
     ) {
       return price * 0.9;
