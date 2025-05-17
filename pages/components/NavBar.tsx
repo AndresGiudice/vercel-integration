@@ -316,26 +316,26 @@ function Example() {
             </form>
           </div>
         )}
-        <div className="flex lg:flex-1 justify-center lg:justify-start">
-          <Link href="/" className="-m-1.5 p-1.5">
+        <div className="flex lg:flex-1 justify-center lg:justify-start items-center h-full">
+          <Link href="/" className="-m-1.5 p-1.5 flex items-center h-full">
             <span className="sr-only">Your Company</span>
             <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
           </Link>
         </div>
         {/* Mobile search icon and input */}
-        <div className="flex items-center justify-center flex-1 lg:hidden">
+        <div className="flex items-center justify-center flex-1 lg:hidden h-full">
           {!showMobileSearch ? (
             <>
               <a
                 href="#"
-                className="text-sm font-semibold leading-6 text-gray-900 mr-4"
+                className="text-sm font-semibold leading-6 text-gray-900 mr-4 flex items-center h-full"
                 onClick={toggleCartDetails}
               >
                 <i className="fas fa-shopping-cart cart-icon text-xl"></i>
                 {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
               </a>
               <button
-                className="ml-2 text-gray-700"
+                className="ml-2 text-gray-700 flex items-center h-full"
                 onClick={() => setShowMobileSearch(true)}
                 aria-label="Buscar"
               >
@@ -345,11 +345,11 @@ function Example() {
           ) : null}
         </div>
         {!showMobileSearch && (
-          <div className="flex lg:hidden">
+          <div className="flex lg:hidden items-center h-full">
             <button
               type="button"
               onClick={handleMobileMenuToggle}
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 h-full"
             >
               {mobileMenuOpen ? (
                 <XMarkIcon aria-hidden="true" className="h-6 w-6" />
@@ -359,7 +359,7 @@ function Example() {
             </button>
           </div>
         )}
-        <div className="hidden lg:flex lg:gap-x-12">
+        <div className="hidden lg:flex lg:gap-x-12 items-center h-full">
           {priceList && (
             <div className="relative">
               <button
@@ -426,7 +426,7 @@ function Example() {
             )}
           </div>
         </div>
-        <form onSubmit={handleSearch} className="hidden lg:flex items-center ml-16">
+        <form onSubmit={handleSearch} className="hidden lg:flex items-center ml-16 h-full">
           <input
             type="text"
             placeholder="Buscar productos..."
@@ -441,10 +441,10 @@ function Example() {
             Buscar
           </button>
         </form>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center h-full">
           <a
             href="#"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="text-sm font-semibold leading-6 text-gray-900 flex items-center h-full"
             onClick={toggleCartDetails}
           >
             <i className="fas fa-shopping-cart cart-icon text-2xl"></i>
@@ -452,7 +452,7 @@ function Example() {
           </a>
           <button
             onClick={toggleUserDetails}
-            className="ml-4 rounded-full text-gray-700 hover:text-gray-900"
+            className="ml-4 rounded-full text-gray-700 hover:text-gray-900 flex items-center h-full"
           >
             <UserIcon className="h-6 w-6" />
           </button>
