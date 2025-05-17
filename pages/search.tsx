@@ -23,7 +23,7 @@ export default function SearchPage() {
         const response = await fetch(`/api/allPrices`);
         const data = await response.json();
 
-        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false, isBaFdoKr = false) => {
+        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false, isBaFdoKr = false, isBaFdoSu = false) => {
           // Función para quitar acentos
           const normalize = (str: string) =>
             str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -61,6 +61,14 @@ export default function SearchPage() {
             return bags;
           }
 
+          // Si es baSu y la búsqueda contiene "fondo", mostrar todos los baSu
+          if (
+            isBaFdoSu &&
+            queryString.includes("fondo")
+          ) {
+            return bags;
+          }
+
           return bags.filter((bag: Bag) => {
             const combinedText = normalize(
               `${bag.description} ${bag.additionalDescription || ''}`.toLowerCase()
@@ -69,10 +77,33 @@ export default function SearchPage() {
           });
         };
 
+        // Ordenar baSu según el arreglo dado
+        const orderBaSu = ["BAS3", "BAS4", "BAS4A", "BAS5", "BAS6", "BAS6L", "BAS7"];
+        const orderedBaSu = [...data.baSu].sort((a, b) => {
+          const aIndex = orderBaSu.indexOf(a.systemCode);
+          const bIndex = orderBaSu.indexOf(b.systemCode);
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
+        // Ordenar baKr según el arreglo dado
+        const order = ["BAK2", "BAK3", "BAK4", "BAK4A", "BAK5", "BAK6", "BAK6L", "BAK7"];
+        const orderedBaKr = [...data.baKr].sort((a, b) => {
+          const aIndex = order.indexOf(a.systemCode);
+          const bIndex = order.indexOf(b.systemCode);
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
         const queryString = (query as string).toLowerCase();
 
         const filteredResults = [
-          ...filterBags(data.baKr, false, false, true), // Pasa true para isBaFdoKr
+          ...filterBags(orderedBaSu, false, false, true), // Ordenados según 'orderBaSu'
+          ...filterBags(orderedBaKr, false, false, true), // Ordenados según 'order'
           ...filterBags(data.kraft),
           ...filterBags(data.blancas),
           ...filterBags(data.pa),
@@ -227,15 +258,17 @@ export default function SearchPage() {
                             ? "/bolsas-blancas.jpg"
                             : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
                               ? "/bolsa-fondo-americano-kraft.png"
-                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                                ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                                  ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
-                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
-                                    ? `/Bolsa Fast Food ${bag.systemCode}.png`
-                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
-                                      ? "/bolsas-kraft.jpg"
-                                      : ""
+                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano sulfito"))
+                                ? "/bolsa-fondo-americano-sulfito.png"
+                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                                  ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                                    ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
+                                      ? `/Bolsa Fast Food ${bag.systemCode}.png`
+                                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
+                                        ? "/bolsas-kraft.jpg"
+                                        : ""
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
