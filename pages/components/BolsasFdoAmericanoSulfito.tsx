@@ -34,7 +34,7 @@ const BolsasFdoAmericanoSulfito = ({ isConnected }: InferGetServerSidePropsType<
     (async () => {
       const response = await fetch("/api/allPrices");
       const data = await response.json();
-      const order = ["BAS3", "BAS4", "BAS4A", "BAS5", "BAS6", "BAS6L", "BAS7" ]; 
+      const order = ["BAS3", "BAS4", "BAS4A", "BAS5", "BAS6", "BAS6L", "BAS7"];
       const processedData = data.baSu
         .map((bag: Bag) => ({
           ...bag,
@@ -64,7 +64,7 @@ const BolsasFdoAmericanoSulfito = ({ isConnected }: InferGetServerSidePropsType<
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`} style={{ marginTop: '4rem'}}>
+      <main className={`main ${inter.className}`} style={{ marginTop: '4rem' }}>
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start lg:space-x-4">
           {showCartDetails && totalItems > 0 && (
             <div className="lg:w-1/4 p-4 bg-white shadow-lg rounded-lg mt-4 lg:mt-0 order-1 lg:order-2">
@@ -116,8 +116,22 @@ const BolsasFdoAmericanoSulfito = ({ isConnected }: InferGetServerSidePropsType<
                               </thead>
                               <tbody>
                                 <tr className="border-b">
-                                  <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                    {bag.description}
+                                  <td className="px-2 py-2 whitespace-normal break-words text-base font-medium text-gray-900 text-center align-middle">
+                                    {
+                                      (() => {
+                                        const match = bag.description.match(/(.*)(x\s*1000\s*u.*)/i);
+                                        if (match) {
+                                          return (
+                                            <>
+                                              <span>{match[1].trim()}</span>
+                                              <span className="inline lg:hidden"><br /></span>
+                                              <span>{match[2].trim()}</span>
+                                            </>
+                                          );
+                                        }
+                                        return bag.description;
+                                      })()
+                                    }
                                   </td>
                                 </tr>
                               </tbody>
@@ -128,10 +142,10 @@ const BolsasFdoAmericanoSulfito = ({ isConnected }: InferGetServerSidePropsType<
                     </div>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x1000: 
-                    <span className="font-bold">
+                    <p className="text-gray-700 text-lg"> Precio x1000:
+                      <span className="font-bold">
                         {calculateFinalPrice(folderName, bag)}
-                      </span> 
+                      </span>
                     </p>
                   </div>
                   <QuantityControls
@@ -150,7 +164,7 @@ const BolsasFdoAmericanoSulfito = ({ isConnected }: InferGetServerSidePropsType<
         </div>
       </main>
       <footer className="text-center bg-[#efefef] py-4">
-          <p>{folderName.toUpperCase()}</p>
+        <p>{folderName.toUpperCase()}</p>
       </footer>
     </div>
   );
