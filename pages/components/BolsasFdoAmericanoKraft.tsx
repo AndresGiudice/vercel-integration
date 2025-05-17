@@ -117,8 +117,22 @@ const BolsasFdoAmericanoKraft = ({ isConnected }: InferGetServerSidePropsType<ty
                               </thead>
                               <tbody>
                                 <tr className="border-b">
-                                  <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                    {bag.description}
+                                  <td className="px-2 py-2 whitespace-normal break-words text-base font-medium text-gray-900 text-center align-middle">
+                                    {
+                                      (() => {
+                                        const match = bag.description.match(/(.*)(x\s*1000\s*u.*)/i);
+                                        if (match) {
+                                          return (
+                                            <>
+                                              <span>{match[1].trim()}</span>
+                                              <span className="inline lg:hidden"><br /></span>
+                                              <span>{match[2].trim()}</span>
+                                            </>
+                                          );
+                                        }
+                                        return bag.description;
+                                      })()
+                                    }
                                   </td>
                                 </tr>
                               </tbody>
