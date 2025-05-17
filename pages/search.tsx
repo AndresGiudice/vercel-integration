@@ -68,6 +68,7 @@ export default function SearchPage() {
         const queryString = (query as string).toLowerCase();
 
         const filteredResults = [
+          ...filterBags(data.baKr),
           ...filterBags(data.kraft),
           ...filterBags(data.blancas),
           ...filterBags(data.pa),
@@ -83,7 +84,7 @@ export default function SearchPage() {
           ...filterBags(
             data.fm.map((bag: Bag) => ({
               ...bag,
-          
+
               isFM: true, // Marca las bolsas FM
             }))
           ),
@@ -220,15 +221,17 @@ export default function SearchPage() {
                           ? `/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`
                           : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
                             ? "/bolsas-blancas.jpg"
-                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                              ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                                ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
-                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
-                                  ? `/Bolsa Fast Food ${bag.systemCode}.png`
-                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
-                                    ? "/bolsas-kraft.jpg"
-                                    : ""
+                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
+                              ? "/bolsa-fondo-americano-kraft.png"
+                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                                ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                                  ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
+                                    ? `/Bolsa Fast Food ${bag.systemCode}.png`
+                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
+                                      ? "/bolsas-kraft.jpg"
+                                      : ""
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
