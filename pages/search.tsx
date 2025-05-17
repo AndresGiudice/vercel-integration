@@ -7,6 +7,7 @@ import { calculateFinalPrice } from '../utils/calculateFinalPrice';
 import { Bag } from '../utils/types';
 import { useUser } from '../context/UserContext'; // Import useUser
 import { handleAddToCartUtil } from "@/utils/addToCartUtil";
+import '../styles/styles.css';
 
 export default function SearchPage() {
   const router = useRouter();
