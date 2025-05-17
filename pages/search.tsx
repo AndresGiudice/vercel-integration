@@ -251,7 +251,7 @@ export default function SearchPage() {
                             </thead>
                             <tbody>
                               <tr className="border-b">
-                                <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
+                                <td className="px-2 py-2 whitespace-normal break-words text-base font-medium text-gray-900 text-center align-middle">
                                   {bag.description.replace(/\bBolsa(s)?\b\s*/i, '')}
                                 </td>
                               </tr>
