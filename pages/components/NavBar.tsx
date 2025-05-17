@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Dialog, DialogPanel } from '@headlessui/react';
-import { Bars3Icon, ChevronDownIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'; // Add UserIcon import
+import { Bars3Icon, ChevronDownIcon, XMarkIcon, UserIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'; // Add MagnifyingGlassIcon import
 import { useCart } from '../../context/CartContext';
 import { useUser } from '../../context/UserContext'; // Assuming you have a UserContext
 import axios from 'axios';
@@ -129,6 +129,7 @@ function Example() {
   const [showUserDetails, setShowUserDetails] = useState(false); // Add this line
   const [isPlacingOrder, setIsPlacingOrder] = useState(false); // Add this line
   const [searchQuery, setSearchQuery] = useState('');
+  const [showMobileSearch, setShowMobileSearch] = useState(false); // Nuevo estado para mostrar el buscador en mobile
   const router = useRouter();
 
   const handleLogout = () => {
@@ -285,35 +286,79 @@ function Example() {
   return (
     <header className="fixed top-0 left-0 right-0 bg-[#A6CE39] z-50">
       <nav aria-label="Global" className="relative mx-auto flex items-center justify-between h-14 lg:h-16 p-2 lg:px-8 z-50">
+        {/* Mobile search overlay */}
+        {showMobileSearch && (
+          <div className="fixed top-0 left-0 right-0 h-14 bg-[#A6CE39] z-[100] flex items-center px-2 w-full">
+            <form onSubmit={handleSearch} className="flex items-center w-full">
+              <input
+                type="text"
+                placeholder="Buscar productos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="px-2 py-1 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 w-full"
+                autoFocus
+              />
+              <button
+                type="submit"
+                className="px-3 py-1 bg-green-500 text-white rounded-r-lg hover:bg-green-600"
+                aria-label="Buscar"
+              >
+                <MagnifyingGlassIcon className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                className="ml-2 text-gray-700"
+                onClick={() => setShowMobileSearch(false)}
+                aria-label="Cerrar búsqueda"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </form>
+          </div>
+        )}
         <div className="flex lg:flex-1 justify-center lg:justify-start">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img alt="logo" src="/evacor-logo.png" className="h-6 w-auto lg:h-10" />
           </Link>
         </div>
-        <div className="flex  items-center justify-center flex-1 lg:hidden">
-          <a
-            href="#"
-            className="text-sm font-semibold leading-6 text-gray-900 mr-10 "
-            onClick={toggleCartDetails}
-          >
-            <i className="fas fa-shopping-cart cart-icon text-xl"></i>
-            {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
-          </a>
+        {/* Mobile search icon and input */}
+        <div className="flex items-center justify-center flex-1 lg:hidden">
+          {!showMobileSearch ? (
+            <>
+              <a
+                href="#"
+                className="text-sm font-semibold leading-6 text-gray-900 mr-4"
+                onClick={toggleCartDetails}
+              >
+                <i className="fas fa-shopping-cart cart-icon text-xl"></i>
+                {totalItems > 0 && <span className="ml-2">{totalItems}</span>}
+              </a>
+              <button
+                className="ml-2 text-gray-700"
+                onClick={() => setShowMobileSearch(true)}
+                aria-label="Buscar"
+              >
+                <MagnifyingGlassIcon className="h-6 w-6" />
+              </button>
+            </>
+          ) : null}
         </div>
-        <div className="flex lg:hidden">
-          <button
-            type="button"
-            onClick={handleMobileMenuToggle}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-          >
-            {mobileMenuOpen ? (
-              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
-            ) : (
-              <Bars3Icon aria-hidden="true" className="h-6 w-6" />
-            )}
-          </button>
-        </div>
+        {!showMobileSearch && (
+          <div className="flex lg:hidden">
+            <button
+              type="button"
+              onClick={handleMobileMenuToggle}
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            >
+              {mobileMenuOpen ? (
+                <XMarkIcon aria-hidden="true" className="h-6 w-6" />
+              ) : (
+                <Bars3Icon aria-hidden="true" className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+        )}
         <div className="hidden lg:flex lg:gap-x-12">
           {priceList && (
             <div className="relative">
