@@ -99,17 +99,37 @@ export default function SearchPage() {
           return aIndex - bIndex;
         });
 
+        const orderBoObr = [
+          "multicírculos rojo", "multicírculos naranja", "multicírculos verde", "multicírculos negro",
+          "tejido rojo", "tejido naranja", "tejido verde", "tejido negro",
+          "zigzag rojo", "zigzag naranja", "zigzag verde", "zigzag negro",
+          "delivery negro", "delivery gris", "delivery marrón",
+          "Pintita negro", "Pintita Naranja", "Pintita Verde", "Pintita Rojo",
+          "regalos negro", "regalos naranja", "regalos verde", "regalos rojo",
+          "animalitos naranja", "animalitos verde", "animalitos rojo",
+          "Navidad Azul", "Navidad Verde", "Navidad Rojo"
+        ];
+
+        const sortedBoObr = [...filterBags(data.boObr)].sort((a, b) => {
+          const aIndex = orderBoObr.indexOf(a.additionalDescription || "");
+          const bIndex = orderBoObr.indexOf(b.additionalDescription || "");
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
         const queryString = (query as string).toLowerCase();
 
         const filteredResults = [
-          ...filterBags(orderedBaSu, false, false, true), // Ordenados según 'orderBaSu'
-          ...filterBags(orderedBaKr, false, false, true), // Ordenados según 'order'
+          ...sortedBoObr.map((bag: Bag) => ({ ...bag, source: 'boObr' })), // <--- aquí
+          ...filterBags(orderedBaSu, false, false, true),
+          ...filterBags(orderedBaKr, false, false, true),
           ...filterBags(data.kraft),
           ...filterBags(data.blancas),
           ...filterBags(data.pa),
           ...filterBags(data.boFae),
-          ...filterBags(data.fb3x100, false, true), // Pasa true para fb3x100
-          // Solo incluye fb3x10 si la búsqueda NO es "fb3 x100" o "fast food x100"
+          ...filterBags(data.fb3x100, false, true),
           ...(
             queryString.includes("fb3 x100") || queryString.includes("fast food x100")
               ? []
@@ -119,7 +139,6 @@ export default function SearchPage() {
           ...filterBags(
             data.fm.map((bag: Bag) => ({
               ...bag,
-
               isFM: true, // Marca las bolsas FM
             }))
           ),
@@ -256,19 +275,21 @@ export default function SearchPage() {
                           ? `/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`
                           : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
                             ? "/bolsas-blancas.jpg"
-                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
-                              ? "/bolsa-fondo-americano-kraft.png"
-                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano sulfito"))
-                                ? "/bolsa-fondo-americano-sulfito.png"
-                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                                  ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                                    ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
-                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
-                                      ? `/Bolsa Fast Food ${bag.systemCode}.png`
-                                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
-                                        ? "/bolsas-kraft.jpg"
-                                        : ""
+                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina"))
+                              ? `/Bobina Obra ${bag.additionalDescription}.png`
+                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
+                                ? "/bolsa-fondo-americano-kraft.png"
+                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano sulfito"))
+                                  ? "/bolsa-fondo-americano-sulfito.png"
+                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                                    ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                                      ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
+                                        ? `/Bolsa Fast Food ${bag.systemCode}.png`
+                                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
+                                          ? "/bolsas-kraft.jpg"
+                                          : ""
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
@@ -293,6 +314,8 @@ export default function SearchPage() {
                               <tr className="border-b">
                                 <td className="px-2 py-2 whitespace-normal break-words text-base font-medium text-gray-900 text-center align-middle">
                                   {bag.description.replace(/\bBolsa(s)?\b\s*/i, '')}
+                                  {bag.source === 'boObr' && <br />}
+                                  {bag.source === 'boObr' && bag.additionalDescription ? ` ${bag.additionalDescription}` : ''}
                                 </td>
                               </tr>
                             </tbody>

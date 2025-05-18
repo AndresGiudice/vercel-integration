@@ -5,6 +5,7 @@ export type ConnectionStatus = {
   
   // Tipo para las bolsas
   export type Bag = {
+    source: string;
     isFM: any;
     additionalDescription: string;
     description: string;
