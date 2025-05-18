@@ -48,10 +48,14 @@ function HomePage() {
   return (
     <div>
       <NavBar />
-      <main className={`main ${inter.className}`}>
-        <h1 className="text-center text-4xl font-bold text-black">
-          Bienvenido a nuestro <br /> E-Commerce
-        </h1>
+      <main
+        className={`main min-h-[100vh] ${inter.className}`}
+      >
+        <div className="flex justify-center items-center w-full">
+          <h1 className="text-center text-4xl font-bold text-black">
+            Bienvenido a nuestro <br /> E-Commerce
+          </h1>
+        </div>
       </main>
     </div>
   );
