@@ -23,7 +23,7 @@ export default function SearchPage() {
         const response = await fetch(`/api/allPrices`);
         const data = await response.json();
 
-        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false, isBaFdoKr = false, isBaFdoSu = false, isBoObr = false) => {
+        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false, isBaFdoKr = false, isBaFdoSu = false, isBoObr = false, isBoSu = false) => {
           // Función para quitar acentos
           const normalize = (str: string) =>
             str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -73,6 +73,14 @@ export default function SearchPage() {
           if (
             isBoObr &&
             (queryString.includes("obra") || queryString.includes("bobinas"))
+          ) {
+            return bags;
+          }
+
+          // Si es boSu y la búsqueda contiene "bobinas", mostrar todos los boSu
+          if (
+            isBoSu &&
+            queryString.includes("bobinas sulfito")
           ) {
             return bags;
           }
@@ -148,9 +156,12 @@ export default function SearchPage() {
 
         const queryString = (query as string).toLowerCase();
 
+        // Si la búsqueda es "bobinas sulfito", no mostrar resultados de data.boObr
+        const showBoObr = !queryString.includes("bobinas sulfito");
+
         const filteredResults = [
-          ...sortedBoObr.map((bag: Bag) => ({ ...bag, source: 'boObr' })), // <--- aquí
-          ...filterBags(orderedBoSu).map((bag: Bag) => ({
+          ...(showBoObr ? sortedBoObr.map((bag: Bag) => ({ ...bag, source: 'boObr' })) : []),
+          ...filterBags(orderedBoSu, false, false, false, false, false, true).map((bag: Bag) => ({
             ...bag,
             description: bag.description.replace(/x 140 mts/gi, '').replace(/Fantasía/gi, '').trim(),
             source: 'boSu'
