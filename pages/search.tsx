@@ -88,6 +88,24 @@ export default function SearchPage() {
           return aIndex - bIndex;
         });
 
+        // Ordenar boSu según el arreglo dado por el usuario
+        const orderBoSu = [
+          "BSF370201", "BSF600201", "BSF370202", "BSF600202", "BSF370203", "BSF600203",
+          "BSF370201", "BSF600201", "BSF370102", "BSF600102", "BSF370103", "BSF600103",
+          "BSF370401", "BSF600401", "BSF370402", "BSF600402", "BSF370403", "BSF600403",
+          "BSF370404", "BSF600404", "BSF370604", "BSF600604", "BSF370601", "BSF600601",
+          "BSF370603", "BSF600603", "BSF370602", "BSF600602", "BSF370704", "BSF600704",
+          "BSF370701", "BSF600701", "BSF370703", "BSF600703", "BSF370702", "BSF600702"
+        ];
+        const orderedBoSu = [...data.boSu].sort((a, b) => {
+          const aIndex = orderBoSu.indexOf(a.systemCode);
+          const bIndex = orderBoSu.indexOf(b.systemCode);
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
         // Ordenar baKr según el arreglo dado
         const order = ["BAK2", "BAK3", "BAK4", "BAK4A", "BAK5", "BAK6", "BAK6L", "BAK7"];
         const orderedBaKr = [...data.baKr].sort((a, b) => {
@@ -122,8 +140,19 @@ export default function SearchPage() {
 
         const filteredResults = [
           ...sortedBoObr.map((bag: Bag) => ({ ...bag, source: 'boObr' })), // <--- aquí
-          ...filterBags(orderedBaSu, false, false, true),
-          ...filterBags(orderedBaKr, false, false, true),
+          ...filterBags(orderedBoSu).map((bag: Bag) => ({
+            ...bag,
+            description: bag.description.replace(/x 140 mts/gi, '').replace(/Fantasía/gi, '').trim(),
+            source: 'boSu'
+          })),
+          ...filterBags(orderedBaSu, false, false, true).map((bag: Bag) => ({
+            ...bag,
+            source: 'baSu'
+          })),
+          ...filterBags(orderedBaKr, false, false, true).map((bag: Bag) => ({
+            ...bag,
+            source: 'baKr'
+          })),
           ...filterBags(data.kraft),
           ...filterBags(data.blancas),
           ...filterBags(data.pa),
@@ -274,21 +303,23 @@ export default function SearchPage() {
                           ? `/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`
                           : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
                             ? "/bolsas-blancas.jpg"
-                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina"))
-                              ? `/Bobina Obra ${bag.additionalDescription}.png`
-                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
-                                ? "/bolsa-fondo-americano-kraft.png"
-                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano sulfito"))
-                                  ? "/bolsa-fondo-americano-sulfito.png"
-                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                                    ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                                      ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
-                                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
-                                        ? `/Bolsa Fast Food ${bag.systemCode}.png`
-                                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
-                                          ? "/bolsas-kraft.jpg"
-                                          : ""
+                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina sulfito"))
+                              ? `/Bobina Sulfito ${bag.additionalDescription}.png`
+                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina"))
+                                ? `/Bobina Obra ${bag.additionalDescription}.png`
+                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
+                                  ? "/bolsa-fondo-americano-kraft.png"
+                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano sulfito"))
+                                    ? "/bolsa-fondo-americano-sulfito.png"
+                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                                      ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                                        ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
+                                          ? `/Bolsa Fast Food ${bag.systemCode}.png`
+                                          : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
+                                            ? "/bolsas-kraft.jpg"
+                                            : ""
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
@@ -312,7 +343,25 @@ export default function SearchPage() {
                             <tbody>
                               <tr className="border-b">
                                 <td className="px-2 py-2 whitespace-normal break-words text-base font-medium text-gray-900 text-center align-middle">
-                                  {bag.description.replace(/\bBolsa(s)?\b\s*/i, '')}
+                                  {
+                                    bag.source === 'boSu'
+                                      ? (() => {
+                                        // Busca "cm" y agrega un salto de línea después de la primera ocurrencia
+                                        const desc = `${bag.description}${bag.additionalDescription ? ' ' + bag.additionalDescription : ''}`;
+                                        const cmIndex = desc.indexOf('cm');
+                                        if (cmIndex !== -1) {
+                                          return (
+                                            <>
+                                              {desc.substring(0, cmIndex + 2)}
+                                              <br />
+                                              {desc.substring(cmIndex + 2).trim()}
+                                            </>
+                                          );
+                                        }
+                                        return desc;
+                                      })()
+                                      : bag.description.replace(/\bBolsa(s)?\b\s*/i, '')
+                                  }
                                   {bag.source === 'boObr' && <br />}
                                   {bag.source === 'boObr' && bag.additionalDescription ? ` ${bag.additionalDescription}` : ''}
                                 </td>
@@ -326,7 +375,15 @@ export default function SearchPage() {
                 </div>
                 <div className="flex justify-center mb-2">
                   <p className="text-gray-700 text-lg">
-                    {bag.isFM ? "Precio x1000:" : "Precio x100:"}
+                    {
+                      bag.isFM
+                        ? "Precio x1000: "
+                        : bag.source === 'boObr' || bag.source === 'boSu'
+                          ? "Precio x und. :"
+                          : bag.source === 'baSu' || bag.source === 'baKr'
+                            ? "Precio x1000: "
+                            : "Precio x100: "
+                    }
                     <span className="font-bold">
                       {(() => {
                         const finalPriceString = calculateFinalPrice(user.priceList, bag);
