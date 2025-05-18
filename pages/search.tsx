@@ -100,19 +100,18 @@ export default function SearchPage() {
         });
 
         const orderBoObr = [
-          "multicírculos rojo", "multicírculos naranja", "multicírculos verde", "multicírculos negro",
-          "tejido rojo", "tejido naranja", "tejido verde", "tejido negro",
-          "zigzag rojo", "zigzag naranja", "zigzag verde", "zigzag negro",
-          "delivery negro", "delivery gris", "delivery marrón",
-          "Pintita negro", "Pintita Naranja", "Pintita Verde", "Pintita Rojo",
-          "regalos negro", "regalos naranja", "regalos verde", "regalos rojo",
-          "animalitos naranja", "animalitos verde", "animalitos rojo",
-          "Navidad Azul", "Navidad Verde", "Navidad Rojo"
+          "BLD4001201", "BLD6001201", "BLD4001202", "BLD6001202", "BLD4001203", "BLD6001203", "BLD4001204", "BLD6001204",
+          "BLD4001401", "BLD6001401", "BLD4001402", "BLD6001402", "BLD4001403", "BLD6001403", "BLD4001404", "BLD6001404",
+          "BLD4001301", "BLD6001301", "BLD4001302", "BLD6001302", "BLD4001303", "BLD6001303", "BLD4001304", "BLD6001304",
+          "BLD4001103", "BLD6001103", "BLD4001104", "BLD6001104", "BLD4001102", "BLD6001102", "BLD4043", "BLD6043",
+          "BLD4042", "BLD6042", "BLD4040", "BLD6040", "BLD4041", "BLD6041", "BLD4001501", "BLD6001501", "BLD4001502",
+          "BLD6001502", "BLD4001503", "BLD6001503", "BLD4001504", "BLD6001504", "BLD4000407", "BLD6000407", "BLD4000405",
+          "BLD6000405", "BLD4000406", "BLD6000406", "BLD4001601", "BLD6001601", "BLD4001602", "BLD6001602", "BLD4001603", "BLD6001603"
         ];
 
         const sortedBoObr = [...filterBags(data.boObr)].sort((a, b) => {
-          const aIndex = orderBoObr.indexOf(a.additionalDescription || "");
-          const bIndex = orderBoObr.indexOf(b.additionalDescription || "");
+          const aIndex = orderBoObr.indexOf(a.systemCode);
+          const bIndex = orderBoObr.indexOf(b.systemCode);
           if (aIndex === -1 && bIndex === -1) return 0;
           if (aIndex === -1) return 1;
           if (bIndex === -1) return -1;
