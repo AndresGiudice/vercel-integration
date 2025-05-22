@@ -23,7 +23,7 @@ export default function SearchPage() {
         const response = await fetch(`/api/allPrices`);
         const data = await response.json();
 
-        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false, isBaFdoKr = false, isBaFdoSu = false, isBoObr = false, isBoSu = false) => {
+        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false, isBaFdoKr = false, isBaFdoSu = false, isBoObr = false, isBoSu = false, isBoKr = false) => {
           // Función para quitar acentos
           const normalize = (str: string) =>
             str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -81,6 +81,14 @@ export default function SearchPage() {
           if (
             isBoSu &&
             queryString.includes("bobinas sulfito")
+          ) {
+            return bags;
+          }
+
+          // Si es boKr y la búsqueda contiene "bobinas kraft", mostrar todos los boKr
+          if (
+            isBoKr &&
+            queryString.includes("bobinas kraft")
           ) {
             return bags;
           }
@@ -178,8 +186,8 @@ export default function SearchPage() {
 
         const queryString = (query as string).toLowerCase();
 
-        // Si la búsqueda es "bobinas sulfito", no mostrar resultados de data.boObr
-        const showBoObr = !queryString.includes("bobinas sulfito");
+        // Si la búsqueda es "bobinas sulfito" o "bobinas kraft", no mostrar resultados de data.boObr
+        const showBoObr = !queryString.includes("bobinas sulfito") && !queryString.includes("bobinas kraft");
 
         const filteredResults = [
           ...(showBoObr ? sortedBoObr.map((bag: Bag) => ({ ...bag, source: 'boObr' })) : []),
@@ -196,7 +204,7 @@ export default function SearchPage() {
             ...bag,
             source: 'baKr'
           })),
-          ...filterBags(orderedBoKr).map((bag: Bag) => ({
+          ...filterBags(orderedBoKr, false, false, false, false, false, false, true).map((bag: Bag) => ({
             ...bag,
             source: 'boKr'
           })),
@@ -350,7 +358,14 @@ export default function SearchPage() {
                           ? `/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`
                           : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
                             ? "/bolsas-blancas.jpg"
-                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina kraft"))
+                            : results.some(
+                              (b: Bag) =>
+                                b.systemCode === bag.systemCode &&
+                                (
+                                  b.description.toLowerCase().includes("bobina kraft") ||
+                                  b.description.toLowerCase().includes("bobina fantasia marron")
+                                )
+                            )
                               ? `/Bobina Kraft ${bag.additionalDescription}.png`
                               : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina sulfito"))
                                 ? `/Bobina Sulfito ${bag.additionalDescription}.png`
