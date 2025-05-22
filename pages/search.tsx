@@ -112,12 +112,34 @@ export default function SearchPage() {
           "BSF370401", "BSF600401", "BSF370402", "BSF600402", "BSF370403", "BSF600403",
           "BSF370404", "BSF600404", "BSF370604", "BSF600604", "BSF370601", "BSF600601",
           "BSF370603", "BSF600603", "BSF370602", "BSF600602", "BSF370704", "BSF600704",
-          "BSF370701", "BSF600701", "BSF370703", "BSF600703", "BSF370702", "BSF600702", 
+          "BSF370701", "BSF600701", "BSF370703", "BSF600703", "BSF370702", "BSF600702",
           "BSF370501", "BSF600501"
         ];
         const orderedBoSu = [...data.boSu].sort((a, b) => {
           const aIndex = orderBoSu.indexOf(a.systemCode);
           const bIndex = orderBoSu.indexOf(b.systemCode);
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
+        // Ordenar boKr según el arreglo dado por el usuario
+        const orderBoKr = [
+          "BKF370101", "BKF600101", "BKF370102", "BKF600102", "BKF370103", "BKF600103",
+          "BKF370201", "BKF600201", "BKF370202", "BKF600202", "BKF370203", "BKF600203",
+          "BKF370701", "BKF600701", "BKF370702", "BKF600702", "BKF370703", "BKF600703",
+          "BKF370704", "BKF600704", "BKF370501", "BKF600501", "BKF370502", "BKF600502",
+          "BLD4013N", "BLD6017N", "BLD4039L", "BLD6047L", "BKF370401", "BKF600401",
+          "BKF370402", "BKF600402", "BLD4039B", "BLD6047B", "BLD4039M", "BLD6047M",
+          "BKF370601", "BKF600601", "BKF370603", "BKF600603", "BKF370602", "BKF600602"
+        ];
+
+
+
+        const orderedBoKr = [...data.boKr].sort((a, b) => {
+          const aIndex = orderBoKr.indexOf(a.systemCode);
+          const bIndex = orderBoKr.indexOf(b.systemCode);
           if (aIndex === -1 && bIndex === -1) return 0;
           if (aIndex === -1) return 1;
           if (bIndex === -1) return -1;
@@ -135,15 +157,15 @@ export default function SearchPage() {
           return aIndex - bIndex;
         });
 
-       const orderBoObr = [
-  "BLD4001201", "BLD6001201", "BLD4001203", "BLD6001203", "BLD4001202", "BLD6001202", "BLD4001204", "BLD6001204",
-  "BLD4001401", "BLD6001401", "BLD4001403", "BLD6001403", "BLD4001402", "BLD6001402", "BLD4001404", "BLD6001404",
-  "BLD4001301", "BLD6001301", "BLD4001303", "BLD6001303", "BLD4001302", "BLD6001302", "BLD4001304", "BLD6001304",
-  "BLD4001102", "BLD6001102", "BLD4001103", "BLD6001103", "BLD4001104", "BLD6001104", "BLD4040", "BLD6050",
-  "BLD4042", "BLD6048", "BLD4041", "BLD6049", "BLD4043", "BLD6051", "BLD4001501", "BLD6001501", "BLD4001503",
-  "BLD6001503", "BLD4001502", "BLD6001502", "BLD4001504", "BLD6001504", "BLD4000405", "BLD6000405", "BLD4000406",
-  "BLD6000406", "BLD4000407", "BLD6000407"
-];
+        const orderBoObr = [
+          "BLD4001201", "BLD6001201", "BLD4001203", "BLD6001203", "BLD4001202", "BLD6001202", "BLD4001204", "BLD6001204",
+          "BLD4001401", "BLD6001401", "BLD4001403", "BLD6001403", "BLD4001402", "BLD6001402", "BLD4001404", "BLD6001404",
+          "BLD4001301", "BLD6001301", "BLD4001303", "BLD6001303", "BLD4001302", "BLD6001302", "BLD4001304", "BLD6001304",
+          "BLD4001102", "BLD6001102", "BLD4001103", "BLD6001103", "BLD4001104", "BLD6001104", "BLD4040", "BLD6050",
+          "BLD4042", "BLD6048", "BLD4041", "BLD6049", "BLD4043", "BLD6051", "BLD4001501", "BLD6001501", "BLD4001503",
+          "BLD6001503", "BLD4001502", "BLD6001502", "BLD4001504", "BLD6001504", "BLD4000405", "BLD6000405", "BLD4000406",
+          "BLD6000406", "BLD4000407", "BLD6000407"
+        ];
 
         const sortedBoObr = [...filterBags(data.boObr, false, false, false, false, true)].sort((a, b) => {
           const aIndex = orderBoObr.indexOf(a.systemCode);
@@ -173,6 +195,10 @@ export default function SearchPage() {
           ...filterBags(orderedBaKr, false, false, true).map((bag: Bag) => ({
             ...bag,
             source: 'baKr'
+          })),
+          ...filterBags(orderedBoKr).map((bag: Bag) => ({
+            ...bag,
+            source: 'boKr'
           })),
           ...filterBags(data.kraft),
           ...filterBags(data.blancas),
@@ -324,23 +350,25 @@ export default function SearchPage() {
                           ? `/Bolsa Fast Food FB3 Fantasia x 100 u. ${bag.additionalDescription}.png`
                           : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("blanca"))
                             ? "/bolsas-blancas.jpg"
-                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina sulfito"))
-                              ? `/Bobina Sulfito ${bag.additionalDescription}.png`
-                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina"))
-                                ? `/Bobina Obra ${bag.additionalDescription}.png`
-                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
-                                  ? "/bolsa-fondo-americano-kraft.png"
-                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano sulfito"))
-                                    ? "/bolsa-fondo-americano-sulfito.png"
-                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
-                                      ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
-                                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
-                                        ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
-                                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
-                                          ? `/Bolsa Fast Food ${bag.systemCode}.png`
-                                          : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
-                                            ? "/bolsas-kraft.jpg"
-                                            : ""
+                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina kraft"))
+                              ? `/Bobina Kraft ${bag.additionalDescription}.png`
+                              : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina sulfito"))
+                                ? `/Bobina Sulfito ${bag.additionalDescription}.png`
+                                : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("bobina"))
+                                  ? `/Bobina Obra ${bag.additionalDescription}.png`
+                                  : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano kraft"))
+                                    ? "/bolsa-fondo-americano-kraft.png"
+                                    : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fdo americano sulfito"))
+                                      ? "/bolsa-fondo-americano-sulfito.png"
+                                      : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
+                                        ? `/Bolsa de Color ${bag.additionalDescription}.jpg`
+                                        : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fantasia"))
+                                          ? `/Bolsa Fantasia ${bag.additionalDescription}.png`
+                                          : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("fast food fm"))
+                                            ? `/Bolsa Fast Food ${bag.systemCode}.png`
+                                            : results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("kraft"))
+                                              ? "/bolsas-kraft.jpg"
+                                              : ""
                   }
                   alt={
                     results.some((b: Bag) => b.systemCode === bag.systemCode && b.description.toLowerCase().includes("pa"))
@@ -381,7 +409,19 @@ export default function SearchPage() {
                                         }
                                         return desc;
                                       })()
-                                      : bag.description.replace(/\bBolsa(s)?\b\s*/i, '')
+                                      : bag.source === 'boKr'
+                                        ? (
+                                          <>
+                                            {bag.description.replace(/x 140 mts/gi, '').trim()}
+                                            {bag.additionalDescription && (
+                                              <>
+                                                <br />
+                                                {bag.additionalDescription.replace(/x 140 mts/gi, '').trim()}
+                                              </>
+                                            )}
+                                          </>
+                                        )
+                                        : bag.description.replace(/\bBolsa(s)?\b\s*/i, '')
                                   }
                                   {bag.source === 'boObr' && <br />}
                                   {bag.source === 'boObr' && bag.additionalDescription ? ` ${bag.additionalDescription}` : ''}
@@ -399,7 +439,7 @@ export default function SearchPage() {
                     {
                       bag.isFM
                         ? "Precio x1000: "
-                        : bag.source === 'boObr' || bag.source === 'boSu'
+                        : bag.source === 'boObr' || bag.source === 'boSu' || bag.source === 'boKr'
                           ? "Precio x und. :"
                           : bag.source === 'baSu' || bag.source === 'baKr'
                             ? "Precio x1000: "
