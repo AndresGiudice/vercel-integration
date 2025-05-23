@@ -15,6 +15,7 @@ import { useQuantityHandler } from "@/hooks/useQuantityHandler";
 import { handleAddToCartUtil } from "@/utils/addToCartUtil";
 import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
 import QuantityControls from "@/pages/components/QuantityControls";
+import Loading from "@/pages/components/Loading"; // importar Loading
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,6 +27,7 @@ export const getServerSideProps = getServerSidePropsUtil;
 const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   // Estados y variables
   const [bags, setBags] = useState<Bag[]>([]);
+  const [loading, setLoading] = useState(true); // estado loading
   // useQuantityHandler es un hook personalizado que maneja la lógica de cantidades
   const { quantities, setQuantities, handleIncrement, handleDecrement, handleQuantityChange } = useQuantityHandler();
   const { addToCart, cart, clearCart } = useCart();
@@ -36,6 +38,7 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
  // Efecto para cargar datos de las bolsas
   useEffect(() => {
     (async () => {
+      setLoading(true); // inicia loading
       const response = await fetch("/api/allPrices");
       const data = await response.json();
       const order = ["B00B0", "BG0B0", "B1AB0", "BG1B0", "BG1BG", "BG2B0", "BG3B0", "BG4B0", "BG5B0", "BG7B0", "BBB00", "BG8B0", "B11B0"];
@@ -51,6 +54,7 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
         return acc;
       }, {});
       setQuantities(initialQuantities);
+      setLoading(false); // termina loading
     })();
   }, []);
 
@@ -109,12 +113,15 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
           )}
           {/* Listado de bolsas */}
           <div className="lg:flex-1 order-2 lg:order-1">
-            <div className="flex flex-wrap justify-evenly">
-              {bags.map((bag, index) => (
-                <div
-                  className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
-                  key={index}
-                >
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className="flex flex-wrap justify-evenly">
+                {bags.map((bag, index) => (
+                  <div
+                    className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
+                    key={index}
+                  >
                    {/* Imagen y descripción */}
                   <img className="w-72 h-36 object-contain" src="/bolsas-blancas.jpg" alt="Bolsa con Manija Blanca" />
                   <div className="container mx-auto p-2">
@@ -164,8 +171,9 @@ const  BolsasConManijaBlancas = ({ isConnected }: InferGetServerSidePropsType<ty
                     handleAddToCart={handleAddToCart}
                   />
                 </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

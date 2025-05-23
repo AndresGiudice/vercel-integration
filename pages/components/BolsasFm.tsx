@@ -15,6 +15,7 @@ import { useQuantityHandler } from "@/hooks/useQuantityHandler";
 import { handleAddToCartUtil } from "@/utils/addToCartUtil";
 import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
 import QuantityControls from "@/pages/components/QuantityControls";
+import Loading from "@/pages/components/Loading"; // importar el componente Loading
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,6 +27,7 @@ const BolsasFm = ({ isConnected }: InferGetServerSidePropsType<typeof getServerS
   const [bags, setBags] = useState<Bag[]>([]);
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
+  const [loading, setLoading] = useState(true); // estado loading
   const router = useRouter();
   const folderName = router.pathname.split('/').slice(-2, -1)[0];
 
@@ -33,6 +35,7 @@ const BolsasFm = ({ isConnected }: InferGetServerSidePropsType<typeof getServerS
 
   useEffect(() => {
     (async () => {
+      setLoading(true); // inicia loading
       const response = await fetch("/api/allPrices");
       const data = await response.json();
       const order = ["BFM501", "BFM901", "BFM101"];
@@ -48,6 +51,7 @@ const BolsasFm = ({ isConnected }: InferGetServerSidePropsType<typeof getServerS
         return acc;
       }, {});
       setQuantities(initialQuantities);
+      setLoading(false); // termina loading
     })();
   }, [setQuantities]);
 
@@ -95,60 +99,64 @@ const BolsasFm = ({ isConnected }: InferGetServerSidePropsType<typeof getServerS
             </div>
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
-            <div className="flex flex-wrap justify-evenly">
-              {bags.map((bag, index) => (
-                <div
-                  className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
-                  key={index}
-                >
-                  <img className="w-72 h-36 object-contain" 
-                       src={`/Bolsa Fast Food ${bag.systemCode}.png`}  
-                       alt="Bolsa Fast Food Kraft" />
-                  <div className="container mx-auto p-2">
-                    <div className="flex flex-col">
-                      <div className="overflow-x-auto">
-                        <div className="py-2 inline-block min-w-full">
-                          <div className="overflow-hidden">
-                            <table className="min-w-full table-fixed">
-                              <thead className="border-b">
-                                <tr>
-                                  <th scope="col" className="w-1/4 text-base font-medium text-gray-900 px-2 py-2 text-center">
-                                    Descripción & Medidas
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr className="border-b">
-                                  <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
-                                    {bag.description}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className="flex flex-wrap justify-evenly">
+                {bags.map((bag, index) => (
+                  <div
+                    className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
+                    key={index}
+                  >
+                    <img className="w-72 h-36 object-contain" 
+                         src={`/Bolsa Fast Food ${bag.systemCode}.png`}  
+                         alt="Bolsa Fast Food Kraft" />
+                    <div className="container mx-auto p-2">
+                      <div className="flex flex-col">
+                        <div className="overflow-x-auto">
+                          <div className="py-2 inline-block min-w-full">
+                            <div className="overflow-hidden">
+                              <table className="min-w-full table-fixed">
+                                <thead className="border-b">
+                                  <tr>
+                                    <th scope="col" className="w-1/4 text-base font-medium text-gray-900 px-2 py-2 text-center">
+                                      Descripción & Medidas
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr className="border-b">
+                                    <td className="px-2 py-2 whitespace-nowrap text-base font-medium text-gray-900 text-center align-middle">
+                                      {bag.description}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div className="flex justify-center mb-2">
+                      <p className="text-gray-700 text-lg"> Precio x1000: 
+                      <span className="font-bold">
+                          {calculateFinalPrice(folderName, bag)}
+                        </span> 
+                      </p>
+                    </div>
+                    <QuantityControls
+                      bag={bag}
+                      quantities={quantities}
+                      handleIncrement={handleIncrement}
+                      handleDecrement={handleDecrement}
+                      handleQuantityChange={handleQuantityChange}
+                      setQuantities={setQuantities}
+                      handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list2, bag.additionalDescription)}
+                    />
                   </div>
-                  <div className="flex justify-center mb-2">
-                    <p className="text-gray-700 text-lg"> Precio x1000: 
-                    <span className="font-bold">
-                        {calculateFinalPrice(folderName, bag)}
-                      </span> 
-                    </p>
-                  </div>
-                  <QuantityControls
-                    bag={bag}
-                    quantities={quantities}
-                    handleIncrement={handleIncrement}
-                    handleDecrement={handleDecrement}
-                    handleQuantityChange={handleQuantityChange}
-                    setQuantities={setQuantities}
-                    handleAddToCart={() => handleAddToCart(bag.systemCode, bag.description, bag.list2, bag.additionalDescription)}
-                  />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

@@ -15,6 +15,7 @@ import { useQuantityHandler } from "@/hooks/useQuantityHandler";
 import { handleAddToCartUtil } from "@/utils/addToCartUtil";
 import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
 import QuantityControls from "@/pages/components/QuantityControls";
+import Loading from "@/pages/components/Loading"; // importar Loading
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,15 +24,16 @@ export const getServerSideProps = getServerSidePropsUtil;
 
 const BolsasConManijaColor = ({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [bags, setBags] = useState<Bag[]>([]);
+  const [loading, setLoading] = useState(true); // estado loading
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
   const router = useRouter();
   const folderName: keyof Bag | 'lista2' | 'lista2-10' | 'lista2-10-2' | 'lista2-final' | 'lista2-10-final' | 'lista2-10-2-final' | 'lista3-10' | 'lista3-10-2' | 'lista3-final' | 'lista3-10-final' | 'lista3-10-2-final' | 'lista4-10' | 'lista4-10-2' | 'lista4-final' | 'lista4-10-final' | 'lista4-10-2-final' = router.pathname.split('/').slice(-2, -1)[0] as any;
 
-
   useEffect(() => {
     (async () => {
       try {
+        setLoading(true); // inicia loading
         const response = await fetch("/api/allPrices");
         const data = await response.json();
         const order = ["BG1P001", "BG1P002", "BG1P003", "BG1P004", "BG1P00S", "BG3P001", "BG3P002", "BG3P003", "BG3P004", "BG3P00S", "BG5P001", "BG5P002", "BG5P003", "BG5P004", "BG5P00S"];
@@ -44,6 +46,8 @@ const BolsasConManijaColor = ({ isConnected }: InferGetServerSidePropsType<typeo
         setBags(processedData);
       } catch (error) {
         console.error("Error fetching bag handles:", error);
+      } finally {
+        setLoading(false); // termina loading
       }
     })();
   }, []);
@@ -108,19 +112,23 @@ const BolsasConManijaColor = ({ isConnected }: InferGetServerSidePropsType<typeo
             </div>
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
-            <div className="flex flex-wrap justify-evenly">
-              {Object.entries(sortedGroupedBags).map(([additionalDescription, bags]) => (
-                <div
-                  className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
-                  key={additionalDescription}
-                >
-                  <img className="w-72 h-36 object-contain" src={`/Bolsa de Color ${additionalDescription}.jpg`} alt={additionalDescription} />
-                  <div className="px-4 py-1 ">
-                    <BagCard bags={bags.slice(0, 3)} additionalDescription={additionalDescription} addToCart={addToCart} folderName={folderName} />
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className="flex flex-wrap justify-evenly">
+                {Object.entries(sortedGroupedBags).map(([additionalDescription, bags]) => (
+                  <div
+                    className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
+                    key={additionalDescription}
+                  >
+                    <img className="w-72 h-36 object-contain" src={`/Bolsa de Color ${additionalDescription}.jpg`} alt={additionalDescription} />
+                    <div className="px-4 py-1 ">
+                      <BagCard bags={bags.slice(0, 3)} additionalDescription={additionalDescription} addToCart={addToCart} folderName={folderName} />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

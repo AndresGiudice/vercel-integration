@@ -15,7 +15,7 @@ import { useQuantityHandler } from "@/hooks/useQuantityHandler";
 import { handleAddToCartUtil } from "@/utils/addToCartUtil";
 import { calculateFinalPrice } from "@/utils/calculateFinalPrice";
 import QuantityControls from "@/pages/components/QuantityControls";
-
+import Loading from "@/pages/components/Loading"; // importar Loading
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,12 +26,14 @@ const BobinasSulfito = ({ isConnected }: InferGetServerSidePropsType<typeof getS
   const [bags, setBags] = useState<Bag[]>([]);
   const { addToCart, cart, clearCart } = useCart();
   const [showCartDetails, setShowCartDetails] = useState(false);
+  const [loading, setLoading] = useState(true); // estado loading
   const router = useRouter();
   const folderName: keyof Bag | 'lista2' | 'lista2-10' | 'lista2-10-2' | 'lista2-final' | 'lista2-10-final' | 'lista2-10-2-final' | 'lista3-10' | 'lista3-10-2' | 'lista3-final' | 'lista3-10-final' | 'lista3-10-2-final' | 'lista4-10' | 'lista4-10-2' | 'lista4-final' | 'lista4-10-final' | 'lista4-10-2-final' = router.pathname.split('/').slice(-2, -1)[0] as any;
 
   useEffect(() => {
     (async () => {
       try {
+        setLoading(true); // inicia loading
         const response = await fetch("/api/allPrices");
         const data = await response.json();
         const processedData = data.boSu
@@ -43,6 +45,8 @@ const BobinasSulfito = ({ isConnected }: InferGetServerSidePropsType<typeof getS
         setBags(processedData);
       } catch (error) {
         console.error("Error fetching bag handles:", error);
+      } finally {
+        setLoading(false); // termina loading
       }
     })();
   }, []);
@@ -104,19 +108,23 @@ const BobinasSulfito = ({ isConnected }: InferGetServerSidePropsType<typeof getS
             </div>
           )}
           <div className="lg:flex-1 order-2 lg:order-1">
-            <div className="flex flex-wrap justify-evenly">
-              {Object.entries(sortedGroupedBags).map(([additionalDescription, bags]) => (
-                <div
-                  className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
-                  key={additionalDescription}
-                >
-                  <img className="w-72 h-36 object-contain" src={`/Bobina Sulfito ${additionalDescription}.png`} alt={additionalDescription} />
-                  <div className="px-4 py-1 ">
-                    <BagCard bags={bags} additionalDescription={additionalDescription} addToCart={addToCart} folderName={folderName} />
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className="flex flex-wrap justify-evenly">
+                {Object.entries(sortedGroupedBags).map(([additionalDescription, bags]) => (
+                  <div
+                    className="relative m-4 p-2 pb-5 rounded-2xl shadow-lg bg-white hover:shadow-2xl max-w-sm"
+                    key={additionalDescription}
+                  >
+                    <img className="w-72 h-36 object-contain" src={`/Bobina Sulfito ${additionalDescription}.png`} alt={additionalDescription} />
+                    <div className="px-4 py-1 ">
+                      <BagCard bags={bags} additionalDescription={additionalDescription} addToCart={addToCart} folderName={folderName} />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>
