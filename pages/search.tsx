@@ -26,7 +26,20 @@ export default function SearchPage() {
         const response = await fetch(`/api/allPrices`);
         const data = await response.json();
 
-        const filterBags = (bags: Bag[], isFb3x10 = false, isFb3x100 = false, isBaFdoKr = false, isBaFdoSu = false, isBoObr = false, isBoSu = false, isBoKr = false) => {
+        const filterBags = (
+          bags: Bag[],
+          isFb3x10 = false,
+          isFb3x100 = false,
+          isBaFdoKr = false,
+          isBaFdoSu = false,
+          isBoObr = false,
+          isBoSu = false,
+          isBoKr = false,
+          isKraftManija = false,
+          isBlancaManija = false,
+          isPaManija = false, // Nuevo parámetro para PA
+          isBoFae = false     // Nuevo parámetro para BoFae
+        ) => {
           // Función para quitar acentos
           const normalize = (str: string) =>
             str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -92,6 +105,87 @@ export default function SearchPage() {
           if (
             isBoKr &&
             queryString.includes("bobinas kraft")
+          ) {
+            return bags;
+          }
+
+          // Si es kraft con manija y la búsqueda contiene "bolsa(s) con manija", mostrar todos los kraft
+          if (
+            isKraftManija &&
+            (
+              (queryString.includes("bolsa con manija") || queryString.includes("bolsas con manija")
+                || queryString.includes("bolsa con manija kraft")
+                || queryString.includes("bolsas con manija kraft "))
+              && !queryString.includes("bolsa con manija blanca")
+              && !queryString.includes("bolsas con manija blanca")
+              && !queryString.includes("bolsa con manija color")
+              && !queryString.includes("bolsas con manija color")
+              && !queryString.includes("bolsa con manija fantasia")
+              && !queryString.includes("bolsas con manija fantasia")
+            )
+          ) {
+            return bags;
+          }
+
+          // Si es blanca con manija y la búsqueda contiene "bolsa(s) con manija blancas", mostrar todos los blancas
+          if (
+            isBlancaManija &&
+            (
+              (
+                queryString.includes("bolsa con manija blancas") ||
+                queryString.includes("bolsas con manija blancas") ||
+                queryString.includes("bolsa con manija") || // agregado
+                queryString.includes("bolsas con manija")
+              )
+              && !queryString.includes("bolsa con manija kraft")
+              && !queryString.includes("bolsas con manija kraft")
+              && !queryString.includes("bolsa con manija color")
+              && !queryString.includes("bolsas con manija color")
+              && !queryString.includes("bolsa con manija fantasia")
+              && !queryString.includes("bolsas con manija fantasia")
+            )
+          ) {
+            return bags;
+          }
+
+          // Si es PA con manija y la búsqueda contiene "bolsa con manija color", mostrar todos los PA
+          if (
+            isPaManija &&
+            (
+              (
+                queryString.includes("bolsa con manija color") ||
+                queryString.includes("bolsas con manija color") ||
+                queryString.includes("bolsa con manija") ||
+                queryString.includes("bolsas con manija")
+              )
+              && !queryString.includes("bolsa con manija kraft")
+              && !queryString.includes("bolsas con manija kraft")
+              && !queryString.includes("bolsa con manija blanca")
+              && !queryString.includes("bolsas con manija blanca")
+              && !queryString.includes("bolsa con manija fantasia")
+              && !queryString.includes("bolsas con manija fantasia")
+            )
+          ) {
+            return bags;
+          }
+
+          // Si es boFae y la búsqueda contiene "bolsa con manija fantasia", mostrar todos los boFae
+          if (
+            isBoFae &&
+            (
+              (
+                queryString.includes("bolsa con manija fantasia") ||
+                queryString.includes("bolsas con manija fantasia") ||
+                queryString.includes("bolsa con manija") ||
+                queryString.includes("bolsas con manija")
+              )
+              && !queryString.includes("bolsa con manija kraft")
+              && !queryString.includes("bolsas con manija kraft")
+              && !queryString.includes("bolsa con manija blanca")
+              && !queryString.includes("bolsas con manija blanca")
+              && !queryString.includes("bolsa con manija color")
+              && !queryString.includes("bolsas con manija color")
+            )
           ) {
             return bags;
           }
@@ -168,6 +262,40 @@ export default function SearchPage() {
           return aIndex - bIndex;
         });
 
+        // Ordenar pa según el arreglo dado
+        const orderPa = [
+          "BG1P001", "BG1P002", "BG1P003", "BG1P004", "BG1P00S",
+          "BG3P001", "BG3P002", "BG3P003", "BG3P004", "BG3P00S",
+          "BG5P001", "BG5P002", "BG5P003", "BG5P004", "BG5P00S"
+        ];
+        const orderedPa = [...data.pa].sort((a, b) => {
+          const aIndex = orderPa.indexOf(a.systemCode);
+          const bIndex = orderPa.indexOf(b.systemCode);
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+
+        // Ordenar boFae según prefijo G1, G3, G5 en la descripción
+        const orderBoFaePrefix = ["G1", "G3", "G5"];
+        const orderedBoFae = [...data.boFae].sort((a, b) => {
+          const aPrefix = a.description.slice(0, 2);
+          const bPrefix = b.description.slice(0, 2);
+          const aIndex = orderBoFaePrefix.indexOf(aPrefix);
+          const bIndex = orderBoFaePrefix.indexOf(bPrefix);
+
+          if (aIndex !== -1 && bIndex !== -1) {
+            return aIndex - bIndex;
+          } else if (aIndex !== -1) {
+            return -1;
+          } else if (bIndex !== -1) {
+            return 1;
+          } else {
+            return aPrefix.localeCompare(bPrefix);
+          }
+        });
+
         const orderBoObr = [
           "BLD4001201", "BLD6001201", "BLD4001203", "BLD6001203", "BLD4001202", "BLD6001202", "BLD4001204", "BLD6001204",
           "BLD4001401", "BLD6001401", "BLD4001403", "BLD6001403", "BLD4001402", "BLD6001402", "BLD4001404", "BLD6001404",
@@ -211,10 +339,10 @@ export default function SearchPage() {
             ...bag,
             source: 'boKr'
           })),
-          ...filterBags(data.kraft),
-          ...filterBags(data.blancas),
-          ...filterBags(data.pa),
-          ...filterBags(data.boFae),
+          ...filterBags(data.kraft, false, false, false, false, false, false, false, true),
+          ...filterBags(data.blancas, false, false, false, false, false, false, false, false, true),
+          ...filterBags(orderedPa, false, false, false, false, false, false, false, false, false, true),
+          ...filterBags(orderedBoFae, false, false, false, false, false, false, false, false, false, false, true),
           ...filterBags(data.fb3x100, false, true),
           ...(
             queryString.includes("fb3 x100") || queryString.includes("fast food x100")
@@ -490,7 +618,7 @@ export default function SearchPage() {
                               setQuantities((prevQuantities) => ({
                                 ...prevQuantities,
                                 [bag.systemCode]: 0,
-                            }));
+                              }));
                             } else {
                               handleQuantityChange(bag.systemCode, value);
                             }
